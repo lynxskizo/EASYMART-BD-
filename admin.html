@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EASYMART BD - Admin Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #6366f1; --primary-hover: #4f46e5; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background-color: #1a0f0a;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 0), linear-gradient(135deg, #2d1810 0%, #150a06 100%);
+            background-size: 24px 24px, 100% 100%;
+            color: #f8fafc; font-family: 'Hind Siliguri', sans-serif; min-height: 100vh; padding: 30px 15px;
+        }
+        .container { max-width: 750px; margin: 0 auto; }
+        .header-title { text-align: center; margin-bottom: 30px; font-size: 26px; font-weight: 700; }
+        .header-title span { color: var(--primary); }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 24px; margin-bottom: 25px;
+        }
+        h2 { font-size: 18px; margin-bottom: 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 8px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-size: 14px; margin-bottom: 6px; color: #cbd5e1; }
+        input {
+            width: 100%; padding: 10px; background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 8px; color: #ffffff; outline: none;
+        }
+        .btn { background: var(--primary); color: white; padding: 10px; border: none; border-radius: 8px; font-weight: 600; width: 100%; cursor: pointer; }
+        .order-card {
+            background: rgba(255, 255, 255, 0.03); border-left: 4px solid var(--primary);
+            border-top: 1px solid rgba(255,255,255,0.08); padding: 14px; border-radius: 6px; margin-bottom: 12px; font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-title">EASYMART <span>BD</span> - Admin Panel</div>
+
+        <div class="glass-card">
+            <h2>১. নতুন প্রোডাক্ট যোগ করুন</h2>
+            <form id="prod-form">
+                <div class="form-group">
+                    <label>প্রোডাক্টের নাম (বাংলা)</label>
+                    <input type="text" id="title-bn" required>
+                </div>
+                <div class="form-group">
+                    <label>Product Title (English)</label>
+                    <input type="text" id="title-en">
+                </div>
+                <div class="form-group">
+                    <label>দাম (৳ / BDT)</label>
+                    <input type="number" id="price" required>
+                </div>
+                <div class="form-group">
+                    <label>প্রোডাক্ট ইমেজ লিঙ্ক (URL)</label>
+                    <input type="url" id="image-url" required>
+                </div>
+                <button type="submit" class="btn">পাবলিশ করুন</button>
+            </form>
+        </div>
+
+        <div class="glass-card">
+            <h2>২. কাস্টমারদের অর্ডারের তালিকা</h2>
+            <div id="orders-list">
+                <p style="color: #94a3b8;">অর্ডার লোড হচ্ছে...</p>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCnrZ8ZF8tGW2R5buFDsAeLHJlWHBwb9hw",
+            authDomain: "easy-mart-bd-16b7b.firebaseapp.com",
+            databaseURL: "https://easy-mart-bd-16b7b-default-rtdb.firebaseio.com",
+            projectId: "easy-mart-bd-16b7b",
+            storageBucket: "easy-mart-bd-16b7b.firebasestorage.app",
+            messagingSenderId: "421957488158",
+            appId: "1:421957488158:web:7d20d1f557ac6b06c9280f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        document.getElementById('prod-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                await addDoc(collection(db, "products"), {
+                    title_bn: document.getElementById('title-bn').value,
+                    title_en: document.getElementById('title-en').value,
+                    price: document.getElementById('price').value,
+                    image: document.getElementById('image-url').value
+                });
+                alert('প্রোডাক্ট সেভ হয়েছে!');
+                e.target.reset();
+            } catch (err) { alert(err.message); }
+        });
+
+        const ordersList = document.getElementById('orders-list');
+        onSnapshot(collection(db, "orders"), (snapshot) => {
+            ordersList.innerHTML = '';
+            if(snapshot.empty) {
+                ordersList.innerHTML = '<p style="color: #94a3b8;">কোনো অর্ডার নেই</p>';
+                return;
+            }
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                ordersList.innerHTML += `
+                    <div class="order-card">
+                        <strong>পণ্য:</strong> ${data.product || ''} (৳${data.price || '0'})<br>
+                        <strong>কাস্টমার:</strong> ${data.customer_name || ''}<br>
+                        <strong>ফোন:</strong> ${data.phone || ''}<br>
+                        <strong>ঠিকানা:</strong> ${data.address || ''}<br>
+                        <strong>পেমেন্ট:</strong> ${data.payment || ''}<br>
+                        <small style="color: #6366f1;">তারিখ: ${data.date || ''}</small>
+                    </div>
+                `;
+            });
+        });
+    </script>
+</body>
+</html>
