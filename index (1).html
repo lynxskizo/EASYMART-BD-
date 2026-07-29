@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EASYMART BD</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --font-bn: 'Hind Siliguri', sans-serif;
+            --font-en: 'Inter', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        /* Wooden Texture Background Overlay */
+        body {
+            background-color: #1a0f0a;
+            background-image: 
+                radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 0),
+                linear-gradient(135deg, #2d1810 0%, #150a06 100%);
+            background-size: 24px 24px, 100% 100%;
+            color: #f8fafc;
+            font-family: var(--font-bn);
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        body.lang-en { font-family: var(--font-en); }
+
+        /* Glassmorphism Header & Animation */
+        header {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        header:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-bottom-color: rgba(99, 102, 241, 0.4);
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 700;
+            color: #ffffff;
+            font-family: var(--font-en);
+        }
+
+        .logo span { color: var(--primary); }
+
+        /* Realtime Search Bar */
+        .search-container {
+            position: relative;
+            flex: 0 1 300px;
+            margin: 0 15px;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            color: #fff;
+            outline: none;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .search-container input::placeholder { color: #94a3b8; }
+
+        .search-container input:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--primary);
+            box-shadow: 0 0 12px rgba(99, 102, 241, 0.3);
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        /* Language Switcher */
+        .lang-switch {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 6px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            color: #ffffff;
+            transition: all 0.2s;
+        }
+
+        .lang-switch:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        /* Hero Banner */
+        .hero {
+            padding: 70px 20px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .hero h1 { font-size: 32px; font-weight: 700; margin-bottom: 10px; }
+        .hero p { color: #94a3b8; font-size: 16px; margin-bottom: 20px; }
+
+        .btn-main {
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            transition: background 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-main:hover { background-color: var(--primary-hover); }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 50px 20px; }
+        .section-header { margin-bottom: 25px; }
+        .section-title { font-size: 22px; font-weight: 700; }
+
+        /* Glassy Cards Grid */
+        .grid-products {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 50px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(99, 102, 241, 0.5);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        .card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .card-title { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+        .card-price { color: var(--primary); font-weight: 700; font-size: 16px; margin-bottom: 12px; }
+
+        .btn-card {
+            width: 100%;
+            padding: 9px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .card:hover .btn-card {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        /* AI Floating Button */
+        .ai-fab {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: var(--primary);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+            z-index: 100;
+            transition: transform 0.2s;
+        }
+
+        .ai-fab:hover { transform: scale(1.08); }
+
+        /* AI Chat Window Glassmorphism */
+        .ai-chat-window {
+            display: none;
+            position: fixed;
+            bottom: 85px;
+            right: 25px;
+            width: 310px;
+            height: 400px;
+            background: rgba(20, 10, 6, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            flex-direction: column;
+            z-index: 100;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+        }
+
+        .chat-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .chat-body {
+            flex: 1;
+            padding: 12px;
+            overflow-y: auto;
+            font-size: 13px;
+        }
+
+        .chat-input {
+            display: flex;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 10px;
+            background: transparent;
+            border: none;
+            color: white;
+            outline: none;
+            font-size: 13px;
+        }
+
+        .chat-input button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0 14px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            text-align: center;
+            padding: 24px;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .lang-en-text { display: none; }
+        body.lang-en .lang-bn-text { display: none; }
+        body.lang-en .lang-en-text { display: inline-block; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">EASYMART <span>BD</span></div>
+
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="সার্চ করুন..." onkeyup="searchProducts()">
+        </div>
+
+        <div class="nav-actions">
+            <button class="lang-switch" onclick="toggleLanguage()">
+                <span class="lang-bn-text">English</span>
+                <span class="lang-en-text">বাংলা</span>
+            </button>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h1>
+            <span class="lang-bn-text">আপনার প্রয়োজনীয় সব কেনাকাটা এক জায়গায়</span>
+            <span class="lang-en-text">All Your Daily Needs in One Place</span>
+        </h1>
+        <p>
+            <span class="lang-bn-text">সহজ ও দ্রুত কেনাকাটার বিশ্বস্ত মাধ্যম EASYMART BD</span>
+            <span class="lang-en-text">EASYMART BD - Trusted platform for easy & fast shopping</span>
+        </p>
+        <a href="#products" class="btn-main">
+            <span class="lang-bn-text">শপিং করুন</span>
+            <span class="lang-en-text">Shop Now</span>
+        </a>
+    </section>
+
+    <div class="container">
+        <section id="products">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="lang-bn-text">লেটেস্ট প্রোডাক্টস</span>
+                    <span class="lang-en-text">Latest Products</span>
+                </h2>
+            </div>
+            <div id="product-list" class="grid-products">
+                <p style="color: #94a3b8;">লোড হচ্ছে...</p>
+            </div>
+        </section>
+    </div>
+
+    <div class="ai-fab" onclick="toggleAIChat()">AI</div>
+
+    <div class="ai-chat-window" id="ai-chat">
+        <div class="chat-header">
+            <span>AI Assistant</span>
+            <span style="cursor:pointer;" onclick="toggleAIChat()">✕</span>
+        </div>
+        <div class="chat-body" id="chat-logs">
+            <p style="color:#6366f1;">হ্যালো! EASYMART BD-তে স্বাগতম। আমি আপনাকে কীভাবে সাহায্য করতে পারি?</p>
+        </div>
+        <div class="chat-input">
+            <input type="text" id="user-msg" placeholder="প্রশ্ন লিখুন...">
+            <button onclick="sendAIMessage()">Send</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; ২০২৬ EASYMART BD. All Rights Reserved.</p>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCnrZ8ZF8tGW2R5buFDsAeLHJlWHBwb9hw",
+            authDomain: "easy-mart-bd-16b7b.firebaseapp.com",
+            databaseURL: "https://easy-mart-bd-16b7b-default-rtdb.firebaseio.com",
+            projectId: "easy-mart-bd-16b7b",
+            storageBucket: "easy-mart-bd-16b7b.firebasestorage.app",
+            messagingSenderId: "421957488158",
+            appId: "1:421957488158:web:7d20d1f557ac6b06c9280f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const prodList = document.getElementById('product-list');
+
+        // Load Products Realtime
+        onSnapshot(collection(db, "products"), (snapshot) => {
+            prodList.innerHTML = '';
+            if(snapshot.empty) {
+                prodList.innerHTML = '<p style="color:#94a3b8;">কোনো প্রোডাক্ট পাওয়া যায়নি</p>';
+                return;
+            }
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                prodList.innerHTML += `
+                    <div class="card" data-title="${(data.title_bn || '') + ' ' + (data.title_en || '')}">
+                        <img src="${data.image || 'https://via.placeholder.com/150'}" alt="Product">
+                        <div class="card-title">
+                            <span class="lang-bn-text">${data.title_bn || ''}</span>
+                            <span class="lang-en-text">${data.title_en || data.title_bn || ''}</span>
+                        </div>
+                        <div class="card-price">৳${data.price || '0'}</div>
+                        <button class="btn-card">
+                            <span class="lang-bn-text">অর্ডার করুন</span>
+                            <span class="lang-en-text">Order Now</span>
+                        </button>
+                    </div>
+                `;
+            });
+        });
+    </script>
+
+    <script>
+        function toggleLanguage() {
+            document.body.classList.toggle('lang-en');
+            const searchInput = document.getElementById('search-input');
+            if(document.body.classList.contains('lang-en')) {
+                searchInput.placeholder = "Search products...";
+            } else {
+                searchInput.placeholder = "সার্চ করুন...";
+            }
+        }
+
+        function searchProducts() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const cards = document.querySelectorAll('.card');
+            
+            cards.forEach(card => {
+                const title = card.getAttribute('data-title').toLowerCase();
+                if(title.includes(query)) {
+                    card.style.display = "block";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        }
+
+        function toggleAIChat() {
+            const chat = document.getElementById('ai-chat');
+            chat.style.display = (chat.style.display === 'flex') ? 'none' : 'flex';
+        }
+
+        function sendAIMessage() {
+            const input = document.getElementById('user-msg');
+            const logs = document.getElementById('chat-logs');
+            if(!input.value.trim()) return;
+
+            const text = input.value;
+            logs.innerHTML += `<p style="margin-top:8px; text-align:right; color:#cbd5e1;"><b>You:</b> ${text}</p>`;
+            input.value = '';
+
+            setTimeout(() => {
+                logs.innerHTML += `<p style="margin-top:8px; color:#6366f1;"><b>AI:</b> ধন্যবাদ! আমাদের সাথে সরাসরি যোগাযোগের জন্য অ্যাডমিন প্যানেল বা হটলাইনে কথা বলতে পারেন।</p>`;
+                logs.scrollTop = logs.scrollHeight;
+            }, 500);
+        }
+    </script>
+</body>
+</html>
