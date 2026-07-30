@@ -4,62 +4,100 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EASYMART BD - Pro Admin Console</title>
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #6366f1;
+            --primary-glow: rgba(99, 102, 241, 0.25);
             --bg-dark: #0f172a;
-            --panel-bg: rgba(30, 41, 59, 0.75);
-            --border: rgba(255, 255, 255, 0.12);
-            --text: #f8fafc;
+            --glass-card: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Hind Siliguri', sans-serif; }
-        body { background-color: var(--bg-dark); color: var(--text); display: flex; min-height: 100vh; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Hind Siliguri', 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg-dark); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
 
+        /* Security Login Modal */
         #login-overlay {
             position: fixed; top:0; left:0; width:100%; height:100%;
-            background: var(--bg-dark); display:flex; justify-content:center; align-items:center; z-index:9999;
+            background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(16px);
+            display: flex; justify-content: center; align-items: center; z-index: 9999;
         }
         .login-card {
-            background: var(--panel-bg); border: 1px solid var(--border); padding: 30px;
-            border-radius: 16px; width: 90%; max-width: 380px; text-align: center;
+            background: var(--glass-card); border: 1px solid var(--glass-border);
+            padding: 30px; border-radius: 20px; width: 90%; max-width: 380px; text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
         }
 
+        /* Glass Admin Header */
+        header {
+            background: rgba(30, 41, 59, 0.8); backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 16px 24px; display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 100;
+        }
+        .brand-logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 18px; color: #fff; }
+        .logo-icon { width: 34px; height: 34px; background: var(--primary); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; }
+
+        .btn-logout { background: #ef4444; border: none; color: white; padding: 8px 16px; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 6px; }
+
+        /* Layout Container */
+        .admin-container { max-width: 1100px; margin: 24px auto; width: 92%; flex: 1; display: grid; grid-template-columns: 240px 1fr; gap: 20px; }
+
+        /* Sidebar Navigation */
         .sidebar {
-            width: 260px; background: rgba(15, 23, 42, 0.95); border-right: 1px solid var(--border);
-            padding: 20px 10px; display: flex; flex-direction: column; gap: 8px; position: fixed; height: 100vh;
+            background: var(--glass-card); border: 1px solid var(--glass-border);
+            border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 8px; height: fit-content;
         }
-        .sidebar-brand { font-size: 20px; font-weight: 700; text-align: center; margin-bottom: 20px; color: var(--primary); }
-        .nav-item {
-            padding: 12px 16px; border-radius: 8px; color: #94a3b8; cursor: pointer;
-            font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 10px; transition: 0.2s;
+        .nav-tab {
+            padding: 12px 16px; border-radius: 12px; color: var(--text-muted); cursor: pointer;
+            font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 10px; transition: all 0.3s;
         }
-        .nav-item:hover, .nav-item.active { background: var(--primary); color: white; }
+        .nav-tab:hover, .nav-tab.active { background: var(--primary); color: white; box-shadow: 0 4px 15px var(--primary-glow); }
 
-        .main-panel { margin-left: 260px; flex: 1; padding: 30px; max-width: 1000px; }
-        .section-page { display: none; }
-        .section-page.active { display: block; }
+        /* Content Area */
+        .content-area { display: flex; flex-direction: column; gap: 20px; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
 
-        .card-box {
-            background: var(--panel-bg); border: 1px solid var(--border);
-            border-radius: 14px; padding: 25px; margin-bottom: 20px; backdrop-filter: blur(10px);
+        /* Glass Cards */
+        .glass-box {
+            background: var(--glass-card); backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border); border-radius: 18px; padding: 24px; margin-bottom: 20px;
         }
-        .card-box h2 { font-size: 18px; margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+        .glass-box h3 { font-size: 18px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; }
 
-        .form-group { margin-bottom: 15px; }
-        label { display: block; font-size: 13px; color: #cbd5e1; margin-bottom: 5px; }
-        input, select, textarea {
-            width: 100%; padding: 10px 14px; background: rgba(255,255,255,0.05);
-            border: 1px solid var(--border); border-radius: 8px; color: white; outline: none;
+        /* Form Inputs */
+        .form-group { margin-bottom: 14px; }
+        label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px; font-weight: 600; }
+        input[type="text"], input[type="number"], input[type="password"], input[type="file"] {
+            width: 100%; padding: 10px 14px; background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border); border-radius: 10px; color: white; outline: none; font-size: 14px;
         }
-        .btn-submit { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; width: 100%; }
-        .btn-danger { background: #ef4444; border: none; color: white; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+        input:focus { border-color: var(--primary); }
+
+        .btn-submit {
+            width: 100%; padding: 12px; background: var(--primary); border: none;
+            border-radius: 10px; color: white; font-weight: 700; cursor: pointer; font-size: 14px;
+            box-shadow: 0 4px 15px var(--primary-glow); transition: 0.3s;
+        }
+        .btn-submit:hover { opacity: 0.9; }
+
+        /* List Items */
+        .item-row {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 12px 16px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--glass-border);
+            border-radius: 12px; margin-bottom: 10px;
+        }
+        .item-info { display: flex; align-items: center; gap: 12px; }
+        .item-img { width: 44px; height: 44px; border-radius: 8px; object-fit: cover; background: #334155; }
+        .btn-delete { background: #ef4444; border: none; color: white; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 600; }
 
         @media (max-width: 768px) {
-            body { flex-direction: column; }
-            .sidebar { width: 100%; height: auto; position: relative; }
-            .main-panel { margin-left: 0; padding: 15px; }
+            .admin-container { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -67,61 +105,65 @@
 
     <div id="login-overlay">
         <div class="login-card">
-            <h2>Admin Security Login</h2>
-            <div class="form-group" style="margin-top:15px;"><input type="text" id="admin-user" placeholder="Username"></div>
+            <div class="logo-icon" style="margin: 0 auto 15px auto; width:48px; height:48px; font-size:22px;"><i class="fa-solid fa-lock"></i></div>
+            <h2 style="margin-bottom:15px; font-size:20px;">Admin Control Panel</h2>
+            <div class="form-group"><input type="text" id="admin-user" placeholder="Username"></div>
             <div class="form-group"><input type="password" id="admin-pass" placeholder="Password"></div>
-            <button class="btn-submit" onclick="checkAuth()">Login</button>
+            <button class="btn-submit" onclick="checkAuth()"><i class="fa-solid fa-right-to-bracket"></i> Login</button>
         </div>
     </div>
 
-    <div class="sidebar">
-        <div class="sidebar-brand">EASYMART Admin</div>
-        <div class="nav-item active" onclick="switchTab('overview')">📊 Overview</div>
-        <div class="nav-item" onclick="switchTab('products')">🛍️ All Products</div>
-        <div class="nav-item" onclick="switchTab('banners')">🖼️ Slider Banners (Multi)</div>
-        <div class="nav-item" style="margin-top:auto; background:#ef4444; color:white;" onclick="logout()">🚪 Logout</div>
-    </div>
+    <header>
+        <div class="brand-logo">
+            <div class="logo-icon"><i class="fa-solid fa-bolt"></i></div>
+            <span>EASYMART BD Admin</span>
+        </div>
+        <button class="btn-logout" onclick="logout()"><i class="fa-solid fa-power-off"></i> Logout</button>
+    </header>
 
-    <div class="main-panel">
-
-        <div id="page-overview" class="section-page active">
-            <div class="card-box">
-                <h2>📊 সাম্প্রতিক অর্ডারস</h2>
-                <div id="recent-orders-list"></div>
-            </div>
+    <div class="admin-container">
+        
+        <div class="sidebar">
+            <div class="nav-tab active" onclick="switchTab('products')"><i class="fa-solid fa-box"></i> Manage Products</div>
+            <div class="nav-tab" onclick="switchTab('banners')"><i class="fa-solid fa-images"></i> Manage Banners</div>
         </div>
 
-        <div id="page-products" class="section-page">
-            <div class="card-box">
-                <h2>➕ নতুন প্রোডাক্ট যুক্ত করুন</h2>
-                <form id="prod-form">
-                    <div class="form-group"><label>পণ্যের নাম</label><input type="text" id="p-name" required></div>
-                    <div class="form-group"><label>দাম (৳)</label><input type="number" id="p-price" required></div>
-                    <div class="form-group"><label>ছবি আপলোড (Max 4MB)</label><input type="file" id="p-img" accept="image/*" required></div>
-                    <button type="submit" class="btn-submit">পাবলিশ করুন</button>
-                </form>
-            </div>
-            <div class="card-box">
-                <h2>📦 সকল প্রোডাক্ট</h2>
-                <div id="all-products-list"></div>
-            </div>
-        </div>
+        <div class="content-area">
 
-        <div id="page-banners" class="section-page">
-            <div class="card-box">
-                <h2>🖼️ নতুন স্লাইডার ব্যানার যুক্ত করুন</h2>
-                <form id="banner-form">
-                    <div class="form-group"><label>ব্যানার টেক্সট/শিরোনাম</label><input type="text" id="b-title"></div>
-                    <div class="form-group"><label>ব্যানার ছবি (Max 4MB)</label><input type="file" id="b-img" accept="image/*" required></div>
-                    <button type="submit" class="btn-submit">ব্যানার আপলোড করুন</button>
-                </form>
-            </div>
-            <div class="card-box">
-                <h2>বর্তমান ব্যানারসমূহ</h2>
-                <div id="all-banners-list"></div>
-            </div>
-        </div>
+            <div id="tab-products" class="tab-content active">
+                <div class="glass-box">
+                    <h3><i class="fa-solid fa-plus"></i> নতুন প্রোডাক্ট যোগ করুন</h3>
+                    <form id="prod-form">
+                        <div class="form-group"><label>পণ্যের নাম (Title)</label><input type="text" id="p-name" placeholder="যেমন: ChatGPT Plus" required></div>
+                        <div class="form-group"><label>মূল্য (৳ Price)</label><input type="number" id="p-price" placeholder="450" required></div>
+                        <div class="form-group"><label>পণ্যের ছবি (Product Image)</label><input type="file" id="p-img" accept="image/*" required></div>
+                        <button type="submit" class="btn-submit"><i class="fa-solid fa-cloud-arrow-up"></i> পাবলিশ করুন</button>
+                    </form>
+                </div>
 
+                <div class="glass-box">
+                    <h3><i class="fa-solid fa-list-check"></i> বর্তমান প্রোডাক্ট তালিকা (Live Update/Delete)</h3>
+                    <div id="all-products-list"><p style="color:var(--text-muted); font-size:13px;">লোড হচ্ছে...</p></div>
+                </div>
+            </div>
+
+            <div id="tab-banners" class="tab-content">
+                <div class="glass-box">
+                    <h3><i class="fa-solid fa-file-image"></i> নতুন ব্যানার স্লাইডার যোগ করুন</h3>
+                    <form id="banner-form">
+                        <div class="form-group"><label>ব্যানার শিরোনাম (Title - Optional)</label><input type="text" id="b-title" placeholder="Special Offer 50% Off"></div>
+                        <div class="form-group"><label>ব্যানার ছবি (Banner Image)</label><input type="file" id="b-img" accept="image/*" required></div>
+                        <button type="submit" class="btn-submit"><i class="fa-solid fa-upload"></i> ব্যানার আপলোড করুন</button>
+                    </form>
+                </div>
+
+                <div class="glass-box">
+                    <h3><i class="fa-solid fa-layer-group"></i> বর্তমান স্লাইডার ব্যানারসমূহ</h3>
+                    <div id="all-banners-list"><p style="color:var(--text-muted); font-size:13px;">লোড হচ্ছে...</p></div>
+                </div>
+            </div>
+
+        </div>
     </div>
 
     <script type="module">
@@ -141,7 +183,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Add Product
+        // Upload Product to Firebase
         document.getElementById('prod-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const file = document.getElementById('p-img').files[0];
@@ -152,13 +194,13 @@
                     price: Number(document.getElementById('p-price').value),
                     image: reader.result
                 });
-                alert("প্রোডাক্ট যোগ হয়েছে!");
+                alert("প্রোডাক্ট সফলভাবে যুক্ত হয়েছে!");
                 e.target.reset();
             };
             reader.readAsDataURL(file);
         });
 
-        // Add Banner
+        // Upload Banner to Firebase
         document.getElementById('banner-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const file = document.getElementById('b-img').files[0];
@@ -168,40 +210,65 @@
                     title: document.getElementById('b-title').value,
                     image: reader.result
                 });
-                alert("স্লাইডার ব্যানার যোগ হয়েছে!");
+                alert("স্লাইডার ব্যানার যুক্ত হয়েছে!");
                 e.target.reset();
             };
             reader.readAsDataURL(file);
         });
 
-        // Sync Products
+        // Live Read & Delete Products
         onSnapshot(collection(db, "products"), (snap) => {
             const list = document.getElementById('all-products-list');
             list.innerHTML = '';
+            if(snap.empty) { list.innerHTML = '<p style="color:var(--text-muted); font-size:13px;">কোনো প্রোডাক্ট পাওয়া যায়নি!</p>'; return; }
             snap.forEach(d => {
                 const p = d.data();
-                list.innerHTML += `<div style="padding:10px; border-bottom:1px solid rgba(255,255,255,0.1); display:flex; justify-content:space-between; align-items:center;"><span>${p.title_bn} (৳${p.price})</span><button class="btn-danger" onclick="deleteDocItem('products', '${d.id}')">Delete</button></div>`;
+                list.innerHTML += `
+                    <div class="item-row">
+                        <div class="item-info">
+                            <img src="${p.image}" class="item-img">
+                            <div>
+                                <strong style="display:block; font-size:14px;">${p.title_bn}</strong>
+                                <span style="font-size:12px; color:var(--primary); font-weight:bold;">৳${p.price}</span>
+                            </div>
+                        </div>
+                        <button class="btn-delete" onclick="deleteItem('products', '${d.id}')"><i class="fa-solid fa-trash-can"></i> Delete</button>
+                    </div>
+                `;
             });
         });
 
-        // Sync Banners
+        // Live Read & Delete Banners
         onSnapshot(collection(db, "banners"), (snap) => {
             const list = document.getElementById('all-banners-list');
             list.innerHTML = '';
+            if(snap.empty) { list.innerHTML = '<p style="color:var(--text-muted); font-size:13px;">কোনো ব্যানার পাওয়া যায়নি!</p>'; return; }
             snap.forEach(d => {
                 const b = d.data();
-                list.innerHTML += `<div style="padding:10px; border-bottom:1px solid rgba(255,255,255,0.1); display:flex; justify-content:space-between; align-items:center;"><span>${b.title || 'Banner'}</span><button class="btn-danger" onclick="deleteDocItem('banners', '${d.id}')">Delete</button></div>`;
+                list.innerHTML += `
+                    <div class="item-row">
+                        <div class="item-info">
+                            <img src="${b.image}" class="item-img" style="width:70px;">
+                            <span style="font-size:13px;">${b.title || 'Slide Banner'}</span>
+                        </div>
+                        <button class="btn-delete" onclick="deleteItem('banners', '${d.id}')"><i class="fa-solid fa-trash-can"></i> Delete</button>
+                    </div>
+                `;
             });
         });
 
-        window.deleteDocItem = async (col, id) => { if(confirm("মুছতে চান?")) await deleteDoc(doc(db, col, id)); };
+        window.deleteItem = async (col, id) => {
+            if(confirm("আপনি কি নিশ্চিত এটি মুছতে চান?")) {
+                await deleteDoc(doc(db, col, id));
+            }
+        };
     </script>
 
     <script>
         function switchTab(tab) {
-            document.querySelectorAll('.section-page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            document.getElementById('page-' + tab).classList.add('active');
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById('tab-' + tab).classList.add('active');
             event.currentTarget.classList.add('active');
         }
 
@@ -209,7 +276,7 @@
             if(document.getElementById('admin-user').value === 'Admin' && document.getElementById('admin-pass').value === 'tTtTahsin26') {
                 document.getElementById('login-overlay').style.display = 'none';
                 sessionStorage.setItem('admin_logged', 'true');
-            } else alert("ভুল পাসওয়ার্ড!");
+            } else alert("ভুল ইউজারনেম বা পাসওয়ার্ড!");
         }
 
         function logout() { sessionStorage.removeItem('admin_logged'); location.reload(); }
