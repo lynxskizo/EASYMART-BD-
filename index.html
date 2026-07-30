@@ -9,9 +9,9 @@
         :root {
             --primary: #6366f1;
             --primary-glow: rgba(99, 102, 241, 0.4);
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.12);
-            --glass-card: rgba(30, 41, 59, 0.5);
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --glass-card: rgba(30, 41, 59, 0.65);
             --bg-color: #0b0f19;
             --text-color: #f8fafc;
         }
@@ -23,77 +23,94 @@
         /* Glass Header */
         header {
             position: sticky; top: 0; z-index: 1000;
-            background: rgba(11, 15, 25, 0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            background: rgba(11, 15, 25, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--glass-border); padding: 12px 5%;
             display: flex; justify-content: space-between; align-items: center; gap: 15px;
         }
 
         .header-left { display: flex; align-items: center; gap: 15px; }
-        .menu-btn { background: none; border: none; color: white; font-size: 22px; cursor: pointer; }
+        .menu-btn { background: none; border: none; color: white; font-size: 24px; cursor: pointer; }
         .logo { font-size: 22px; font-weight: 800; font-family: 'Inter', sans-serif; color: #fff; cursor: pointer; }
         .logo span { color: var(--primary); text-shadow: 0 0 10px var(--primary-glow); }
 
-        .search-bar { flex: 1; max-width: 450px; position: relative; }
+        /* Advanced Glassy Search Bar */
+        .search-bar { flex: 1; max-width: 420px; position: relative; }
         .search-bar input {
-            width: 100%; padding: 10px 18px; background: var(--glass-bg);
+            width: 100%; padding: 10px 20px; background: var(--glass-bg);
             border: 1px solid var(--glass-border); border-radius: 30px; color: white; outline: none; font-size: 14px;
+            backdrop-filter: blur(10px);
         }
         .search-bar input:focus { border-color: var(--primary); box-shadow: 0 0 15px var(--primary-glow); }
 
-        .header-right { display: flex; align-items: center; gap: 15px; }
-        .cart-icon-btn { position: relative; background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 8px 12px; border-radius: 20px; cursor: pointer; color: white; }
+        .header-right { display: flex; align-items: center; gap: 12px; }
+        .cart-icon-btn { position: relative; background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 8px 14px; border-radius: 20px; cursor: pointer; color: white; }
         .cart-count { position: absolute; top: -6px; right: -6px; background: #ef4444; color: white; font-size: 11px; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
 
-        /* User Profile Dropdown */
-        .user-menu { position: relative; }
+        /* Language Toggle Switch */
+        .lang-switch {
+            background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px;
+            padding: 2px 4px; display: flex; cursor: pointer; font-size: 12px; font-weight: 600;
+        }
+        .lang-btn { padding: 4px 8px; border-radius: 16px; color: #94a3b8; }
+        .lang-btn.active { background: var(--primary); color: white; box-shadow: 0 0 10px var(--primary-glow); }
+
         .btn-auth { background: var(--primary); border: none; padding: 8px 16px; border-radius: 20px; color: white; font-weight: 600; cursor: pointer; }
-        .btn-auth:hover { transform: scale(1.05); box-shadow: 0 0 15px var(--primary-glow); }
 
-        /* Slide Menu (Mobile Drawer) */
-        .side-drawer {
-            position: fixed; top: 0; left: -300px; width: 280px; height: 100%;
-            background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(20px); border-right: 1px solid var(--glass-border);
-            z-index: 2000; padding: 25px 20px; display: flex; flex-direction: column; gap: 20px;
+        /* Drawers */
+        .side-drawer, .cart-drawer {
+            position: fixed; top: 0; width: 300px; height: 100%;
+            background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(25px); border: 1px solid var(--glass-border);
+            z-index: 2000; padding: 25px 20px; display: flex; flex-direction: column; transition: all 0.3s ease;
         }
+        .side-drawer { left: -320px; }
         .side-drawer.active { left: 0; }
-        .drawer-close { align-self: flex-end; background: none; border: none; color: white; font-size: 20px; cursor: pointer; }
-
-        /* Slide Cart Drawer */
-        .cart-drawer {
-            position: fixed; top: 0; right: -380px; width: 350px; height: 100%;
-            background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(25px); border-left: 1px solid var(--glass-border);
-            z-index: 2000; padding: 25px; display: flex; flex-direction: column;
-        }
+        .cart-drawer { right: -320px; }
         .cart-drawer.active { right: 0; }
-        .cart-items { flex: 1; overflow-y: auto; margin: 20px 0; }
-        .cart-item { display: flex; justify-content: space-between; align-items: center; background: var(--glass-bg); padding: 10px; border-radius: 8px; margin-bottom: 10px; }
+        .drawer-close { align-self: flex-end; background: none; border: none; color: white; font-size: 22px; cursor: pointer; }
 
-        /* Hero Banner & Layout */
-        .hero { text-align: center; padding: 60px 20px; background: radial-gradient(circle at center, rgba(99, 102, 241, 0.15), transparent 70%); }
-        .hero h1 { font-size: 32px; font-weight: 700; margin-bottom: 10px; }
-        
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        .grid-products { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
-
-        /* Glass Product Cards */
-        .card {
-            background: var(--glass-card); backdrop-filter: blur(12px); border: 1px solid var(--glass-border);
-            border-radius: 16px; padding: 15px; position: relative; overflow: hidden;
+        /* Auto Swipe Hero Slider */
+        .hero-slider-container {
+            position: relative; max-width: 1200px; margin: 20px auto; border-radius: 20px; overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid var(--glass-border);
         }
-        .card:hover { transform: translateY(-8px); border-color: var(--primary); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); }
+        .slider-wrapper { display: flex; transition: transform 0.5s ease-in-out; }
+        .slide { min-width: 100%; position: relative; height: 260px; }
+        .slide img { width: 100%; height: 100%; object-fit: cover; }
+        .slide-overlay {
+            position: absolute; bottom: 0; left: 0; width: 100%; padding: 20px;
+            background: linear-gradient(transparent, rgba(11, 15, 25, 0.9)); text-align: center;
+        }
+
+        /* Container & Smart Products Grid */
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .grid-products { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+
+        /* Ultra Smart Product Cards */
+        .card {
+            background: var(--glass-card); backdrop-filter: blur(16px); border: 1px solid var(--glass-border);
+            border-radius: 18px; padding: 15px; position: relative; overflow: hidden; text-align: center;
+            display: flex; flex-direction: column; justify-content: space-between;
+        }
+        .card:hover { transform: translateY(-8px) scale(1.02); border-color: var(--primary); box-shadow: 0 15px 30px rgba(0,0,0,0.4); }
         .card img { width: 100%; height: 180px; object-fit: cover; border-radius: 12px; margin-bottom: 12px; }
-        .card-title { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
-        .card-price { color: var(--primary); font-size: 18px; font-weight: 700; margin-bottom: 12px; }
+        .card h4 { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+        .card-price { color: var(--primary); font-size: 20px; font-weight: 700; margin-bottom: 12px; }
 
-        .btn-action { width: 100%; padding: 10px; background: var(--primary); border: none; border-radius: 8px; color: white; font-weight: 600; cursor: pointer; }
-        .btn-action:hover { opacity: 0.9; }
+        .btn-action { width: 100%; padding: 10px; background: var(--primary); border: none; border-radius: 10px; color: white; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px var(--primary-glow); }
+        .btn-action:hover { opacity: 0.9; transform: scale(0.98); }
 
-        /* Glass Modal */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(10px); justify-content: center; align-items: center; z-index: 3000; }
-        .modal-box { background: rgba(30, 41, 59, 0.9); border: 1px solid var(--glass-border); padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; font-size: 13px; margin-bottom: 5px; color: #cbd5e1; }
-        .form-group input, .form-group select { width: 100%; padding: 10px; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 8px; color: white; outline: none; }
+        /* Modals */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(12px); justify-content: center; align-items: center; z-index: 4000; }
+        .modal-box { background: rgba(30, 41, 59, 0.95); border: 1px solid var(--glass-border); padding: 25px; border-radius: 20px; width: 90%; max-width: 420px; text-align: center; position: relative; }
+        .modal-close-btn { position: absolute; top: 12px; right: 15px; background: none; border: none; color: white; font-size: 20px; cursor: pointer; }
+
+        @media (max-width: 768px) {
+            header { padding: 10px 3%; }
+            .slide { height: 180px; }
+            .search-bar { max-width: 180px; }
+            .grid-products { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+            .card img { height: 130px; }
+        }
     </style>
 </head>
 <body>
@@ -105,109 +122,74 @@
         </div>
 
         <div class="search-bar">
-            <input type="text" id="search-input" placeholder="পছন্দের পণ্য সার্চ করুন..." onkeyup="searchProducts()">
+            <input type="text" id="search-input" placeholder="সার্চ করুন..." onkeyup="searchProducts()">
         </div>
 
         <div class="header-right">
-            <button class="cart-icon-btn" onclick="toggleDrawer('cart-drawer')">
-                🛒 Cart <span class="cart-count" id="cart-count">0</span>
-            </button>
-            <div class="user-menu">
-                <button id="auth-btn" class="btn-auth" onclick="openAuthModal()">Login / Sign Up</button>
+            <div class="lang-switch" onclick="toggleLanguage()">
+                <div class="lang-btn active" id="lang-bn">BNG</div>
+                <div class="lang-btn" id="lang-en">ENG</div>
             </div>
+            <button class="cart-icon-btn" onclick="toggleDrawer('cart-drawer')">🛒 <span class="cart-count" id="cart-count">0</span></button>
+            <button id="auth-btn" class="btn-auth" onclick="openAuthModal()">Login</button>
         </div>
     </header>
 
     <div class="side-drawer" id="side-drawer">
         <button class="drawer-close" onclick="toggleDrawer('side-drawer')">✕</button>
-        <h2>Menu</h2>
-        <a href="#" style="color:white; text-decoration:none;">Home</a>
-        <a href="#products" style="color:white; text-decoration:none;">All Products</a>
-        <a href="#categories" style="color:white; text-decoration:none;">Categories</a>
+        <h2 style="border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; margin-bottom: 15px;">Menu</h2>
+        <a href="#" style="color:white; text-decoration:none; margin-bottom:10px; display:block;">🏠 Home</a>
+        <a href="#products" style="color:white; text-decoration:none; margin-bottom:10px; display:block;">🛍️ All Products</a>
     </div>
 
     <div class="cart-drawer" id="cart-drawer">
         <div style="display:flex; justify-content:space-between; align-items:center;">
-            <h3>Your Cart</h3>
+            <h3 id="txt-cart-title">Your Cart</h3>
             <button class="drawer-close" onclick="toggleDrawer('cart-drawer')">✕</button>
         </div>
-        <div class="cart-items" id="cart-items">
-            <p style="color:#94a3b8;">কার্ট খালি রয়েছে</p>
-        </div>
-        <button class="btn-action" onclick="openCheckoutFromCart()">Checkout Now</button>
+        <div class="cart-items" id="cart-items" style="flex:1; margin: 15px 0;"><p style="color:#94a3b8;">কার্ট খালি রয়েছে</p></div>
+        <button class="btn-action" onclick="proceedToCheckout()">Checkout Now</button>
     </div>
 
-    <section class="hero">
-        <h1 id="hero-banner-text">আপনার প্রয়োজনীয় সব কেনাকাটা এক জায়গায়</h1>
-    </section>
+    <div id="event-modal" class="modal">
+        <div class="modal-box">
+            <button class="modal-close-btn" onclick="closeModal('event-modal')">✕</button>
+            <h2 style="color:var(--primary); margin-bottom:10px;">🎉 স্পেশাল অফার! 🎉</h2>
+            <p id="event-desc" style="font-size:14px; color:#cbd5e1; margin-bottom:15px;">আজকের কেনাকাটায় পাচ্ছেন বিশেষ ডিসকাউন্ট!</p>
+            <button class="btn-action" onclick="closeModal('event-modal')">শপিং করুন</button>
+        </div>
+    </div>
+
+    <div class="hero-slider-container">
+        <div class="slider-wrapper" id="slider-wrapper">
+            <div class="slide">
+                <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=1200" alt="Banner">
+                <div class="slide-overlay"><h2 id="hero-banner-text">বিশেষ ছাড় চলছে!</h2></div>
+            </div>
+        </div>
+    </div>
 
     <div class="container" id="products">
-        <h2 style="margin-bottom:20px;">প্রোডাক্টস</h2>
-        <div id="product-list" class="grid-products">
-            <p style="color:#94a3b8;">প্রোডাক্ট লোড হচ্ছে...</p>
-        </div>
+        <h2 id="txt-sec-prod" style="margin-bottom:15px;">সকল প্রোডাক্টস</h2>
+        <div id="product-list" class="grid-products"></div>
     </div>
 
     <div id="auth-modal" class="modal">
         <div class="modal-box">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                <h3 id="auth-title">Sign In</h3>
-                <span style="cursor:pointer;" onclick="closeModal('auth-modal')">✕</span>
-            </div>
+            <button class="modal-close-btn" onclick="closeModal('auth-modal')">✕</button>
+            <h3 id="auth-title" style="margin-bottom:15px;">লগইন করুন</h3>
             <form id="auth-form">
-                <div class="form-group">
-                    <label>ইমেইল</label>
-                    <input type="email" id="auth-email" required>
-                </div>
-                <div class="form-group">
-                    <label>পাসওয়ার্ড</label>
-                    <input type="password" id="auth-pass" required>
-                </div>
+                <input type="email" id="auth-email" placeholder="ইমেইল" style="width:100%; padding:10px; margin-bottom:10px; background:var(--glass-bg); border:1px solid var(--glass-border); border-radius:8px; color:white;" required>
+                <input type="password" id="auth-pass" placeholder="পাসওয়ার্ড" style="width:100%; padding:10px; margin-bottom:10px; background:var(--glass-bg); border:1px solid var(--glass-border); border-radius:8px; color:white;" required>
                 <button type="submit" class="btn-action" id="auth-submit-btn">Login</button>
             </form>
-            <button class="btn-action" style="background:#4285F4; margin-top:10px;" onclick="googleLogin()">Continue with Google</button>
-            <p style="font-size:12px; margin-top:10px; text-align:center; cursor:pointer; color:#94a3b8;" onclick="toggleAuthMode()">নতুন অ্যাকাউন্ট খুলতে চান? Sign Up করুন</p>
-        </div>
-    </div>
-
-    <div id="order-modal" class="modal">
-        <div class="modal-box">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                <h3>অর্ডার কনফার্ম করুন</h3>
-                <span style="cursor:pointer;" onclick="closeModal('order-modal')">✕</span>
-            </div>
-            <form id="checkout-form">
-                <input type="hidden" id="order-prod-title">
-                <input type="hidden" id="order-prod-price">
-                <div class="form-group">
-                    <label>আপনার নাম</label>
-                    <input type="text" id="cust-name" required>
-                </div>
-                <div class="form-group">
-                    <label>মোবাইল নম্বর</label>
-                    <input type="tel" id="cust-phone" required>
-                </div>
-                <div class="form-group">
-                    <label>ঠিকানা</label>
-                    <input type="text" id="cust-address" required>
-                </div>
-                <div class="form-group">
-                    <label>পেমেন্ট মেথড</label>
-                    <select id="payment-method">
-                        <option value="Cash on Delivery">ক্যাশ অন ডেলিভারি (COD)</option>
-                        <option value="bKash">বিকাশ</option>
-                        <option value="Nagad">নগদ</option>
-                    </select>
-                </div>
-                <div id="payment-instructions" style="font-size:12px; color:#cbd5e1; margin-bottom:10px;"></div>
-                <button type="submit" class="btn-action">অর্ডার প্লেস করুন</button>
-            </form>
+            <button class="btn-action" style="background:#4285F4; margin-top:10px;" onclick="googleLogin()">Google দিয়ে সাইন-ইন</button>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, addDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         const firebaseConfig = {
@@ -223,99 +205,91 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
-        let currentUser = null;
-        let isSignUp = false;
 
-        // Settings Sync
-        onSnapshot(doc(db, "settings", "site_config"), (snap) => {
-            if(snap.exists()){
-                const data = snap.data();
-                if(data.site_name) document.getElementById('site-logo').innerHTML = data.site_name;
-                if(data.hero_banner) document.getElementById('hero-banner-text').innerText = data.hero_banner;
-                if(data.payment_info) document.getElementById('payment-instructions').innerText = data.payment_info;
+        onAuthStateChanged(auth, (user) => {
+            window.currentUser = user;
+            const btn = document.getElementById('auth-btn');
+            if(user) {
+                btn.innerText = 'Logout';
+                btn.onclick = () => signOut(auth);
+            } else {
+                btn.innerText = 'Login';
+                btn.onclick = () => window.openAuthModal();
+            }
+        });
+
+        window.googleLogin = async () => {
+            try { await signInWithPopup(auth, new GoogleAuthProvider()); window.closeModal('auth-modal'); } catch(e) { alert(e.message); }
+        };
+
+        // Load Dynamic Banners
+        onSnapshot(collection(db, "banners"), (snap) => {
+            const wrapper = document.getElementById('slider-wrapper');
+            if(!snap.empty) {
+                wrapper.innerHTML = '';
+                snap.forEach(d => {
+                    const b = d.data();
+                    wrapper.innerHTML += `
+                        <div class="slide">
+                            <img src="${b.image}" alt="Banner">
+                            <div class="slide-overlay"><h2>${b.title || ''}</h2></div>
+                        </div>
+                    `;
+                });
             }
         });
 
         // Load Products
-        onSnapshot(collection(db, "products"), (snapshot) => {
+        onSnapshot(collection(db, "products"), (snap) => {
             const list = document.getElementById('product-list');
             list.innerHTML = '';
-            snapshot.forEach(d => {
+            snap.forEach(d => {
                 const p = d.data();
                 list.innerHTML += `
                     <div class="card" data-title="${p.title_bn}">
                         <img src="${p.image}">
-                        <div class="card-title">${p.title_bn}</div>
+                        <h4>${p.title_bn}</h4>
                         <div class="card-price">৳${p.price}</div>
                         <button class="btn-action" onclick="addToCart('${p.title_bn}', ${p.price})">Add to Cart</button>
                     </div>
                 `;
             });
         });
-
-        // Auth Logic
-        onAuthStateChanged(auth, (user) => {
-            currentUser = user;
-            const btn = document.getElementById('auth-btn');
-            if(user) {
-                btn.innerText = 'Logout';
-                btn.onclick = () => signOut(auth);
-            } else {
-                btn.innerText = 'Login / Sign Up';
-                btn.onclick = () => window.openAuthModal();
-            }
-        });
-
-        window.googleLogin = () => signInWithPopup(auth, new GoogleAuthProvider());
-        
-        document.getElementById('auth-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('auth-email').value;
-            const pass = document.getElementById('auth-pass').value;
-            try {
-                if(isSignUp) {
-                    await createUserWithEmailAndPassword(auth, email, pass);
-                    alert('অ্যাকাউন্ট তৈরি সফল হয়েছে!');
-                } else {
-                    await signInWithEmailAndPassword(auth, email, pass);
-                    alert('লগইন সফল হয়েছে!');
-                }
-                window.closeModal('auth-modal');
-            } catch(err) { alert(err.message); }
-        });
-
-        window.toggleAuthMode = () => {
-            isSignUp = !isSignUp;
-            document.getElementById('auth-title').innerText = isSignUp ? 'Sign Up' : 'Sign In';
-            document.getElementById('auth-submit-btn').innerText = isSignUp ? 'Register' : 'Login';
-        };
-
-        // Checkout
-        document.getElementById('checkout-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            await addDoc(collection(db, "orders"), {
-                product: document.getElementById('order-prod-title').value,
-                price: document.getElementById('order-prod-price').value,
-                customer_name: document.getElementById('cust-name').value,
-                phone: document.getElementById('cust-phone').value,
-                address: document.getElementById('cust-address').value,
-                payment: document.getElementById('payment-method').value,
-                date: new Date().toLocaleString()
-            });
-            alert('অর্ডার সম্পন্ন হয়েছে!');
-            window.closeModal('order-modal');
-        });
     </script>
 
     <script>
-        let cart = [];
+        window.cart = [];
+        let currentLang = 'BNG';
+        let slideIndex = 0;
+
+        setInterval(() => {
+            const wrapper = document.getElementById('slider-wrapper');
+            const totalSlides = wrapper.children.length;
+            if(totalSlides > 1) {
+                slideIndex = (slideIndex + 1) % totalSlides;
+                wrapper.style.transform = `translateX(-${slideIndex * 100}%)`;
+            }
+        }, 3500);
+
+        window.onload = () => { setTimeout(() => { document.getElementById('event-modal').style.display = 'flex'; }, 800); };
+
         function toggleDrawer(id) { document.getElementById(id).classList.toggle('active'); }
         function openAuthModal() { document.getElementById('auth-modal').style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-        
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'BNG' ? 'ENG' : 'BNG';
+            document.getElementById('lang-bn').classList.toggle('active', currentLang === 'BNG');
+            document.getElementById('lang-en').classList.toggle('active', currentLang === 'ENG');
+
+            document.getElementById('txt-sec-prod').innerText = currentLang === 'ENG' ? "All Products" : "সকল প্রোডাক্টস";
+            document.getElementById('txt-cart-title').innerText = currentLang === 'ENG' ? "Your Cart" : "আপনার কার্ট";
+            document.getElementById('search-input').placeholder = currentLang === 'ENG' ? "Search items..." : "সার্চ করুন...";
+        }
+
         function addToCart(title, price) {
-            cart.push({title, price});
-            document.getElementById('cart-count').innerText = cart.length;
+            window.cart.push({title, price});
+            document.getElementById('cart-count').innerText = window.cart.length;
             renderCart();
             toggleDrawer('cart-drawer');
         }
@@ -323,25 +297,17 @@
         function renderCart() {
             const list = document.getElementById('cart-items');
             list.innerHTML = '';
-            cart.forEach((item) => {
-                list.innerHTML += `<div class="cart-item"><span>${item.title}</span> <b>৳${item.price}</b></div>`;
+            window.cart.forEach((item) => {
+                list.innerHTML += `<div style="display:flex; justify-content:space-between; margin-bottom:8px; padding:8px; background:var(--glass-bg); border-radius:6px;"><span>${item.title}</span><b>৳${item.price}</b></div>`;
             });
-        }
-
-        function openCheckoutFromCart() {
-            if(cart.length === 0) return alert('কার্ট খালি!');
-            document.getElementById('order-prod-title').value = cart.map(i => i.title).join(', ');
-            document.getElementById('order-prod-price').value = cart.reduce((a, b) => a + b.price, 0);
-            toggleDrawer('cart-drawer');
-            document.getElementById('order-modal').style.display = 'flex';
         }
 
         function searchProducts() {
             const q = document.getElementById('search-input').value.toLowerCase();
             document.querySelectorAll('.card').forEach(c => {
-                c.style.display = c.getAttribute('data-title').toLowerCase().includes(q) ? 'block' : 'none';
+                c.style.display = c.getAttribute('data-title').toLowerCase().includes(q) ? 'flex' : 'none';
             });
         }
     </script>
 </body>
-</html>
+                                                                                       </html>
