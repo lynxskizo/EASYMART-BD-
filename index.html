@@ -3,311 +3,253 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="site-title">EASYMART BD - Premium Store</title>
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>ZenX Style Digital Store</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #6366f1;
-            --primary-glow: rgba(99, 102, 241, 0.4);
-            --glass-bg: rgba(255, 255, 255, 0.08);
-            --glass-border: rgba(255, 255, 255, 0.15);
-            --glass-card: rgba(30, 41, 59, 0.65);
-            --bg-color: #0b0f19;
-            --text-color: #f8fafc;
+            --primary: #059669;
+            --primary-light: #e6f4ea;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
-        html { scroll-behavior: smooth; }
-        body { background: var(--bg-color); color: var(--text-color); font-family: 'Hind Siliguri', 'Inter', sans-serif; overflow-x: hidden; min-height: 100vh; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg-color); color: var(--text-main); padding-bottom: 70px; }
 
-        /* Glass Header */
+        /* Top Header */
         header {
-            position: sticky; top: 0; z-index: 1000;
-            background: rgba(11, 15, 25, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--glass-border); padding: 12px 5%;
-            display: flex; justify-content: space-between; align-items: center; gap: 15px;
+            position: sticky; top: 0; z-index: 100;
+            background: #ffffff; border-bottom: 1px solid var(--border);
+            padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px;
         }
+        .header-left { display: flex; align-items: center; gap: 12px; }
+        .icon-btn { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text-main); padding: 4px; }
+        
+        .brand-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+        .logo-icon { width: 32px; height: 32px; background: #10b981; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 18px; }
+        .logo-text { display: flex; flex-direction: column; }
+        .logo-title { font-weight: 800; font-size: 16px; color: #0f172a; line-height: 1; }
+        .logo-sub { font-size: 10px; color: #059669; font-weight: 700; letter-spacing: 0.5px; margin-top: 2px; }
 
-        .header-left { display: flex; align-items: center; gap: 15px; }
-        .menu-btn { background: none; border: none; color: white; font-size: 24px; cursor: pointer; }
-        .logo { font-size: 22px; font-weight: 800; font-family: 'Inter', sans-serif; color: #fff; cursor: pointer; }
-        .logo span { color: var(--primary); text-shadow: 0 0 10px var(--primary-glow); }
-
-        /* Advanced Glassy Search Bar */
-        .search-bar { flex: 1; max-width: 420px; position: relative; }
-        .search-bar input {
-            width: 100%; padding: 10px 20px; background: var(--glass-bg);
-            border: 1px solid var(--glass-border); border-radius: 30px; color: white; outline: none; font-size: 14px;
-            backdrop-filter: blur(10px);
+        /* Search Section */
+        .search-container { padding: 12px 16px; background: #fff; border-bottom: 1px solid var(--border); }
+        .search-box {
+            display: flex; align-items: center; gap: 8px; background: #f1f5f9;
+            border: 1px solid var(--border); border-radius: 12px; padding: 10px 14px;
         }
-        .search-bar input:focus { border-color: var(--primary); box-shadow: 0 0 15px var(--primary-glow); }
+        .search-box input { border: none; background: none; outline: none; width: 100%; font-size: 14px; color: var(--text-main); }
 
-        .header-right { display: flex; align-items: center; gap: 12px; }
-        .cart-icon-btn { position: relative; background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 8px 14px; border-radius: 20px; cursor: pointer; color: white; }
-        .cart-count { position: absolute; top: -6px; right: -6px; background: #ef4444; color: white; font-size: 11px; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
-
-        /* Language Toggle Switch */
-        .lang-switch {
-            background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px;
-            padding: 2px 4px; display: flex; cursor: pointer; font-size: 12px; font-weight: 600;
+        /* Category Chips Bar */
+        .chips-container { display: flex; gap: 8px; overflow-x: auto; padding: 16px; scrollbar-width: none; }
+        .chips-container::-webkit-scrollbar { display: none; }
+        .chip {
+            padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600;
+            white-space: nowrap; cursor: pointer; border: 1px solid var(--border); background: #fff; color: var(--text-main);
         }
-        .lang-btn { padding: 4px 8px; border-radius: 16px; color: #94a3b8; }
-        .lang-btn.active { background: var(--primary); color: white; box-shadow: 0 0 10px var(--primary-glow); }
+        .chip.active { background: #0f172a; color: white; border-color: #0f172a; }
 
-        .btn-auth { background: var(--primary); border: none; padding: 8px 16px; border-radius: 20px; color: white; font-weight: 600; cursor: pointer; }
+        /* Slider Banner Placeholder */
+        .banner-slider { margin: 0 16px 16px 16px; height: 160px; background: #e2e8f0; border-radius: 16px; position: relative; overflow: hidden; }
+        .banner-dots { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; }
+        .dot { width: 8px; height: 4px; background: rgba(255,255,255,0.5); border-radius: 2px; }
+        .dot.active { width: 16px; background: white; }
 
-        /* Drawers */
-        .side-drawer, .cart-drawer {
-            position: fixed; top: 0; width: 300px; height: 100%;
-            background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(25px); border: 1px solid var(--glass-border);
-            z-index: 2000; padding: 25px 20px; display: flex; flex-direction: column; transition: all 0.3s ease;
+        /* Products Grid */
+        .section-title { padding: 0 16px 12px 16px; font-size: 18px; font-weight: 800; display: flex; justify-content: space-between; align-items: center; }
+        .grid-products { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 0 16px; }
+
+        /* Product Card */
+        .prod-card {
+            background: #fff; border: 1px solid var(--border); border-radius: 16px;
+            padding: 10px; position: relative; display: flex; flex-direction: column; justify-content: space-between;
         }
-        .side-drawer { left: -320px; }
-        .side-drawer.active { left: 0; }
-        .cart-drawer { right: -320px; }
-        .cart-drawer.active { right: 0; }
-        .drawer-close { align-self: flex-end; background: none; border: none; color: white; font-size: 22px; cursor: pointer; }
-
-        /* Auto Swipe Hero Slider */
-        .hero-slider-container {
-            position: relative; max-width: 1200px; margin: 20px auto; border-radius: 20px; overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid var(--glass-border);
+        .discount-tag {
+            position: absolute; top: 10px; left: 10px; background: #ef4444;
+            color: white; font-size: 10px; font-weight: 800; padding: 3px 6px; border-radius: 6px; z-index: 2;
         }
-        .slider-wrapper { display: flex; transition: transform 0.5s ease-in-out; }
-        .slide { min-width: 100%; position: relative; height: 260px; }
-        .slide img { width: 100%; height: 100%; object-fit: cover; }
-        .slide-overlay {
-            position: absolute; bottom: 0; left: 0; width: 100%; padding: 20px;
-            background: linear-gradient(transparent, rgba(11, 15, 25, 0.9)); text-align: center;
+        .prod-img { width: 100%; height: 120px; object-fit: cover; border-radius: 10px; background: #f1f5f9; margin-bottom: 8px; }
+        .prod-title { font-size: 14px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; }
+        .rating-badge { display: inline-flex; align-items: center; gap: 2px; background: #fffbe3; border: 1px solid #fef08a; padding: 2px 6px; border-radius: 6px; font-size: 10px; font-weight: 700; color: #b45309; }
+
+        /* Floating Purchase Toast */
+        .toast-notify {
+            position: fixed; bottom: 80px; left: 16px; right: 16px;
+            background: #ffffff; border: 1px solid var(--border); box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            border-radius: 14px; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+            animation: slideUp 0.4s ease; z-index: 90;
         }
+        .toast-icon { width: 36px; height: 36px; background: var(--primary-light); color: var(--primary); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        .toast-info { flex: 1; font-size: 12px; }
+        .toast-info strong { color: var(--text-main); font-weight: 700; }
+        .toast-info p { color: var(--text-muted); font-size: 11px; margin-top: 2px; }
 
-        /* Container & Smart Products Grid */
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        .grid-products { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+        /* Tabbed Side Drawer Menu */
+        .drawer-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 200; }
+        .drawer-content { position: fixed; top: 0; left: -300px; width: 280px; height: 100%; background: #fff; z-index: 201; transition: 0.3s ease; display: flex; flex-direction: column; }
+        .drawer-content.active { left: 0; }
+        .drawer-header { padding: 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .drawer-tabs { display: flex; border-bottom: 1px solid var(--border); }
+        .tab-btn { flex: 1; padding: 12px; text-align: center; font-size: 14px; font-weight: 700; color: var(--text-muted); border: none; background: none; cursor: pointer; }
+        .tab-btn.active { color: var(--primary); border-bottom: 2px solid var(--primary); }
+        .drawer-body { flex: 1; overflow-y: auto; padding: 12px 0; }
+        .menu-link { display: flex; align-items: center; gap: 12px; padding: 12px 20px; color: var(--text-main); text-decoration: none; font-size: 14px; font-weight: 600; }
+        .menu-link:hover { background: #f8fafc; }
 
-        /* Ultra Smart Product Cards */
-        .card {
-            background: var(--glass-card); backdrop-filter: blur(16px); border: 1px solid var(--glass-border);
-            border-radius: 18px; padding: 15px; position: relative; overflow: hidden; text-align: center;
-            display: flex; flex-direction: column; justify-content: space-between;
+        /* Bottom Fixed Navigation */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; width: 100%; background: #ffffff;
+            border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 8px 0; z-index: 100;
         }
-        .card:hover { transform: translateY(-8px) scale(1.02); border-color: var(--primary); box-shadow: 0 15px 30px rgba(0,0,0,0.4); }
-        .card img { width: 100%; height: 180px; object-fit: cover; border-radius: 12px; margin-bottom: 12px; }
-        .card h4 { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
-        .card-price { color: var(--primary); font-size: 20px; font-weight: 700; margin-bottom: 12px; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 10px; color: var(--text-muted); text-decoration: none; font-weight: 600; gap: 2px; }
+        .nav-item.active { color: var(--primary); }
+        .nav-item span { font-size: 18px; }
 
-        .btn-action { width: 100%; padding: 10px; background: var(--primary); border: none; border-radius: 10px; color: white; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px var(--primary-glow); }
-        .btn-action:hover { opacity: 0.9; transform: scale(0.98); }
-
-        /* Modals */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(12px); justify-content: center; align-items: center; z-index: 4000; }
-        .modal-box { background: rgba(30, 41, 59, 0.95); border: 1px solid var(--glass-border); padding: 25px; border-radius: 20px; width: 90%; max-width: 420px; text-align: center; position: relative; }
-        .modal-close-btn { position: absolute; top: 12px; right: 15px; background: none; border: none; color: white; font-size: 20px; cursor: pointer; }
-
-        @media (max-width: 768px) {
-            header { padding: 10px 3%; }
-            .slide { height: 180px; }
-            .search-bar { max-width: 180px; }
-            .grid-products { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
-            .card img { height: 130px; }
-        }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     </style>
 </head>
 <body>
 
     <header>
         <div class="header-left">
-            <button class="menu-btn" onclick="toggleDrawer('side-drawer')">☰</button>
-            <div class="logo" id="site-logo">EASYMART <span>BD</span></div>
+            <button class="icon-btn" onclick="toggleDrawer()">☰</button>
+            <a href="#" class="brand-logo">
+                <div class="logo-icon">⚡</div>
+                <div class="logo-text">
+                    <span class="logo-title">ZenX BD</span>
+                    <span class="logo-sub">DIGITAL STORE</span>
+                </div>
+            </a>
         </div>
-
-        <div class="search-bar">
-            <input type="text" id="search-input" placeholder="সার্চ করুন..." onkeyup="searchProducts()">
-        </div>
-
-        <div class="header-right">
-            <div class="lang-switch" onclick="toggleLanguage()">
-                <div class="lang-btn active" id="lang-bn">BNG</div>
-                <div class="lang-btn" id="lang-en">ENG</div>
-            </div>
-            <button class="cart-icon-btn" onclick="toggleDrawer('cart-drawer')">🛒 <span class="cart-count" id="cart-count">0</span></button>
-            <button id="auth-btn" class="btn-auth" onclick="openAuthModal()">Login</button>
+        <div style="display:flex; gap:8px;">
+            <button class="icon-btn" style="background:#f1f5f9; border-radius:50%; width:36px; height:36px;">👤</button>
+            <button class="icon-btn" style="background:#f1f5f9; border-radius:50%; width:36px; height:36px; position:relative;">🛒</button>
         </div>
     </header>
 
-    <div class="side-drawer" id="side-drawer">
-        <button class="drawer-close" onclick="toggleDrawer('side-drawer')">✕</button>
-        <h2 style="border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; margin-bottom: 15px;">Menu</h2>
-        <a href="#" style="color:white; text-decoration:none; margin-bottom:10px; display:block;">🏠 Home</a>
-        <a href="#products" style="color:white; text-decoration:none; margin-bottom:10px; display:block;">🛍️ All Products</a>
-    </div>
-
-    <div class="cart-drawer" id="cart-drawer">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-            <h3 id="txt-cart-title">Your Cart</h3>
-            <button class="drawer-close" onclick="toggleDrawer('cart-drawer')">✕</button>
-        </div>
-        <div class="cart-items" id="cart-items" style="flex:1; margin: 15px 0;"><p style="color:#94a3b8;">কার্ট খালি রয়েছে</p></div>
-        <button class="btn-action" onclick="proceedToCheckout()">Checkout Now</button>
-    </div>
-
-    <div id="event-modal" class="modal">
-        <div class="modal-box">
-            <button class="modal-close-btn" onclick="closeModal('event-modal')">✕</button>
-            <h2 style="color:var(--primary); margin-bottom:10px;">🎉 স্পেশাল অফার! 🎉</h2>
-            <p id="event-desc" style="font-size:14px; color:#cbd5e1; margin-bottom:15px;">আজকের কেনাকাটায় পাচ্ছেন বিশেষ ডিসকাউন্ট!</p>
-            <button class="btn-action" onclick="closeModal('event-modal')">শপিং করুন</button>
+    <div class="search-container">
+        <div class="search-box">
+            <span>🔍</span>
+            <input type="text" id="search-input" placeholder="Search products..." onkeyup="filterItems()">
         </div>
     </div>
 
-    <div class="hero-slider-container">
-        <div class="slider-wrapper" id="slider-wrapper">
-            <div class="slide">
-                <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=1200" alt="Banner">
-                <div class="slide-overlay"><h2 id="hero-banner-text">বিশেষ ছাড় চলছে!</h2></div>
+    <div style="padding-top: 12px;">
+        <div class="banner-slider">
+            <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800" style="width:100%; height:100%; object-fit:cover;">
+            <div class="banner-dots">
+                <div class="dot active"></div>
+                <div class="dot"></div>
             </div>
         </div>
     </div>
 
-    <div class="container" id="products">
-        <h2 id="txt-sec-prod" style="margin-bottom:15px;">সকল প্রোডাক্টস</h2>
-        <div id="product-list" class="grid-products"></div>
+    <div class="chips-container">
+        <div class="chip active">All</div>
+        <div class="chip">🤖 AI Subscriptions</div>
+        <div class="chip">📺 Streaming</div>
+        <div class="chip">💻 Software</div>
+        <div class="chip">🎁 Gift Cards</div>
+        <div class="chip">🎮 Game Top-ups</div>
     </div>
 
-    <div id="auth-modal" class="modal">
-        <div class="modal-box">
-            <button class="modal-close-btn" onclick="closeModal('auth-modal')">✕</button>
-            <h3 id="auth-title" style="margin-bottom:15px;">লগইন করুন</h3>
-            <form id="auth-form">
-                <input type="email" id="auth-email" placeholder="ইমেইল" style="width:100%; padding:10px; margin-bottom:10px; background:var(--glass-bg); border:1px solid var(--glass-border); border-radius:8px; color:white;" required>
-                <input type="password" id="auth-pass" placeholder="পাসওয়ার্ড" style="width:100%; padding:10px; margin-bottom:10px; background:var(--glass-bg); border:1px solid var(--glass-border); border-radius:8px; color:white;" required>
-                <button type="submit" class="btn-action" id="auth-submit-btn">Login</button>
-            </form>
-            <button class="btn-action" style="background:#4285F4; margin-top:10px;" onclick="googleLogin()">Google দিয়ে সাইন-ইন</button>
+    <div class="section-title">
+        <span>AI Subscriptions</span>
+        <span style="font-size:12px; color:var(--text-muted); cursor:pointer;">See all ›</span>
+    </div>
+
+    <div class="grid-products" id="product-container">
+        <div class="prod-card">
+            <span class="discount-tag">-39%</span>
+            <div class="prod-img"></div>
+            <div class="prod-title">Elevenlabs Pro</div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px;">
+                <span class="rating-badge">⭐ 4.5</span>
+                <strong style="font-size:13px; color:var(--primary);">৳250</strong>
+            </div>
+        </div>
+
+        <div class="prod-card">
+            <span class="discount-tag">-68%</span>
+            <div class="prod-img"></div>
+            <div class="prod-title">ChatGPT Plus</div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px;">
+                <span class="rating-badge">⭐ 4.8</span>
+                <strong style="font-size:13px; color:var(--primary);">৳450</strong>
+            </div>
         </div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    <div class="toast-notify" id="live-toast">
+        <div class="toast-icon">🛍️</div>
+        <div class="toast-info">
+            <strong>John D.</strong> bought Free Fire Level Up Pass
+            <p>4d ago</p>
+        </div>
+        <button style="background:none; border:none; color:#94a3b8; cursor:pointer;" onclick="document.getElementById('live-toast').style.display='none'">✕</button>
+    </div>
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyCnrZ8ZF8tGW2R5buFDsAeLHJlWHBwb9hw",
-            authDomain: "easy-mart-bd-16b7b.firebaseapp.com",
-            databaseURL: "https://easy-mart-bd-16b7b-default-rtdb.firebaseio.com",
-            projectId: "easy-mart-bd-16b7b",
-            storageBucket: "easy-mart-bd-16b7b.firebasestorage.app",
-            messagingSenderId: "421957488158",
-            appId: "1:421957488158:web:7d20d1f557ac6b06c9280f"
-        };
+    <div class="drawer-overlay" id="drawer-overlay" onclick="toggleDrawer()"></div>
+    <div class="drawer-content" id="drawer-content">
+        <div class="drawer-header">
+            <div class="brand-logo">
+                <div class="logo-icon">⚡</div>
+                <div class="logo-text"><span class="logo-title">ZenX BD</span></div>
+            </div>
+            <button class="icon-btn" onclick="toggleDrawer()">✕</button>
+        </div>
+        
+        <div class="drawer-tabs">
+            <button class="tab-btn" id="tab-cat" onclick="switchDrawerTab('category')">Category</button>
+            <button class="tab-btn active" id="tab-menu" onclick="switchDrawerTab('menu')">Menu</button>
+        </div>
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
+        <div class="drawer-body" id="drawer-body-menu">
+            <a href="#" class="menu-link">🏠 Home</a>
+            <a href="#" class="menu-link">📑 Catalog</a>
+            <a href="#" class="menu-link">🛒 Cart</a>
+            <a href="#" class="menu-link">⭐ Write a review</a>
+            <a href="#" class="menu-link">📦 Product requests</a>
+            <a href="#" class="menu-link">💬 Support</a>
+        </div>
 
-        onAuthStateChanged(auth, (user) => {
-            window.currentUser = user;
-            const btn = document.getElementById('auth-btn');
-            if(user) {
-                btn.innerText = 'Logout';
-                btn.onclick = () => signOut(auth);
-            } else {
-                btn.innerText = 'Login';
-                btn.onclick = () => window.openAuthModal();
-            }
-        });
+        <div class="drawer-body" id="drawer-body-category" style="display:none;">
+            <a href="#" class="menu-link">🤖 AI Subscriptions</a>
+            <a href="#" class="menu-link">📺 Streaming</a>
+            <a href="#" class="menu-link">💻 Software</a>
+            <a href="#" class="menu-link">🎁 Gift Cards</a>
+            <a href="#" class="menu-link">🎮 Game Top-ups</a>
+            <a href="#" class="menu-link">🌐 Google Services</a>
+            <a href="#" class="menu-link">📖 Education</a>
+            <a href="#" class="menu-link">🎨 Design & Creative</a>
+            <a href="#" class="menu-link">🛡️ VPN & Security</a>
+        </div>
+    </div>
 
-        window.googleLogin = async () => {
-            try { await signInWithPopup(auth, new GoogleAuthProvider()); window.closeModal('auth-modal'); } catch(e) { alert(e.message); }
-        };
-
-        // Load Dynamic Banners
-        onSnapshot(collection(db, "banners"), (snap) => {
-            const wrapper = document.getElementById('slider-wrapper');
-            if(!snap.empty) {
-                wrapper.innerHTML = '';
-                snap.forEach(d => {
-                    const b = d.data();
-                    wrapper.innerHTML += `
-                        <div class="slide">
-                            <img src="${b.image}" alt="Banner">
-                            <div class="slide-overlay"><h2>${b.title || ''}</h2></div>
-                        </div>
-                    `;
-                });
-            }
-        });
-
-        // Load Products
-        onSnapshot(collection(db, "products"), (snap) => {
-            const list = document.getElementById('product-list');
-            list.innerHTML = '';
-            snap.forEach(d => {
-                const p = d.data();
-                list.innerHTML += `
-                    <div class="card" data-title="${p.title_bn}">
-                        <img src="${p.image}">
-                        <h4>${p.title_bn}</h4>
-                        <div class="card-price">৳${p.price}</div>
-                        <button class="btn-action" onclick="addToCart('${p.title_bn}', ${p.price})">Add to Cart</button>
-                    </div>
-                `;
-            });
-        });
-    </script>
+    <div class="bottom-nav">
+        <a href="#" class="nav-item active"><span>🏠</span>Home</a>
+        <a href="#" class="nav-item"><span>🔍</span>Search</a>
+        <a href="#" class="nav-item"><span>🤍</span>Saved</a>
+        <a href="#" class="nav-item"><span>🛍️</span>Cart</a>
+        <a href="#" class="nav-item"><span>👤</span>Sign in</a>
+    </div>
 
     <script>
-        window.cart = [];
-        let currentLang = 'BNG';
-        let slideIndex = 0;
-
-        setInterval(() => {
-            const wrapper = document.getElementById('slider-wrapper');
-            const totalSlides = wrapper.children.length;
-            if(totalSlides > 1) {
-                slideIndex = (slideIndex + 1) % totalSlides;
-                wrapper.style.transform = `translateX(-${slideIndex * 100}%)`;
-            }
-        }, 3500);
-
-        window.onload = () => { setTimeout(() => { document.getElementById('event-modal').style.display = 'flex'; }, 800); };
-
-        function toggleDrawer(id) { document.getElementById(id).classList.toggle('active'); }
-        function openAuthModal() { document.getElementById('auth-modal').style.display = 'flex'; }
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-
-        function toggleLanguage() {
-            currentLang = currentLang === 'BNG' ? 'ENG' : 'BNG';
-            document.getElementById('lang-bn').classList.toggle('active', currentLang === 'BNG');
-            document.getElementById('lang-en').classList.toggle('active', currentLang === 'ENG');
-
-            document.getElementById('txt-sec-prod').innerText = currentLang === 'ENG' ? "All Products" : "সকল প্রোডাক্টস";
-            document.getElementById('txt-cart-title').innerText = currentLang === 'ENG' ? "Your Cart" : "আপনার কার্ট";
-            document.getElementById('search-input').placeholder = currentLang === 'ENG' ? "Search items..." : "সার্চ করুন...";
+        function toggleDrawer() {
+            const drawer = document.getElementById('drawer-content');
+            const overlay = document.getElementById('drawer-overlay');
+            drawer.classList.toggle('active');
+            overlay.style.display = drawer.classList.contains('active') ? 'block' : 'none';
         }
 
-        function addToCart(title, price) {
-            window.cart.push({title, price});
-            document.getElementById('cart-count').innerText = window.cart.length;
-            renderCart();
-            toggleDrawer('cart-drawer');
-        }
-
-        function renderCart() {
-            const list = document.getElementById('cart-items');
-            list.innerHTML = '';
-            window.cart.forEach((item) => {
-                list.innerHTML += `<div style="display:flex; justify-content:space-between; margin-bottom:8px; padding:8px; background:var(--glass-bg); border-radius:6px;"><span>${item.title}</span><b>৳${item.price}</b></div>`;
-            });
-        }
-
-        function searchProducts() {
-            const q = document.getElementById('search-input').value.toLowerCase();
-            document.querySelectorAll('.card').forEach(c => {
-                c.style.display = c.getAttribute('data-title').toLowerCase().includes(q) ? 'flex' : 'none';
-            });
+        function switchDrawerTab(tab) {
+            document.getElementById('tab-cat').classList.toggle('active', tab === 'category');
+            document.getElementById('tab-menu').classList.toggle('active', tab === 'menu');
+            document.getElementById('drawer-body-category').style.display = tab === 'category' ? 'block' : 'none';
+            document.getElementById('drawer-body-menu').style.display = tab === 'menu' ? 'block' : 'none';
         }
     </script>
 </body>
-                                                                                       </html>
+</html>
