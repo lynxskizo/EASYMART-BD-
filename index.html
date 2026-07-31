@@ -3,29 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EASYMART BD - Digital Store</title>
+    <title>EASYMART BD - Apple Glass Store</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #10b981;
-            --primary-glow: rgba(16, 185, 129, 0.35);
-            --bg-dark: #0a0f1d;
-            --glass-card: rgba(255, 255, 255, 0.06);
-            --glass-border: rgba(255, 255, 255, 0.12);
-            --glass-modal: rgba(15, 23, 42, 0.85);
+            --primary-glow: rgba(16, 185, 129, 0.45);
+            --bg-dark: #080c14;
+            /* Premium Apple Glass Styles */
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-card: rgba(255, 255, 255, 0.07);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --glass-modal: rgba(13, 19, 33, 0.75);
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Hind Siliguri', 'Plus Jakarta Sans', sans-serif; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
-        body { background: var(--bg-dark); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; padding-bottom: 75px; background-image: radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.15), transparent 60%); }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Hind Siliguri', 'Plus Jakarta Sans', sans-serif; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
+        body { 
+            background: var(--bg-dark); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; padding-bottom: 75px; 
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.2) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 40%);
+            background-attachment: fixed;
+        }
 
-        /* Glass Header */
+        /* Apple Glass Header */
         header {
-            background: rgba(10, 15, 29, 0.65);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            background: rgba(8, 12, 20, 0.55);
+            backdrop-filter: blur(25px) saturate(200%);
+            -webkit-backdrop-filter: blur(25px) saturate(200%);
             border-bottom: 1px solid var(--glass-border);
             position: sticky; top: 0; z-index: 100;
         }
@@ -34,96 +42,111 @@
             display: flex; justify-content: space-between; align-items: center; gap: 12px;
         }
         
-        /* Glass Buttons */
+        /* Interactive Glass Buttons */
         .icon-btn {
-            background: var(--glass-card); border: 1px solid var(--glass-border);
-            color: white; width: 40px; height: 40px; border-radius: 50%;
+            background: var(--glass-bg); border: 1px solid var(--glass-border);
+            color: white; width: 42px; height: 42px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            cursor: pointer; backdrop-filter: blur(12px); font-size: 16px; position: relative;
+            cursor: pointer; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            font-size: 16px; position: relative;
         }
-        .icon-btn:hover { background: rgba(255,255,255,0.15); border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 4px 15px var(--primary-glow); }
+        .icon-btn:hover, .icon-btn:active { 
+            background: rgba(255,255,255,0.18); 
+            border-color: var(--primary); 
+            transform: translateY(-2px) scale(1.05); 
+            box-shadow: 0 0 20px var(--primary-glow); 
+        }
         
         .badge {
-            position: absolute; top: -4px; right: -4px; background: var(--primary);
+            position: absolute; top: -3px; right: -3px; background: var(--primary);
             color: white; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 10px;
+            box-shadow: 0 0 10px var(--primary-glow);
         }
 
         .logo { font-size: 18px; font-weight: 800; color: white; text-decoration: none; display: flex; align-items: center; gap: 8px; }
-        .logo-icon { background: var(--primary); color: white; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+        .logo-icon { background: var(--primary); color: white; width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; box-shadow: 0 0 15px var(--primary-glow); }
 
         .container { max-width: 1200px; margin: 16px auto; padding: 0 16px; flex: 1; }
 
         /* Glass Search Bar */
-        .search-box {
-            position: relative; margin-bottom: 16px;
-        }
+        .search-box { position: relative; margin-bottom: 16px; }
         .search-box input {
             width: 100%; padding: 12px 16px 12px 42px; background: var(--glass-card);
-            border: 1px solid var(--glass-border); border-radius: 16px;
-            color: white; outline: none; backdrop-filter: blur(10px); font-size: 14px;
+            border: 1px solid var(--glass-border); border-radius: 18px;
+            color: white; outline: none; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); font-size: 14px;
         }
-        .search-box input:focus { border-color: var(--primary); box-shadow: 0 0 15px var(--primary-glow); }
+        .search-box input:focus { border-color: var(--primary); box-shadow: 0 0 20px var(--primary-glow); background: rgba(255,255,255,0.1); }
         .search-box i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
 
         /* Banner Slider Glass */
         .banner-slider {
             width: 100%; height: 160px; background: var(--glass-card);
-            border: 1px solid var(--glass-border); border-radius: 20px;
-            backdrop-filter: blur(16px); display: flex; align-items: center; justify-content: center;
-            color: var(--text-muted); font-weight: 600; margin-bottom: 20px;
-            position: relative; overflow: hidden;
+            border: 1px solid var(--glass-border); border-radius: 22px;
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); 
+            display: flex; align-items: center; justify-content: center;
+            color: var(--text-main); font-weight: 600; margin-bottom: 20px;
+            position: relative; overflow: hidden; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
 
-        /* Categories Chips */
-        .category-chips { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 20px; scrollbar-width: none; }
+        /* Glass Categories Chips */
+        .category-chips { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 20px; scrollbar-width: none; }
         .chip {
             background: var(--glass-card); border: 1px solid var(--glass-border);
-            padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600;
-            white-space: nowrap; cursor: pointer; color: var(--text-muted); backdrop-filter: blur(10px);
+            padding: 8px 18px; border-radius: 20px; font-size: 13px; font-weight: 600;
+            white-space: nowrap; cursor: pointer; color: var(--text-muted); backdrop-filter: blur(16px);
         }
-        .chip.active, .chip:hover { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 15px var(--primary-glow); }
+        .chip.active, .chip:hover { 
+            background: var(--primary); color: white; border-color: var(--primary); 
+            box-shadow: 0 4px 20px var(--primary-glow); transform: translateY(-2px);
+        }
 
-        /* Product Cards */
+        /* Glass Product Cards Animation */
         .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; }
         .product-card {
-            background: var(--glass-card); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--glass-border); border-radius: 20px; padding: 12px;
+            background: var(--glass-card); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border); border-radius: 22px; padding: 12px;
             display: flex; flex-direction: column; justify-content: space-between;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
         }
-        .product-card:hover { transform: translateY(-4px); border-color: rgba(16, 185, 129, 0.4); box-shadow: 0 8px 25px var(--primary-glow); }
-        .product-img { width: 100%; height: 120px; border-radius: 12px; object-fit: cover; background: rgba(255,255,255,0.03); }
+        .product-card:hover { 
+            transform: translateY(-6px) scale(1.02); 
+            border-color: rgba(16, 185, 129, 0.5); 
+            box-shadow: 0 12px 30px var(--primary-glow); 
+        }
+        .product-img { width: 100%; height: 120px; border-radius: 14px; object-fit: cover; background: rgba(255,255,255,0.03); }
         .product-title { font-size: 14px; font-weight: 700; margin: 10px 0 4px; }
         .product-price { font-size: 16px; font-weight: 800; color: var(--primary); margin-bottom: 10px; }
         
         .btn-glass-action {
-            width: 100%; padding: 9px; background: var(--primary); color: white;
-            border: none; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 13px;
-            box-shadow: 0 4px 12px var(--primary-glow);
+            width: 100%; padding: 10px; background: var(--primary); color: white;
+            border: none; border-radius: 14px; font-weight: 700; cursor: pointer; font-size: 13px;
+            box-shadow: 0 4px 15px var(--primary-glow);
         }
+        .btn-glass-action:hover { transform: scale(1.03); background: #059669; }
 
         /* Glass Drawer Side Menu */
         .drawer-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
             display: none; z-index: 999;
         }
         .drawer {
             position: fixed; top: 0; left: -300px; width: 280px; height: 100%;
-            background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(25px);
+            background: rgba(13, 19, 33, 0.85); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
             border-right: 1px solid var(--glass-border); z-index: 1000;
-            padding: 20px; transition: left 0.3s ease; display: flex; flex-direction: column;
+            padding: 20px; transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column;
         }
         .drawer.open { left: 0; }
         .drawer-tabs { display: flex; border-bottom: 1px solid var(--glass-border); margin-bottom: 16px; }
         .drawer-tab { flex: 1; padding: 10px; background: none; border: none; color: var(--text-muted); font-weight: 700; cursor: pointer; text-align: center; }
         .drawer-tab.active { color: var(--primary); border-bottom: 2px solid var(--primary); }
-        .drawer-menu-item { display: flex; align-items: center; gap: 12px; padding: 12px; color: var(--text-main); text-decoration: none; font-size: 14px; font-weight: 600; border-radius: 10px; margin-bottom: 4px; }
-        .drawer-menu-item:hover { background: var(--glass-card); color: var(--primary); }
+        .drawer-menu-item { display: flex; align-items: center; gap: 12px; padding: 12px; color: var(--text-main); text-decoration: none; font-size: 14px; font-weight: 600; border-radius: 12px; margin-bottom: 4px; }
+        .drawer-menu-item:hover { background: var(--glass-card); color: var(--primary); transform: translateX(5px); }
 
-        /* Bottom Glass Navigation */
+        /* Bottom Glass Nav */
         .bottom-nav {
             position: fixed; bottom: 0; left: 0; width: 100%;
-            background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(20px) saturate(180%);
+            background: rgba(8, 12, 20, 0.65); backdrop-filter: blur(25px) saturate(200%); -webkit-backdrop-filter: blur(25px) saturate(200%);
             border-top: 1px solid var(--glass-border);
             display: flex; justify-content: space-around; padding: 10px 0; z-index: 99;
         }
@@ -134,27 +157,29 @@
         /* Glass Modal Popup */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(16px);
-            display: none; justify-content: center; align-items: center; z-index: 1001;
+            background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            display: none; justify-content: center; align-items: center; z-index: 1001; animation: fadeIn 0.3s ease;
         }
         .modal-box {
             background: var(--glass-modal); border: 1px solid var(--glass-border);
-            padding: 24px; border-radius: 24px; width: 90%; max-width: 360px; position: relative;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            padding: 26px; border-radius: 26px; width: 90%; max-width: 360px; position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
         }
-        .close-btn { position: absolute; top: 16px; right: 20px; font-size: 20px; cursor: pointer; color: var(--text-muted); }
+        .close-btn { position: absolute; top: 16px; right: 20px; font-size: 22px; cursor: pointer; color: var(--text-muted); }
 
         .form-group { margin-bottom: 12px; }
         .form-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
         .form-group input {
-            width: 100%; padding: 10px 14px; background: rgba(255, 255, 255, 0.05);
+            width: 100%; padding: 11px 14px; background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--glass-border); border-radius: 12px; color: white; outline: none; font-size: 13px;
         }
-        .form-group input:focus { border-color: var(--primary); box-shadow: 0 0 10px var(--primary-glow); }
+        .form-group input:focus { border-color: var(--primary); box-shadow: 0 0 15px var(--primary-glow); }
 
         .tab-toggle { display: flex; margin-bottom: 16px; background: rgba(255,255,255,0.05); border-radius: 12px; padding: 4px; }
         .tab-btn { flex: 1; padding: 8px; border: none; background: transparent; color: var(--text-muted); font-weight: 700; cursor: pointer; border-radius: 8px; font-size: 13px; }
-        .tab-btn.active { background: var(--primary); color: white; }
+        .tab-btn.active { background: var(--primary); color: white; box-shadow: 0 2px 10px var(--primary-glow); }
+
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
     </style>
 </head>
 <body>
@@ -198,8 +223,8 @@
             <input type="text" placeholder="Search products...">
         </div>
 
-        <div class="banner-slider" id="banner-text">
-            ব্যানার স্লাইডার (Banner Slider)
+        <div class="banner-slider">
+            <i class="fa-regular fa-images" style="margin-right:8px;"></i> ব্যানার স্লাইডার (Banner Slider)
         </div>
 
         <div class="category-chips">
@@ -293,7 +318,7 @@
             }
         });
 
-        // Sign Up
+        // Sign Up Handler
         document.getElementById('form-signup').addEventListener('submit', async (e) => {
             e.preventDefault();
             try {
@@ -308,7 +333,7 @@
             } catch (err) { alert("Sign Up Error: " + err.message); }
         });
 
-        // Sign In
+        // Sign In Handler
         document.getElementById('form-login').addEventListener('submit', async (e) => {
             e.preventDefault();
             try {
@@ -321,7 +346,7 @@
             } catch (err) { alert("Sign In Error: " + err.message); }
         });
 
-        // Realtime Products Load
+        // Load Products in Realtime
         onSnapshot(collection(db, "products"), (snap) => {
             const container = document.getElementById('products-container');
             container.innerHTML = '';
@@ -344,7 +369,7 @@
             });
         });
 
-        // Order Trigger
+        // Mandatory Auth for Order
         window.buyProduct = (title, price) => {
             if (!currentUser) {
                 alert("অর্ডার করতে হলে আপনাকে প্রথমে Sign In করতে হবে!");
@@ -356,7 +381,7 @@
             openModal('checkout-modal');
         };
 
-        // Submit Order
+        // Submit Order to Firestore
         document.getElementById('form-checkout').addEventListener('submit', async (e) => {
             e.preventDefault();
             await addDoc(collection(db, "orders"), {
