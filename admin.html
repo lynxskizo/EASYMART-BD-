@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EASYMART BD - Super Admin Studio</title>
+    <title>EASYMART BD - Pro Admin Console</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #6366f1;
-            --primary-glow: rgba(99, 102, 241, 0.25);
+            --primary: #059669;
             --bg-dark: #0f172a;
             --glass-card: rgba(30, 41, 59, 0.75);
             --glass-border: rgba(255, 255, 255, 0.12);
@@ -20,7 +19,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Hind Siliguri', 'Plus Jakarta Sans', sans-serif; }
         body { background-color: var(--bg-dark); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
 
-        /* Security Login Overlay */
+        /* Security Login Modal */
         #login-overlay {
             position: fixed; top:0; left:0; width:100%; height:100%;
             background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(16px);
@@ -31,31 +30,24 @@
             padding: 30px; border-radius: 20px; width: 90%; max-width: 380px; text-align: center;
         }
 
-        /* Admin Header */
         header {
             background: rgba(30, 41, 59, 0.85); backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--glass-border);
-            padding: 16px 24px; display: flex; justify-content: space-between; align-items: center;
-            position: sticky; top: 0; z-index: 100;
+            border-bottom: 1px solid var(--glass-border); padding: 16px 24px;
+            display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100;
         }
-        .brand-logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 18px; color: #fff; }
-        .logo-icon { width: 34px; height: 34px; background: var(--primary); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; }
 
-        /* Container Layout */
-        .admin-container { max-width: 1200px; margin: 24px auto; width: 92%; flex: 1; display: grid; grid-template-columns: 260px 1fr; gap: 20px; }
+        .admin-container { max-width: 1100px; margin: 24px auto; width: 92%; flex: 1; display: grid; grid-template-columns: 240px 1fr; gap: 20px; }
 
-        /* Sidebar Tabs */
         .sidebar {
             background: var(--glass-card); border: 1px solid var(--glass-border);
             border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 8px; height: fit-content;
         }
         .nav-tab {
             padding: 12px 16px; border-radius: 12px; color: var(--text-muted); cursor: pointer;
-            font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 10px; transition: all 0.3s;
+            font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 10px; transition: 0.3s;
         }
-        .nav-tab:hover, .nav-tab.active { background: var(--primary); color: white; box-shadow: 0 4px 15px var(--primary-glow); }
+        .nav-tab:hover, .nav-tab.active { background: var(--primary); color: white; }
 
-        /* Content Sections */
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
@@ -63,30 +55,265 @@
             background: var(--glass-card); backdrop-filter: blur(12px);
             border: 1px solid var(--glass-border); border-radius: 18px; padding: 24px; margin-bottom: 20px;
         }
-        .glass-box h3 { font-size: 18px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; }
+        .glass-box h3 { font-size: 18px; margin-bottom: 16px; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; }
 
-        /* Forms & Inputs */
         .form-group { margin-bottom: 14px; }
-        label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px; font-weight: 600; }
-        input, select, textarea {
+        label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px; }
+        input, select {
             width: 100%; padding: 10px 14px; background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--glass-border); border-radius: 10px; color: white; outline: none; font-size: 14px;
         }
-        input:focus, select:focus { border-color: var(--primary); }
 
         .btn-submit {
             width: 100%; padding: 12px; background: var(--primary); border: none;
-            border-radius: 10px; color: white; font-weight: 700; cursor: pointer; font-size: 14px; transition: 0.3s;
+            border-radius: 10px; color: white; font-weight: 700; cursor: pointer; font-size: 14px;
         }
-        
+
         .item-row {
             display: flex; align-items: center; justify-content: space-between;
             padding: 12px 16px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--glass-border);
-            border-radius: 12px; margin-bottom: 10px; gap: 10px;
+            border-radius: 12px; margin-bottom: 10px;
         }
-        .btn-action { border: none; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 600; color: white; }
-        .btn-edit { background: #eab308; }
-        .btn-delete { background: #ef4444; }
+        .btn-delete { background: #ef4444; border: none; color: white; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 12px; }
 
         @media (max-width: 768px) { .admin-container { grid-template-columns: 1fr; } }
-            </style>
+    </style>
+</head>
+<body>
+
+    <div id="login-overlay">
+        <div class="login-card">
+            <h2 style="margin-bottom:15px; font-size:20px;">Admin Login</h2>
+            <div class="form-group"><input type="text" id="admin-user" placeholder="Username"></div>
+            <div class="form-group"><input type="password" id="admin-pass" placeholder="Password"></div>
+            <button class="btn-submit" onclick="checkAuth()">Login</button>
+        </div>
+    </div>
+
+    <header>
+        <div style="font-weight:800; font-size:18px;">EASYMART Admin Console</div>
+        <button style="background:#ef4444; border:none; color:white; padding:8px 16px; border-radius:8px; cursor:pointer;" onclick="logout()">Logout</button>
+    </header>
+
+    <div class="admin-container">
+        <div class="sidebar">
+            <div class="nav-tab active" onclick="switchTab('products', this)"><i class="fa-solid fa-box"></i> Manage Products</div>
+            <div class="nav-tab" onclick="switchTab('categories', this)"><i class="fa-solid fa-layer-group"></i> Manage Categories</div>
+            <div class="nav-tab" onclick="switchTab('banners', this)"><i class="fa-solid fa-images"></i> Manage Banners</div>
+            <div class="nav-tab" onclick="switchTab('orders', this)"><i class="fa-solid fa-cart-shopping"></i> Customer Orders</div>
+        </div>
+
+        <div class="content-area">
+
+            <div id="tab-products" class="tab-content active">
+                <div class="glass-box">
+                    <h3>নতুন প্রোডাক্ট যুক্ত করুন</h3>
+                    <form id="prod-form">
+                        <div class="form-group"><label>পণ্যের নাম</label><input type="text" id="p-name" required></div>
+                        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;">
+                            <div class="form-group"><label>মূল্য (৳)</label><input type="number" id="p-price" required></div>
+                            <div class="form-group"><label>ডিসকাউন্ট (%)</label><input type="number" id="p-discount" placeholder="যেমন: 39"></div>
+                            <div class="form-group">
+                                <label>ক্যাটাগরি</label>
+                                <select id="p-cat" required><option value="All">All</option></select>
+                            </div>
+                        </div>
+                        <div class="form-group"><label>ছবি ফাইল</label><input type="file" id="p-img" accept="image/*" required></div>
+                        <button type="submit" class="btn-submit">পাবলিশ করুন</button>
+                    </form>
+                </div>
+                <div class="glass-box">
+                    <h3>বর্তমান প্রোডাক্ট লিস্ট</h3>
+                    <div id="all-products-list"></div>
+                </div>
+            </div>
+
+            <div id="tab-categories" class="tab-content">
+                <div class="glass-box">
+                    <h3>নতুন ক্যাটাগরি যুক্ত করুন</h3>
+                    <form id="cat-form">
+                        <div class="form-group"><label>ক্যাটাগরি টাইটেল</label><input type="text" id="c-name" required></div>
+                        <button type="submit" class="btn-submit">সেভ ক্যাটাগরি</button>
+                    </form>
+                </div>
+                <div class="glass-box">
+                    <h3>ক্যাটাগরি লিস্ট</h3>
+                    <div id="all-categories-list"></div>
+                </div>
+            </div>
+
+            <div id="tab-banners" class="tab-content">
+                <div class="glass-box">
+                    <h3>স্লাইডার ব্যানার আপলোড</h3>
+                    <form id="banner-form">
+                        <div class="form-group"><label>ব্যানার পিকচার</label><input type="file" id="b-img" accept="image/*" required></div>
+                        <button type="submit" class="btn-submit">আপলোড ব্যানার</button>
+                    </form>
+                </div>
+                <div class="glass-box">
+                    <h3>বর্তমান ব্যানারসমূহ</h3>
+                    <div id="all-banners-list"></div>
+                </div>
+            </div>
+
+            <div id="tab-orders" class="tab-content">
+                <div class="glass-box">
+                    <h3>কাস্টমার অর্ডারস</h3>
+                    <div id="all-orders-list"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCnrZ8ZF8tGW2R5buFDsAeLHJlWHBwb9hw",
+            authDomain: "easy-mart-bd-16b7b.firebaseapp.com",
+            databaseURL: "https://easy-mart-bd-16b7b-default-rtdb.firebaseio.com",
+            projectId: "easy-mart-bd-16b7b",
+            storageBucket: "easy-mart-bd-16b7b.firebasestorage.app",
+            messagingSenderId: "421957488158",
+            appId: "1:421957488158:web:7d20d1f557ac6b06c9280f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Fetch Categories to Dropdown
+        onSnapshot(collection(db, "categories"), (snap) => {
+            const select = document.getElementById('p-cat');
+            const list = document.getElementById('all-categories-list');
+            select.innerHTML = '<option value="All">All</option>';
+            list.innerHTML = '';
+            snap.forEach(d => {
+                const name = d.data().name;
+                select.innerHTML += `<option value="${name}">${name}</option>`;
+                list.innerHTML += `
+                    <div class="item-row">
+                        <span>${name}</span>
+                        <button class="btn-delete" onclick="deleteItem('categories', '${d.id}')">Delete</button>
+                    </div>
+                `;
+            });
+        });
+
+        // Add Category
+        document.getElementById('cat-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            await addDoc(collection(db, "categories"), { name: document.getElementById('c-name').value });
+            alert("ক্যাটাগরি যুক্ত হয়েছে!");
+            e.target.reset();
+        });
+
+        // Add Product
+        document.getElementById('prod-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const file = document.getElementById('p-img').files[0];
+            const reader = new FileReader();
+            reader.onload = async () => {
+                await addDoc(collection(db, "products"), {
+                    title_bn: document.getElementById('p-name').value,
+                    price: Number(document.getElementById('p-price').value),
+                    discount: Number(document.getElementById('p-discount').value) || 0,
+                    category: document.getElementById('p-cat').value,
+                    image: reader.result
+                });
+                alert("প্রোডাক্ট আপলোড সফল!");
+                e.target.reset();
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // Add Banner
+        document.getElementById('banner-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const file = document.getElementById('b-img').files[0];
+            const reader = new FileReader();
+            reader.onload = async () => {
+                await addDoc(collection(db, "banners"), { image: reader.result });
+                alert("ব্যানার আপলোড সফল!");
+                e.target.reset();
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // Read Products
+        onSnapshot(collection(db, "products"), (snap) => {
+            const list = document.getElementById('all-products-list');
+            list.innerHTML = '';
+            snap.forEach(d => {
+                const p = d.data();
+                list.innerHTML += `
+                    <div class="item-row">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <img src="${p.image}" style="width:36px; height:36px; border-radius:6px; object-fit:cover;">
+                            <div><strong>${p.title_bn}</strong><br><small style="color:var(--primary)">৳${p.price}</small></div>
+                        </div>
+                        <button class="btn-delete" onclick="deleteItem('products', '${d.id}')">Delete</button>
+                    </div>
+                `;
+            });
+        });
+
+        // Read Banners
+        onSnapshot(collection(db, "banners"), (snap) => {
+            const list = document.getElementById('all-banners-list');
+            list.innerHTML = '';
+            snap.forEach(d => {
+                list.innerHTML += `
+                    <div class="item-row">
+                        <img src="${d.data().image}" style="height:40px; border-radius:6px;">
+                        <button class="btn-delete" onclick="deleteItem('banners', '${d.id}')">Delete</button>
+                    </div>
+                `;
+            });
+        });
+
+        // Read Orders
+        onSnapshot(collection(db, "orders"), (snap) => {
+            const list = document.getElementById('all-orders-list');
+            list.innerHTML = '';
+            snap.forEach(d => {
+                const o = d.data();
+                list.innerHTML += `
+                    <div class="item-row" style="flex-direction:column; align-items:flex-start;">
+                        <div style="display:flex; justify-content:space-between; width:100%;">
+                            <strong>${o.customerName} (${o.phone})</strong>
+                            <span style="color:var(--primary); font-weight:bold;">৳${o.total}</span>
+                        </div>
+                        <small style="color:var(--text-muted); margin-top:4px;">TrxID: ${o.trxId}</small>
+                        <button class="btn-delete" style="margin-top:8px;" onclick="deleteItem('orders', '${d.id}')">অর্ডার মুছুন</button>
+                    </div>
+                `;
+            });
+        });
+
+        window.deleteItem = async (col, id) => {
+            if(confirm("মুছে ফেলতে চান?")) await deleteDoc(doc(db, col, id));
+        };
+    </script>
+
+    <script>
+        function switchTab(tab, el) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById('tab-' + tab).classList.add('active');
+            el.classList.add('active');
+        }
+
+        function checkAuth() {
+            if(document.getElementById('admin-user').value === 'Admin' && document.getElementById('admin-pass').value === 'tTtTahsin26') {
+                document.getElementById('login-overlay').style.display = 'none';
+                sessionStorage.setItem('admin_logged', 'true');
+            } else alert("ভুল তথ্য!");
+        }
+
+        function logout() { sessionStorage.removeItem('admin_logged'); location.reload(); }
+        if(sessionStorage.getItem('admin_logged') === 'true') document.getElementById('login-overlay').style.display = 'none';
+    </script>
+</body>
+    </html>
