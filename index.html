@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EASYMART BD - Apple Glass Store</title>
+    <title>EASYMART BD - Digital Store</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -11,47 +11,46 @@
             --primary: #10b981;
             --primary-glow: rgba(16, 185, 129, 0.45);
             --bg-dark: #080c14;
-            /* Premium Apple Glass Styles */
             --glass-bg: rgba(255, 255, 255, 0.05);
             --glass-card: rgba(255, 255, 255, 0.07);
             --glass-border: rgba(255, 255, 255, 0.15);
-            --glass-modal: rgba(13, 19, 33, 0.75);
+            --glass-modal: rgba(13, 19, 33, 0.85);
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Hind Siliguri', 'Plus Jakarta Sans', sans-serif; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Hind Siliguri', 'Plus Jakarta Sans', sans-serif; transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1); }
+        
         body { 
-            background: var(--bg-dark); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; padding-bottom: 75px; 
+            background: var(--bg-dark); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; padding-bottom: 80px; 
             background-image: 
-                radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.2) 0%, transparent 40%),
+                radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.18) 0%, transparent 40%),
                 radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 40%);
             background-attachment: fixed;
         }
 
         /* Apple Glass Header */
         header {
-            background: rgba(8, 12, 20, 0.55);
+            background: rgba(8, 12, 20, 0.65);
             backdrop-filter: blur(25px) saturate(200%);
             -webkit-backdrop-filter: blur(25px) saturate(200%);
             border-bottom: 1px solid var(--glass-border);
             position: sticky; top: 0; z-index: 100;
         }
         .nav-container {
-            max-width: 1200px; margin: 0 auto; padding: 12px 16px;
+            max-width: 1200px; margin: 0 auto; padding: 12px 20px;
             display: flex; justify-content: space-between; align-items: center; gap: 12px;
         }
         
-        /* Interactive Glass Buttons */
         .icon-btn {
             background: var(--glass-bg); border: 1px solid var(--glass-border);
             color: white; width: 42px; height: 42px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
             cursor: pointer; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-            font-size: 16px; position: relative;
+            font-size: 16px; position: relative; outline: none;
         }
         .icon-btn:hover, .icon-btn:active { 
-            background: rgba(255,255,255,0.18); 
+            background: rgba(255,255,255,0.2); 
             border-color: var(--primary); 
             transform: translateY(-2px) scale(1.05); 
             box-shadow: 0 0 20px var(--primary-glow); 
@@ -66,45 +65,64 @@
         .logo { font-size: 18px; font-weight: 800; color: white; text-decoration: none; display: flex; align-items: center; gap: 8px; }
         .logo-icon { background: var(--primary); color: white; width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; box-shadow: 0 0 15px var(--primary-glow); }
 
-        .container { max-width: 1200px; margin: 16px auto; padding: 0 16px; flex: 1; }
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; flex: 1; width: 100%; }
 
-        /* Glass Search Bar */
-        .search-box { position: relative; margin-bottom: 16px; }
+        /* Search Box */
+        .search-box { position: relative; margin-bottom: 20px; }
         .search-box input {
-            width: 100%; padding: 12px 16px 12px 42px; background: var(--glass-card);
+            width: 100%; padding: 14px 16px 14px 44px; background: var(--glass-card);
             border: 1px solid var(--glass-border); border-radius: 18px;
             color: white; outline: none; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); font-size: 14px;
         }
         .search-box input:focus { border-color: var(--primary); box-shadow: 0 0 20px var(--primary-glow); background: rgba(255,255,255,0.1); }
         .search-box i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
 
-        /* Banner Slider Glass */
+        /* Banner Slider */
         .banner-slider {
-            width: 100%; height: 160px; background: var(--glass-card);
+            width: 100%; height: 180px; background: var(--glass-card);
             border: 1px solid var(--glass-border); border-radius: 22px;
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); 
             display: flex; align-items: center; justify-content: center;
-            color: var(--text-main); font-weight: 600; margin-bottom: 20px;
-            position: relative; overflow: hidden; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            color: var(--text-main); font-weight: 600; margin-bottom: 24px;
+            position: relative; overflow: hidden; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
         }
 
-        /* Glass Categories Chips */
-        .category-chips { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 20px; scrollbar-width: none; }
+        /* Glass Category Scroll Pills */
+        .category-chips { 
+            display: flex; gap: 10px; overflow-x: auto; padding-bottom: 12px; margin-bottom: 24px; 
+            scrollbar-width: none; -ms-overflow-style: none;
+        }
+        .category-chips::-webkit-scrollbar { display: none; }
+        
         .chip {
             background: var(--glass-card); border: 1px solid var(--glass-border);
-            padding: 8px 18px; border-radius: 20px; font-size: 13px; font-weight: 600;
+            padding: 10px 18px; border-radius: 20px; font-size: 13px; font-weight: 600;
             white-space: nowrap; cursor: pointer; color: var(--text-muted); backdrop-filter: blur(16px);
+            user-select: none;
         }
         .chip.active, .chip:hover { 
             background: var(--primary); color: white; border-color: var(--primary); 
             box-shadow: 0 4px 20px var(--primary-glow); transform: translateY(-2px);
         }
 
-        /* Glass Product Cards Animation */
-        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; }
+        /* Product Grid Desktop & Mobile Responsive */
+        .products-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); 
+            gap: 20px; 
+        }
+
+        @media (max-width: 600px) {
+            .products-grid { 
+                grid-template-columns: repeat(2, 1fr); 
+                gap: 12px; 
+            }
+            .banner-slider { height: 140px; }
+        }
+
         .product-card {
             background: var(--glass-card); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border); border-radius: 22px; padding: 12px;
+            border: 1px solid var(--glass-border); border-radius: 22px; padding: 14px;
             display: flex; flex-direction: column; justify-content: space-between;
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
         }
@@ -113,44 +131,45 @@
             border-color: rgba(16, 185, 129, 0.5); 
             box-shadow: 0 12px 30px var(--primary-glow); 
         }
-        .product-img { width: 100%; height: 120px; border-radius: 14px; object-fit: cover; background: rgba(255,255,255,0.03); }
-        .product-title { font-size: 14px; font-weight: 700; margin: 10px 0 4px; }
-        .product-price { font-size: 16px; font-weight: 800; color: var(--primary); margin-bottom: 10px; }
+        .product-img { width: 100%; height: 130px; border-radius: 14px; object-fit: cover; background: rgba(255,255,255,0.03); }
+        .product-title { font-size: 14px; font-weight: 700; margin: 10px 0 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .product-price { font-size: 16px; font-weight: 800; color: var(--primary); margin-bottom: 12px; }
         
         .btn-glass-action {
             width: 100%; padding: 10px; background: var(--primary); color: white;
             border: none; border-radius: 14px; font-weight: 700; cursor: pointer; font-size: 13px;
-            box-shadow: 0 4px 15px var(--primary-glow);
+            box-shadow: 0 4px 15px var(--primary-glow); outline: none;
         }
-        .btn-glass-action:hover { transform: scale(1.03); background: #059669; }
+        .btn-glass-action:hover, .btn-glass-action:active { transform: scale(1.02); background: #059669; }
 
-        /* Glass Drawer Side Menu */
+        /* Side Off-Canvas Drawer Menu */
         .drawer-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
             display: none; z-index: 999;
         }
         .drawer {
-            position: fixed; top: 0; left: -300px; width: 280px; height: 100%;
-            background: rgba(13, 19, 33, 0.85); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+            position: fixed; top: 0; left: -320px; width: 300px; height: 100%;
+            background: rgba(13, 19, 33, 0.88); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
             border-right: 1px solid var(--glass-border); z-index: 1000;
             padding: 20px; transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column;
+            overflow-y: auto;
         }
         .drawer.open { left: 0; }
         .drawer-tabs { display: flex; border-bottom: 1px solid var(--glass-border); margin-bottom: 16px; }
         .drawer-tab { flex: 1; padding: 10px; background: none; border: none; color: var(--text-muted); font-weight: 700; cursor: pointer; text-align: center; }
         .drawer-tab.active { color: var(--primary); border-bottom: 2px solid var(--primary); }
-        .drawer-menu-item { display: flex; align-items: center; gap: 12px; padding: 12px; color: var(--text-main); text-decoration: none; font-size: 14px; font-weight: 600; border-radius: 12px; margin-bottom: 4px; }
-        .drawer-menu-item:hover { background: var(--glass-card); color: var(--primary); transform: translateX(5px); }
+        .drawer-menu-item { display: flex; align-items: center; gap: 12px; padding: 12px; color: var(--text-main); text-decoration: none; font-size: 14px; font-weight: 600; border-radius: 12px; margin-bottom: 4px; cursor: pointer; }
+        .drawer-menu-item:hover, .drawer-menu-item.active { background: var(--glass-card); color: var(--primary); transform: translateX(5px); }
 
         /* Bottom Glass Nav */
         .bottom-nav {
             position: fixed; bottom: 0; left: 0; width: 100%;
-            background: rgba(8, 12, 20, 0.65); backdrop-filter: blur(25px) saturate(200%); -webkit-backdrop-filter: blur(25px) saturate(200%);
+            background: rgba(8, 12, 20, 0.75); backdrop-filter: blur(25px) saturate(200%); -webkit-backdrop-filter: blur(25px) saturate(200%);
             border-top: 1px solid var(--glass-border);
             display: flex; justify-content: space-around; padding: 10px 0; z-index: 99;
         }
-        .nav-item { color: var(--text-muted); text-align: center; font-size: 11px; text-decoration: none; cursor: pointer; background: none; border: none; }
+        .nav-item { color: var(--text-muted); text-align: center; font-size: 11px; text-decoration: none; cursor: pointer; background: none; border: none; outline: none; }
         .nav-item.active, .nav-item:hover { color: var(--primary); }
         .nav-item i { font-size: 18px; display: block; margin-bottom: 2px; }
 
@@ -162,20 +181,20 @@
         }
         .modal-box {
             background: var(--glass-modal); border: 1px solid var(--glass-border);
-            padding: 26px; border-radius: 26px; width: 90%; max-width: 360px; position: relative;
+            padding: 26px; border-radius: 26px; width: 90%; max-width: 380px; position: relative;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
         }
         .close-btn { position: absolute; top: 16px; right: 20px; font-size: 22px; cursor: pointer; color: var(--text-muted); }
 
-        .form-group { margin-bottom: 12px; }
-        .form-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
+        .form-group { margin-bottom: 14px; }
+        .form-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
         .form-group input {
             width: 100%; padding: 11px 14px; background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--glass-border); border-radius: 12px; color: white; outline: none; font-size: 13px;
         }
         .form-group input:focus { border-color: var(--primary); box-shadow: 0 0 15px var(--primary-glow); }
 
-        .tab-toggle { display: flex; margin-bottom: 16px; background: rgba(255,255,255,0.05); border-radius: 12px; padding: 4px; }
+        .tab-toggle { display: flex; margin-bottom: 18px; background: rgba(255,255,255,0.05); border-radius: 12px; padding: 4px; }
         .tab-btn { flex: 1; padding: 8px; border: none; background: transparent; color: var(--text-muted); font-weight: 700; cursor: pointer; border-radius: 8px; font-size: 13px; }
         .tab-btn.active { background: var(--primary); color: white; box-shadow: 0 2px 10px var(--primary-glow); }
 
@@ -199,20 +218,28 @@
     <div class="drawer-overlay" id="drawer-overlay" onclick="toggleDrawer()"></div>
     <div class="drawer" id="drawer">
         <div class="drawer-tabs">
-            <button class="drawer-tab active" id="drawer-tab-cat" onclick="switchDrawerTab('cat')">Category</button>
+            <button class="drawer-tab active" id="drawer-tab-cat" onclick="switchDrawerTab('cat')">Categories</button>
             <button class="drawer-tab" id="drawer-tab-menu" onclick="switchDrawerTab('menu')">Menu</button>
         </div>
         
         <div id="drawer-cat-content">
-            <a href="#" class="drawer-menu-item"><i class="fa-solid fa-robot"></i> AI Subscriptions</a>
-            <a href="#" class="drawer-menu-item"><i class="fa-solid fa-tv"></i> Streaming</a>
-            <a href="#" class="drawer-menu-item"><i class="fa-solid fa-shield-halved"></i> VPN & Security</a>
-            <a href="#" class="drawer-menu-item"><i class="fa-solid fa-gamepad"></i> Game Top-ups</a>
+            <div class="drawer-menu-item active" onclick="filterCategory('All', this)"><i class="fa-solid fa-border-all"></i> All Categories</div>
+            <div class="drawer-menu-item" onclick="filterCategory('AI Subscriptions', this)"><i class="fa-solid fa-robot"></i> AI Subscriptions</div>
+            <div class="drawer-menu-item" onclick="filterCategory('Streaming', this)"><i class="fa-solid fa-tv"></i> Streaming</div>
+            <div class="drawer-menu-item" onclick="filterCategory('Software', this)"><i class="fa-solid fa-code"></i> Software</div>
+            <div class="drawer-menu-item" onclick="filterCategory('Gift card', this)"><i class="fa-solid fa-gift"></i> Gift card</div>
+            <div class="drawer-menu-item" onclick="filterCategory('Game top-ups', this)"><i class="fa-solid fa-gamepad"></i> Game top-ups</div>
+            <div class="drawer-menu-item" onclick="filterCategory('Google service', this)"><i class="fa-brands fa-google"></i> Google service</div>
+            <div class="drawer-menu-item" onclick="filterCategory('Education', this)"><i class="fa-solid fa-graduation-cap"></i> Education</div>
+            <div class="drawer-menu-item" onclick="filterCategory('Design & creative', this)"><i class="fa-solid fa-palette"></i> Design & creative</div>
+            <div class="drawer-menu-item" onclick="filterCategory('VPN & security', this)"><i class="fa-solid fa-shield-halved"></i> VPN & security</div>
+            <div class="drawer-menu-item" onclick="filterCategory('WordPress tools', this)"><i class="fa-brands fa-wordpress"></i> WordPress tools</div>
+            <div class="drawer-menu-item" onclick="filterCategory('Marketing tools', this)"><i class="fa-solid fa-bullhorn"></i> Marketing tools</div>
         </div>
 
         <div id="drawer-menu-content" style="display:none;">
             <a href="#" class="drawer-menu-item"><i class="fa-solid fa-house"></i> Home</a>
-            <a href="#" class="drawer-menu-item"><i class="fa-solid fa-border-all"></i> Catalog</a>
+            <a href="#" class="drawer-menu-item"><i class="fa-solid fa-bag-shopping"></i> My Orders</a>
             <a href="#" class="drawer-menu-item"><i class="fa-solid fa-headset"></i> Support</a>
         </div>
     </div>
@@ -220,32 +247,40 @@
     <div class="container">
         <div class="search-box">
             <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" placeholder="Search products...">
+            <input type="text" placeholder="Search products..." id="search-input" onkeyup="handleSearch()">
         </div>
 
         <div class="banner-slider">
-            <i class="fa-regular fa-images" style="margin-right:8px;"></i> ব্যানার স্লাইডার (Banner Slider)
+            <i class="fa-regular fa-images" style="margin-right:8px;"></i> EASYMART BD Digital Store
         </div>
 
-        <div class="category-chips">
-            <div class="chip active">All</div>
-            <div class="chip">AI Subscriptions</div>
-            <div class="chip">Streaming</div>
-            <div class="chip">VPN & Security</div>
-            <div class="chip">Game Top-ups</div>
+        <div class="category-chips" id="category-chips-list">
+            <div class="chip active" onclick="filterCategory('All', this)">All</div>
+            <div class="chip" onclick="filterCategory('AI Subscriptions', this)">AI Subscriptions</div>
+            <div class="chip" onclick="filterCategory('Streaming', this)">Streaming</div>
+            <div class="chip" onclick="filterCategory('Software', this)">Software</div>
+            <div class="chip" onclick="filterCategory('Gift card', this)">Gift card</div>
+            <div class="chip" onclick="filterCategory('Game top-ups', this)">Game top-ups</div>
+            <div class="chip" onclick="filterCategory('Google service', this)">Google service</div>
+            <div class="chip" onclick="filterCategory('Education', this)">Education</div>
+            <div class="chip" onclick="filterCategory('Design & creative', this)">Design & creative</div>
+            <div class="chip" onclick="filterCategory('VPN & security', this)">VPN & security</div>
+            <div class="chip" onclick="filterCategory('WordPress tools', this)">WordPress tools</div>
+            <div class="chip" onclick="filterCategory('Marketing tools', this)">Marketing tools</div>
         </div>
 
-        <h3 style="font-size: 16px; margin-bottom: 12px;" id="prod-sec-title" data-key="available_products">উপলব্ধ প্রোডাক্টসমূহ</h3>
+        <h3 style="font-size: 16px; margin-bottom: 14px;" id="prod-sec-title" data-key="available_products">উপলব্ধ প্রোডাক্টসমূহ</h3>
+        
         <div class="products-grid" id="products-container">
             <p style="color:var(--text-muted)">প্রোডাক্ট লোড হচ্ছে...</p>
         </div>
     </div>
 
     <div class="bottom-nav">
-        <button class="nav-item active"><i class="fa-solid fa-house"></i><span data-key="nav_home">Home</span></button>
-        <button class="nav-item"><i class="fa-solid fa-magnifying-glass"></i><span data-key="nav_search">Search</span></button>
-        <button class="nav-item"><i class="fa-solid fa-cart-shopping"></i><span data-key="nav_cart">Cart</span></button>
-        <button class="nav-item" onclick="openModal('auth-modal')"><i class="fa-regular fa-user"></i><span id="bottom-user-text" data-key="signin">Sign In</span></button>
+        <button class="nav-item active" onclick="setActiveNavItem(this)"><i class="fa-solid fa-house"></i><span data-key="nav_home">Home</span></button>
+        <button class="nav-item" onclick="setActiveNavItem(this); focusSearch();"><i class="fa-solid fa-magnifying-glass"></i><span data-key="nav_search">Search</span></button>
+        <button class="nav-item" onclick="setActiveNavItem(this)"><i class="fa-solid fa-cart-shopping"></i><span data-key="nav_cart">Cart</span></button>
+        <button class="nav-item" onclick="setActiveNavItem(this); openModal('auth-modal');"><i class="fa-regular fa-user"></i><span id="bottom-user-text" data-key="signin">Sign In</span></button>
     </div>
 
     <div class="modal-overlay" id="auth-modal">
@@ -289,7 +324,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -307,6 +342,7 @@
         const db = getFirestore(app);
 
         let currentUser = null;
+        window.allProductsList = [];
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -318,7 +354,7 @@
             }
         });
 
-        // Sign Up Handler
+        // Sign Up
         document.getElementById('form-signup').addEventListener('submit', async (e) => {
             e.preventDefault();
             try {
@@ -333,7 +369,7 @@
             } catch (err) { alert("Sign Up Error: " + err.message); }
         });
 
-        // Sign In Handler
+        // Sign In
         document.getElementById('form-login').addEventListener('submit', async (e) => {
             e.preventDefault();
             try {
@@ -346,16 +382,23 @@
             } catch (err) { alert("Sign In Error: " + err.message); }
         });
 
-        // Load Products in Realtime
+        // Load Products
         onSnapshot(collection(db, "products"), (snap) => {
+            window.allProductsList = [];
+            snap.forEach(docSnap => {
+                window.allProductsList.push(docSnap.data());
+            });
+            renderProducts(window.allProductsList);
+        });
+
+        window.renderProducts = (products) => {
             const container = document.getElementById('products-container');
             container.innerHTML = '';
-            if (snap.empty) {
-                container.innerHTML = '<p style="color:var(--text-muted)">কোনো প্রোডাক্ট নেই।</p>';
+            if (products.length === 0) {
+                container.innerHTML = '<p style="color:var(--text-muted); grid-column: 1/-1; text-align:center;">কোনো প্রোডাক্ট পাওয়া যায়নি।</p>';
                 return;
             }
-            snap.forEach(docSnap => {
-                const p = docSnap.data();
+            products.forEach(p => {
                 container.innerHTML += `
                     <div class="product-card">
                         <div>
@@ -367,9 +410,9 @@
                     </div>
                 `;
             });
-        });
+        };
 
-        // Mandatory Auth for Order
+        // Mandatory Auth Buy Trigger
         window.buyProduct = (title, price) => {
             if (!currentUser) {
                 alert("অর্ডার করতে হলে আপনাকে প্রথমে Sign In করতে হবে!");
@@ -381,7 +424,7 @@
             openModal('checkout-modal');
         };
 
-        // Submit Order to Firestore
+        // Submit Order
         document.getElementById('form-checkout').addEventListener('submit', async (e) => {
             e.preventDefault();
             await addDoc(collection(db, "orders"), {
@@ -462,6 +505,42 @@
                 document.getElementById('drawer-tab-menu').classList.add('active');
                 document.getElementById('drawer-tab-cat').classList.remove('active');
             }
+        }
+
+        function filterCategory(categoryName, element) {
+            // Update Active Pill States
+            document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.drawer-menu-item').forEach(d => d.classList.remove('active'));
+
+            if(element) element.classList.add('active');
+
+            if (categoryName === 'All') {
+                renderProducts(window.allProductsList || []);
+            } else {
+                const filtered = (window.allProductsList || []).filter(p => p.category === categoryName);
+                renderProducts(filtered);
+            }
+
+            if(document.getElementById('drawer').classList.contains('open')) {
+                toggleDrawer();
+            }
+        }
+
+        function handleSearch() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const filtered = (window.allProductsList || []).filter(p => 
+                (p.title_bn && p.title_bn.toLowerCase().includes(query))
+            );
+            renderProducts(filtered);
+        }
+
+        function focusSearch() {
+            document.getElementById('search-input').focus();
+        }
+
+        function setActiveNavItem(el) {
+            document.querySelectorAll('.bottom-nav .nav-item').forEach(item => item.classList.remove('active'));
+            el.classList.add('active');
         }
 
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
