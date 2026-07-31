@@ -66,7 +66,11 @@
 
         .btn-submit {
             width: 100%; padding: 12px; background: var(--primary); border: none;
-            border-radius: 10px; color: white; font-weight: 700; cursor: pointer; font-size: 14px;
+            border-radius: 10px; color: white; font-weight: 700; cursor: pointer; font-size: 14px; margin-top: 5px;
+        }
+        .btn-cancel {
+            width: 100%; padding: 10px; background: #64748b; border: none;
+            border-radius: 10px; color: white; font-weight: 700; cursor: pointer; font-size: 13px; margin-top: 8px; display: none;
         }
 
         .item-row {
@@ -74,6 +78,8 @@
             padding: 12px 16px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--glass-border);
             border-radius: 12px; margin-bottom: 10px;
         }
+        .action-btns { display: flex; gap: 8px; }
+        .btn-edit { background: #3b82f6; border: none; color: white; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 12px; }
         .btn-delete { background: #ef4444; border: none; color: white; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 12px; }
 
         @media (max-width: 768px) { .admin-container { grid-template-columns: 1fr; } }
@@ -107,19 +113,25 @@
 
             <div id="tab-products" class="tab-content active">
                 <div class="glass-box">
-                    <h3>নতুন প্রোডাক্ট যুক্ত করুন</h3>
+                    <h3 id="form-title">নতুন প্রোডাক্ট যুক্ত করুন</h3>
                     <form id="prod-form">
+                        <input type="hidden" id="p-id">
+                        <input type="hidden" id="p-current-img">
                         <div class="form-group"><label>পণ্যের নাম</label><input type="text" id="p-name" required></div>
                         <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;">
                             <div class="form-group"><label>মূল্য (৳)</label><input type="number" id="p-price" required></div>
-                            <div class="form-group"><label>ডিসকাউন্ট (%)</label><input type="number" id="p-discount" placeholder="যেমন: 39"></div>
+                            <div class="form-group"><label>ডিসকাউন্ট (%)</label><input type="number" id="p-discount" placeholder="যেমন: 10"></div>
                             <div class="form-group">
                                 <label>ক্যাটাগরি</label>
                                 <select id="p-cat" required><option value="All">All</option></select>
                             </div>
                         </div>
-                        <div class="form-group"><label>ছবি ফাইল</label><input type="file" id="p-img" accept="image/*" required></div>
-                        <button type="submit" class="btn-submit">পাবলিশ করুন</button>
+                        <div class="form-group">
+                            <label>ছবি ফাইল <small style="color:var(--primary);">(অপশনাল - না দিলে পরবর্তীতে এড করতে পারবেন)</small></label>
+                            <input type="file" id="p-img" accept="image/*">
+                        </div>
+                        <button type="submit" class="btn-submit" id="btn-save">পাবলিশ করুন</button>
+                        <button type="button" class="btn-cancel" id="btn-cancel-edit" onclick="resetProductForm()">বাতিল করুন</button>
                     </form>
                 </div>
                 <div class="glass-box">
@@ -168,7 +180,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc, updateDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCnrZ8ZF8tGW2R5buFDsAeLHJlWHBwb9hw",
@@ -182,6 +194,10 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+
+        const defaultPlaceholderImg = "data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22200%22%20height%3D%22200%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20200%20200%22%3E%3Crect%20fill%3D%22%231e293b%22%20width%3D%22200%22%20height%3D%22200%22%2F%3E%3Ctext%20fill%3D%22%2394a3b8%22%20font-family%3D%22sans-serif%22%20font-size%3D%2214%22%20x%3D%2250%25%22%20y%3D%2250%25%22%20text-anchor%3D%22middle%22%3ENo%20Image%3C%2Ftext%3E%3C%2Fsvg%3E";
+
+        window.productsData = {};
 
         // Fetch Categories to Dropdown
         onSnapshot(collection(db, "categories"), (snap) => {
@@ -209,24 +225,88 @@
             e.target.reset();
         });
 
-        // Add Product
+        // Add / Update Product
         document.getElementById('prod-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const file = document.getElementById('p-img').files[0];
-            const reader = new FileReader();
-            reader.onload = async () => {
-                await addDoc(collection(db, "products"), {
-                    title_bn: document.getElementById('p-name').value,
-                    price: Number(document.getElementById('p-price').value),
-                    discount: Number(document.getElementById('p-discount').value) || 0,
-                    category: document.getElementById('p-cat').value,
-                    image: reader.result
-                });
-                alert("প্রোডাক্ট আপলোড সফল!");
-                e.target.reset();
+            const id = document.getElementById('p-id').value;
+            const title_bn = document.getElementById('p-name').value;
+            const price = Number(document.getElementById('p-price').value);
+            const discount = Number(document.getElementById('p-discount').value) || 0;
+            const category = document.getElementById('p-cat').value;
+            const fileInput = document.getElementById('p-img');
+            const currentImg = document.getElementById('p-current-img').value;
+
+            const saveProduct = async (imgData) => {
+                const payload = { title_bn, price, discount, category, image: imgData };
+                if (id) {
+                    await updateDoc(doc(db, "products", id), payload);
+                    alert("প্রোডাক্ট আপডেট করা হয়েছে!");
+                } else {
+                    await addDoc(collection(db, "products"), payload);
+                    alert("প্রোডাক্ট সফলভাবে পোস্ট করা হয়েছে!");
+                }
+                resetProductForm();
             };
-            reader.readAsDataURL(file);
+
+            if (fileInput.files.length > 0) {
+                const reader = new FileReader();
+                reader.onload = () => saveProduct(reader.result);
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                saveProduct(id ? (currentImg || defaultPlaceholderImg) : defaultPlaceholderImg);
+            }
         });
+
+        // Read Products
+        onSnapshot(collection(db, "products"), (snap) => {
+            const list = document.getElementById('all-products-list');
+            list.innerHTML = '';
+            window.productsData = {};
+            snap.forEach(d => {
+                const p = d.data();
+                window.productsData[d.id] = p;
+                list.innerHTML += `
+                    <div class="item-row">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <img src="${p.image || defaultPlaceholderImg}" style="width:36px; height:36px; border-radius:6px; object-fit:cover;">
+                            <div>
+                                <strong>${p.title_bn}</strong><br>
+                                <small style="color:var(--primary)">৳${p.price} (${p.category || 'All'})</small>
+                            </div>
+                        </div>
+                        <div class="action-btns">
+                            <button class="btn-edit" onclick="editProduct('${d.id}')">Edit</button>
+                            <button class="btn-delete" onclick="deleteItem('products', '${d.id}')">Delete</button>
+                        </div>
+                    </div>
+                `;
+            });
+        });
+
+        // Edit Product Handler
+        window.editProduct = (id) => {
+            const p = window.productsData[id];
+            if (!p) return;
+            document.getElementById('p-id').value = id;
+            document.getElementById('p-name').value = p.title_bn;
+            document.getElementById('p-price').value = p.price;
+            document.getElementById('p-discount').value = p.discount || 0;
+            document.getElementById('p-cat').value = p.category || 'All';
+            document.getElementById('p-current-img').value = p.image || '';
+            document.getElementById('form-title').innerText = "প্রোডাক্ট এডিট করুন";
+            document.getElementById('btn-save').innerText = "আপডেট করুন";
+            document.getElementById('btn-cancel-edit').style.display = "block";
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        window.resetProductForm = () => {
+            document.getElementById('prod-form').reset();
+            document.getElementById('p-id').value = '';
+            document.getElementById('p-current-img').value = '';
+            document.getElementById('form-title').innerText = "নতুন প্রোডাক্ট যুক্ত করুন";
+            document.getElementById('btn-save').innerText = "পাবলিশ করুন";
+            document.getElementById('btn-cancel-edit').style.display = "none";
+        };
 
         // Add Banner
         document.getElementById('banner-form').addEventListener('submit', async (e) => {
@@ -239,24 +319,6 @@
                 e.target.reset();
             };
             reader.readAsDataURL(file);
-        });
-
-        // Read Products
-        onSnapshot(collection(db, "products"), (snap) => {
-            const list = document.getElementById('all-products-list');
-            list.innerHTML = '';
-            snap.forEach(d => {
-                const p = d.data();
-                list.innerHTML += `
-                    <div class="item-row">
-                        <div style="display:flex; align-items:center; gap:10px;">
-                            <img src="${p.image}" style="width:36px; height:36px; border-radius:6px; object-fit:cover;">
-                            <div><strong>${p.title_bn}</strong><br><small style="color:var(--primary)">৳${p.price}</small></div>
-                        </div>
-                        <button class="btn-delete" onclick="deleteItem('products', '${d.id}')">Delete</button>
-                    </div>
-                `;
-            });
         });
 
         // Read Banners
@@ -295,6 +357,46 @@
         window.deleteItem = async (col, id) => {
             if(confirm("মুছে ফেলতে চান?")) await deleteDoc(doc(db, col, id));
         };
+
+        // Automatic Product & Category Seeder
+        async function autoSeedInitialData() {
+            const catSnap = await getDocs(collection(db, "categories"));
+            let aiCatExists = false;
+            catSnap.forEach(d => {
+                if (d.data().name === "AI & Research Tools") aiCatExists = true;
+            });
+
+            if (!aiCatExists) {
+                await addDoc(collection(db, "categories"), { name: "AI & Research Tools" });
+            }
+
+            const prodSnap = await getDocs(collection(db, "products"));
+            if (prodSnap.empty) {
+                const initialProducts = [
+                    { title_bn: "Claude AI Pro (1 Month 100% Private Account)", price: 2790, category: "AI & Research Tools", discount: 0 },
+                    { title_bn: "ChatGPT Plus (1 Month Personal Plan)", price: 2750, category: "AI & Research Tools", discount: 0 },
+                    { title_bn: "Google Gemini (Gemini Pro / Ultra + 5TB Storage)", price: 750, category: "AI & Research Tools", discount: 0 },
+                    { title_bn: "Grok AI (SuperGrok Personal & Shared)", price: 2350, category: "AI & Research Tools", discount: 0 },
+                    { title_bn: "Gamma AI Pro Premium Monthly Access", price: 1990, category: "AI & Research Tools", discount: 0 },
+                    { title_bn: "Grammarly Premium Shared/Personal", price: 199, category: "AI & Research Tools", discount: 0 },
+                    { title_bn: "QuillBot Premium Shared/Personal", price: 199, category: "AI & Research Tools", discount: 0 },
+                    { title_bn: "Ideogram AI Basic & Plus Plans", price: 650, category: "AI & Research Tools", discount: 0 },
+                    { title_bn: "Paperpal Prime Personal", price: 1250, category: "AI & Research Tools", discount: 0 },
+                    { title_bn: "StealthWriter AI Premium Basic, Plus, Pro", price: 3250, category: "AI & Research Tools", discount: 0 }
+                ];
+
+                for (const p of initialProducts) {
+                    await addDoc(collection(db, "products"), {
+                        title_bn: p.title_bn,
+                        price: p.price,
+                        discount: p.discount,
+                        category: p.category,
+                        image: defaultPlaceholderImg
+                    });
+                }
+            }
+        }
+        autoSeedInitialData();
     </script>
 
     <script>
@@ -316,4 +418,4 @@
         if(sessionStorage.getItem('admin_logged') === 'true') document.getElementById('login-overlay').style.display = 'none';
     </script>
 </body>
-    </html>
+</html>
