@@ -8,80 +8,152 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #059669;
-            --bg-light: #f8fafc;
-            --card-bg: #ffffff;
-            --border-color: #e2e8f0;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
+            --primary: #10b981;
+            --primary-glow: rgba(16, 185, 129, 0.35);
+            --bg-dark: #0a0f1d;
+            --glass-card: rgba(255, 255, 255, 0.06);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --glass-modal: rgba(15, 23, 42, 0.85);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Hind Siliguri', 'Plus Jakarta Sans', sans-serif; }
-        body { background-color: var(--bg-light); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; padding-bottom: 70px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Hind Siliguri', 'Plus Jakarta Sans', sans-serif; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+        body { background: var(--bg-dark); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; padding-bottom: 75px; background-image: radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.15), transparent 60%); }
 
+        /* Glass Header */
         header {
-            background: #ffffff; border-bottom: 1px solid var(--border-color);
+            background: rgba(10, 15, 29, 0.65);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid var(--glass-border);
             position: sticky; top: 0; z-index: 100;
         }
         .nav-container {
-            max-width: 1200px; margin: 0 auto; padding: 12px 20px;
-            display: flex; justify-content: space-between; align-items: center;
+            max-width: 1200px; margin: 0 auto; padding: 12px 16px;
+            display: flex; justify-content: space-between; align-items: center; gap: 12px;
         }
-        .logo { font-size: 20px; font-weight: 800; color: #0f172a; text-decoration: none; }
-        .logo span { color: var(--primary); }
-
-        .btn-auth {
-            background: var(--primary); color: white; border: none; padding: 8px 16px;
-            border-radius: 20px; font-weight: 600; cursor: pointer; font-size: 13px;
+        
+        /* Glass Buttons */
+        .icon-btn {
+            background: var(--glass-card); border: 1px solid var(--glass-border);
+            color: white; width: 40px; height: 40px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; backdrop-filter: blur(12px); font-size: 16px; position: relative;
+        }
+        .icon-btn:hover { background: rgba(255,255,255,0.15); border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 4px 15px var(--primary-glow); }
+        
+        .badge {
+            position: absolute; top: -4px; right: -4px; background: var(--primary);
+            color: white; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 10px;
         }
 
-        .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; flex: 1; }
+        .logo { font-size: 18px; font-weight: 800; color: white; text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .logo-icon { background: var(--primary); color: white; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+
+        .container { max-width: 1200px; margin: 16px auto; padding: 0 16px; flex: 1; }
+
+        /* Glass Search Bar */
+        .search-box {
+            position: relative; margin-bottom: 16px;
+        }
+        .search-box input {
+            width: 100%; padding: 12px 16px 12px 42px; background: var(--glass-card);
+            border: 1px solid var(--glass-border); border-radius: 16px;
+            color: white; outline: none; backdrop-filter: blur(10px); font-size: 14px;
+        }
+        .search-box input:focus { border-color: var(--primary); box-shadow: 0 0 15px var(--primary-glow); }
+        .search-box i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+
+        /* Banner Slider Glass */
+        .banner-slider {
+            width: 100%; height: 160px; background: var(--glass-card);
+            border: 1px solid var(--glass-border); border-radius: 20px;
+            backdrop-filter: blur(16px); display: flex; align-items: center; justify-content: center;
+            color: var(--text-muted); font-weight: 600; margin-bottom: 20px;
+            position: relative; overflow: hidden;
+        }
+
+        /* Categories Chips */
+        .category-chips { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 20px; scrollbar-width: none; }
+        .chip {
+            background: var(--glass-card); border: 1px solid var(--glass-border);
+            padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600;
+            white-space: nowrap; cursor: pointer; color: var(--text-muted); backdrop-filter: blur(10px);
+        }
+        .chip.active, .chip:hover { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 15px var(--primary-glow); }
 
         /* Product Cards */
-        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-top: 16px; }
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; }
         .product-card {
-            background: var(--card-bg); border: 1px solid var(--border-color);
-            border-radius: 16px; padding: 14px; display: flex; flex-direction: column; justify-content: space-between;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+            background: var(--glass-card); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border); border-radius: 20px; padding: 12px;
+            display: flex; flex-direction: column; justify-content: space-between;
         }
-        .product-img { width: 100%; height: 140px; border-radius: 10px; object-fit: cover; background: #f1f5f9; }
-        .product-title { font-size: 14px; font-weight: 700; margin: 10px 0 4px; color: var(--text-main); }
+        .product-card:hover { transform: translateY(-4px); border-color: rgba(16, 185, 129, 0.4); box-shadow: 0 8px 25px var(--primary-glow); }
+        .product-img { width: 100%; height: 120px; border-radius: 12px; object-fit: cover; background: rgba(255,255,255,0.03); }
+        .product-title { font-size: 14px; font-weight: 700; margin: 10px 0 4px; }
         .product-price { font-size: 16px; font-weight: 800; color: var(--primary); margin-bottom: 10px; }
         
-        .btn-buy {
-            width: 100%; padding: 8px; background: var(--primary); color: white;
-            border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 13px;
+        .btn-glass-action {
+            width: 100%; padding: 9px; background: var(--primary); color: white;
+            border: none; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 13px;
+            box-shadow: 0 4px 12px var(--primary-glow);
         }
 
-        /* Bottom Nav */
+        /* Glass Drawer Side Menu */
+        .drawer-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(10px);
+            display: none; z-index: 999;
+        }
+        .drawer {
+            position: fixed; top: 0; left: -300px; width: 280px; height: 100%;
+            background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(25px);
+            border-right: 1px solid var(--glass-border); z-index: 1000;
+            padding: 20px; transition: left 0.3s ease; display: flex; flex-direction: column;
+        }
+        .drawer.open { left: 0; }
+        .drawer-tabs { display: flex; border-bottom: 1px solid var(--glass-border); margin-bottom: 16px; }
+        .drawer-tab { flex: 1; padding: 10px; background: none; border: none; color: var(--text-muted); font-weight: 700; cursor: pointer; text-align: center; }
+        .drawer-tab.active { color: var(--primary); border-bottom: 2px solid var(--primary); }
+        .drawer-menu-item { display: flex; align-items: center; gap: 12px; padding: 12px; color: var(--text-main); text-decoration: none; font-size: 14px; font-weight: 600; border-radius: 10px; margin-bottom: 4px; }
+        .drawer-menu-item:hover { background: var(--glass-card); color: var(--primary); }
+
+        /* Bottom Glass Navigation */
         .bottom-nav {
             position: fixed; bottom: 0; left: 0; width: 100%;
-            background: #ffffff; border-top: 1px solid var(--border-color);
-            display: flex; justify-content: space-around; padding: 8px 0; z-index: 99;
+            background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(20px) saturate(180%);
+            border-top: 1px solid var(--glass-border);
+            display: flex; justify-content: space-around; padding: 10px 0; z-index: 99;
         }
         .nav-item { color: var(--text-muted); text-align: center; font-size: 11px; text-decoration: none; cursor: pointer; background: none; border: none; }
         .nav-item.active, .nav-item:hover { color: var(--primary); }
         .nav-item i { font-size: 18px; display: block; margin-bottom: 2px; }
 
-        /* Modal Overlay */
+        /* Glass Modal Popup */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.5); display: none; justify-content: center; align-items: center; z-index: 1000;
+            background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(16px);
+            display: none; justify-content: center; align-items: center; z-index: 1001;
         }
         .modal-box {
-            background: #ffffff; padding: 24px; border-radius: 16px; width: 90%; max-width: 360px; position: relative;
+            background: var(--glass-modal); border: 1px solid var(--glass-border);
+            padding: 24px; border-radius: 24px; width: 90%; max-width: 360px; position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
-        .close-btn { position: absolute; top: 12px; right: 16px; font-size: 20px; cursor: pointer; color: var(--text-muted); }
+        .close-btn { position: absolute; top: 16px; right: 20px; font-size: 20px; cursor: pointer; color: var(--text-muted); }
 
         .form-group { margin-bottom: 12px; }
         .form-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
         .form-group input {
-            width: 100%; padding: 10px; background: #f8fafc;
-            border: 1px solid var(--border-color); border-radius: 8px; outline: none; font-size: 13px;
+            width: 100%; padding: 10px 14px; background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border); border-radius: 12px; color: white; outline: none; font-size: 13px;
         }
+        .form-group input:focus { border-color: var(--primary); box-shadow: 0 0 10px var(--primary-glow); }
 
-        .tab-toggle { display: flex; margin-bottom: 16px; background: #f1f5f9; border-radius: 8px; padding: 3px; }
-        .tab-btn { flex: 1; padding: 8px; border: none; background: transparent; color: var(--text-muted); font-weight: 700; cursor: pointer; border-radius: 6px; font-size: 13px; }
+        .tab-toggle { display: flex; margin-bottom: 16px; background: rgba(255,255,255,0.05); border-radius: 12px; padding: 4px; }
+        .tab-btn { flex: 1; padding: 8px; border: none; background: transparent; color: var(--text-muted); font-weight: 700; cursor: pointer; border-radius: 8px; font-size: 13px; }
         .tab-btn.active { background: var(--primary); color: white; }
     </style>
 </head>
@@ -89,47 +161,87 @@
 
     <header>
         <div class="nav-container">
-            <a href="#" class="logo">EASYMART <span>BD</span></a>
-            <button class="btn-auth" id="header-auth-btn" onclick="openModal('auth-modal')">Sign In</button>
-            <div id="header-user" style="display:none; align-items:center; gap:8px;">
-                <span id="user-name" style="font-size:13px; font-weight:600;"></span>
-                <button class="btn-auth" style="background:#ef4444;" onclick="logout()">Logout</button>
+            <button class="icon-btn" onclick="toggleDrawer()"><i class="fa-solid fa-bars"></i></button>
+            <a href="#" class="logo"><div class="logo-icon"><i class="fa-solid fa-bolt"></i></div> EASYMART <span>BD</span></a>
+            <div style="display:flex; gap:8px;">
+                <button class="icon-btn" onclick="toggleLanguage()"><i class="fa-solid fa-globe"></i></button>
+                <button class="icon-btn" onclick="openModal('auth-modal')" id="header-user-btn"><i class="fa-regular fa-user"></i></button>
+                <button class="icon-btn"><i class="fa-solid fa-cart-shopping"></i><span class="badge">0</span></button>
             </div>
         </div>
     </header>
 
+    <div class="drawer-overlay" id="drawer-overlay" onclick="toggleDrawer()"></div>
+    <div class="drawer" id="drawer">
+        <div class="drawer-tabs">
+            <button class="drawer-tab active" id="drawer-tab-cat" onclick="switchDrawerTab('cat')">Category</button>
+            <button class="drawer-tab" id="drawer-tab-menu" onclick="switchDrawerTab('menu')">Menu</button>
+        </div>
+        
+        <div id="drawer-cat-content">
+            <a href="#" class="drawer-menu-item"><i class="fa-solid fa-robot"></i> AI Subscriptions</a>
+            <a href="#" class="drawer-menu-item"><i class="fa-solid fa-tv"></i> Streaming</a>
+            <a href="#" class="drawer-menu-item"><i class="fa-solid fa-shield-halved"></i> VPN & Security</a>
+            <a href="#" class="drawer-menu-item"><i class="fa-solid fa-gamepad"></i> Game Top-ups</a>
+        </div>
+
+        <div id="drawer-menu-content" style="display:none;">
+            <a href="#" class="drawer-menu-item"><i class="fa-solid fa-house"></i> Home</a>
+            <a href="#" class="drawer-menu-item"><i class="fa-solid fa-border-all"></i> Catalog</a>
+            <a href="#" class="drawer-menu-item"><i class="fa-solid fa-headset"></i> Support</a>
+        </div>
+    </div>
+
     <div class="container">
-        <h2 style="font-size:18px; margin-bottom:12px;">উপলব্ধ প্রোডাক্টসমূহ</h2>
+        <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" placeholder="Search products...">
+        </div>
+
+        <div class="banner-slider" id="banner-text">
+            ব্যানার স্লাইডার (Banner Slider)
+        </div>
+
+        <div class="category-chips">
+            <div class="chip active">All</div>
+            <div class="chip">AI Subscriptions</div>
+            <div class="chip">Streaming</div>
+            <div class="chip">VPN & Security</div>
+            <div class="chip">Game Top-ups</div>
+        </div>
+
+        <h3 style="font-size: 16px; margin-bottom: 12px;" id="prod-sec-title" data-key="available_products">উপলব্ধ প্রোডাক্টসমূহ</h3>
         <div class="products-grid" id="products-container">
             <p style="color:var(--text-muted)">প্রোডাক্ট লোড হচ্ছে...</p>
         </div>
     </div>
 
     <div class="bottom-nav">
-        <button class="nav-item active"><i class="fa-solid fa-house"></i>Home</button>
-        <button class="nav-item"><i class="fa-solid fa-cart-shopping"></i>Cart</button>
-        <button class="nav-item" onclick="openModal('auth-modal')"><i class="fa-regular fa-user"></i><span id="bottom-auth-text">Sign In</span></button>
+        <button class="nav-item active"><i class="fa-solid fa-house"></i><span data-key="nav_home">Home</span></button>
+        <button class="nav-item"><i class="fa-solid fa-magnifying-glass"></i><span data-key="nav_search">Search</span></button>
+        <button class="nav-item"><i class="fa-solid fa-cart-shopping"></i><span data-key="nav_cart">Cart</span></button>
+        <button class="nav-item" onclick="openModal('auth-modal')"><i class="fa-regular fa-user"></i><span id="bottom-user-text" data-key="signin">Sign In</span></button>
     </div>
 
     <div class="modal-overlay" id="auth-modal">
         <div class="modal-box">
             <span class="close-btn" onclick="closeModal('auth-modal')">&times;</span>
             <div class="tab-toggle">
-                <button class="tab-btn active" id="tab-login" onclick="switchTab('login')">Sign In</button>
-                <button class="tab-btn" id="tab-signup" onclick="switchTab('signup')">Sign Up</button>
+                <button class="tab-btn active" id="tab-login" onclick="switchAuthTab('login')">Sign In</button>
+                <button class="tab-btn" id="tab-signup" onclick="switchAuthTab('signup')">Sign Up</button>
             </div>
 
             <form id="form-login">
                 <div class="form-group"><label>Email</label><input type="email" id="login-email" required></div>
                 <div class="form-group"><label>Password</label><input type="password" id="login-pass" required></div>
-                <button type="submit" class="btn-buy" style="margin-top:8px;">Sign In</button>
+                <button type="submit" class="btn-glass-action" style="margin-top:10px;">Sign In</button>
             </form>
 
             <form id="form-signup" style="display:none;">
                 <div class="form-group"><label>Full Name</label><input type="text" id="signup-name" required></div>
                 <div class="form-group"><label>Email</label><input type="email" id="signup-email" required></div>
                 <div class="form-group"><label>Password</label><input type="password" id="signup-pass" required></div>
-                <button type="submit" class="btn-buy" style="margin-top:8px;">Create Account</button>
+                <button type="submit" class="btn-glass-action" style="margin-top:10px;">Create Account</button>
             </form>
         </div>
     </div>
@@ -137,15 +249,15 @@
     <div class="modal-overlay" id="checkout-modal">
         <div class="modal-box">
             <span class="close-btn" onclick="closeModal('checkout-modal')">&times;</span>
-            <h3 style="margin-bottom:10px; font-size:16px;">অর্ডার চেকআউট</h3>
+            <h3 style="margin-bottom:10px; font-size:16px;" data-key="checkout_title">অর্ডার চেকআউট</h3>
             <p id="checkout-prod-name" style="color:var(--primary); font-weight:bold; font-size:14px;"></p>
             <p id="checkout-prod-price" style="margin-bottom:12px; font-weight:bold; font-size:14px;"></p>
 
             <form id="form-checkout">
-                <div class="form-group"><label>আপনার নাম</label><input type="text" id="ord-name" required></div>
-                <div class="form-group"><label>মোবাইল নম্বর</label><input type="text" id="ord-phone" required></div>
+                <div class="form-group"><label data-key="your_name">আপনার নাম</label><input type="text" id="ord-name" required></div>
+                <div class="form-group"><label data-key="phone_number">মোবাইল নম্বর</label><input type="text" id="ord-phone" required></div>
                 <div class="form-group"><label>bKash / Nagad TrxID</label><input type="text" id="ord-trx" required></div>
-                <button type="submit" class="btn-buy" style="margin-top:8px;">অর্ডার সাবমিট করুন</button>
+                <button type="submit" class="btn-glass-action" style="margin-top:10px;" data-key="submit_order">অর্ডার সাবমিট করুন</button>
             </form>
         </div>
     </div>
@@ -174,18 +286,14 @@
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 currentUser = user;
-                document.getElementById('header-auth-btn').style.display = 'none';
-                document.getElementById('header-user').style.display = 'flex';
-                document.getElementById('user-name').innerText = user.displayName || user.email.split('@')[0];
-                document.getElementById('bottom-auth-text').innerText = 'Account';
+                document.getElementById('bottom-user-text').innerText = 'Account';
             } else {
                 currentUser = null;
-                document.getElementById('header-auth-btn').style.display = 'block';
-                document.getElementById('header-user').style.display = 'none';
-                document.getElementById('bottom-auth-text').innerText = 'Sign In';
+                document.getElementById('bottom-user-text').innerText = 'Sign In';
             }
         });
 
+        // Sign Up
         document.getElementById('form-signup').addEventListener('submit', async (e) => {
             e.preventDefault();
             try {
@@ -197,9 +305,10 @@
                 await updateProfile(res.user, { displayName: name });
                 alert("Account created successfully!");
                 closeModal('auth-modal');
-            } catch (err) { alert("Error: " + err.message); }
+            } catch (err) { alert("Sign Up Error: " + err.message); }
         });
 
+        // Sign In
         document.getElementById('form-login').addEventListener('submit', async (e) => {
             e.preventDefault();
             try {
@@ -207,13 +316,12 @@
                 const pass = document.getElementById('login-pass').value;
 
                 await signInWithEmailAndPassword(auth, email, pass);
-                alert("Signed in successfully!");
+                alert("Logged in successfully!");
                 closeModal('auth-modal');
-            } catch (err) { alert("Error: " + err.message); }
+            } catch (err) { alert("Sign In Error: " + err.message); }
         });
 
-        window.logout = () => signOut(auth);
-
+        // Realtime Products Load
         onSnapshot(collection(db, "products"), (snap) => {
             const container = document.getElementById('products-container');
             container.innerHTML = '';
@@ -226,19 +334,20 @@
                 container.innerHTML += `
                     <div class="product-card">
                         <div>
-                            <img src="${p.image || ''}" class="product-img">
+                            <img src="${p.image || ''}" class="product-img" alt="${p.title_bn}">
                             <div class="product-title">${p.title_bn}</div>
                             <div class="product-price">৳${p.price}</div>
                         </div>
-                        <button class="btn-buy" onclick="buyProduct('${p.title_bn}', '${p.price}')">Buy Now</button>
+                        <button class="btn-glass-action" onclick="buyProduct('${p.title_bn}', '${p.price}')">Buy Now</button>
                     </div>
                 `;
             });
         });
 
+        // Order Trigger
         window.buyProduct = (title, price) => {
             if (!currentUser) {
-                alert("অর্ডার করতে আগে Sign In বা Sign Up করুন!");
+                alert("অর্ডার করতে হলে আপনাকে প্রথমে Sign In করতে হবে!");
                 openModal('auth-modal');
                 return;
             }
@@ -247,6 +356,7 @@
             openModal('checkout-modal');
         };
 
+        // Submit Order
         document.getElementById('form-checkout').addEventListener('submit', async (e) => {
             e.preventDefault();
             await addDoc(collection(db, "orders"), {
@@ -266,9 +376,73 @@
     </script>
 
     <script>
+        let currentLang = 'BN';
+
+        const translations = {
+            BN: {
+                available_products: "উপলব্ধ প্রোডাক্টসমূহ",
+                nav_home: "হোম",
+                nav_search: "সার্চ",
+                nav_cart: "কার্ট",
+                signin: "Sign In",
+                checkout_title: "অর্ডার চেকআউট",
+                your_name: "আপনার নাম",
+                phone_number: "মোবাইল নম্বর",
+                submit_order: "অর্ডার সাবমিট করুন"
+            },
+            EN: {
+                available_products: "Available Products",
+                nav_home: "Home",
+                nav_search: "Search",
+                nav_cart: "Cart",
+                signin: "Sign In",
+                checkout_title: "Order Checkout",
+                your_name: "Your Name",
+                phone_number: "Phone Number",
+                submit_order: "Submit Order"
+            }
+        };
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'BN' ? 'EN' : 'BN';
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (translations[currentLang][key]) {
+                    el.innerText = translations[currentLang][key];
+                }
+            });
+        }
+
+        function toggleDrawer() {
+            const drawer = document.getElementById('drawer');
+            const overlay = document.getElementById('drawer-overlay');
+            if (drawer.classList.contains('open')) {
+                drawer.classList.remove('open');
+                overlay.style.display = 'none';
+            } else {
+                drawer.classList.add('open');
+                overlay.style.display = 'block';
+            }
+        }
+
+        function switchDrawerTab(tab) {
+            if (tab === 'cat') {
+                document.getElementById('drawer-cat-content').style.display = 'block';
+                document.getElementById('drawer-menu-content').style.display = 'none';
+                document.getElementById('drawer-tab-cat').classList.add('active');
+                document.getElementById('drawer-tab-menu').classList.remove('active');
+            } else {
+                document.getElementById('drawer-cat-content').style.display = 'none';
+                document.getElementById('drawer-menu-content').style.display = 'block';
+                document.getElementById('drawer-tab-menu').classList.add('active');
+                document.getElementById('drawer-tab-cat').classList.remove('active');
+            }
+        }
+
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-        function switchTab(tab) {
+
+        function switchAuthTab(tab) {
             if (tab === 'login') {
                 document.getElementById('form-login').style.display = 'block';
                 document.getElementById('form-signup').style.display = 'none';
