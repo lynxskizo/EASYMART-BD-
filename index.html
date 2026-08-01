@@ -163,11 +163,31 @@
 
         .bottom-user-avatar { width: 22px; height: 22px; border-radius: 50%; object-fit: cover; border: 1.5px solid var(--primary); margin-bottom: 2px; }
 
+        /* AI Support Floating Widget Styles */
+        .ai-fab {
+            position: fixed; bottom: 76px; right: 20px; background: var(--primary); color: #080c14;
+            width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 22px; cursor: pointer; box-shadow: 0 6px 20px var(--primary-glow); z-index: 1001; border: 2px solid white;
+        }
+        .ai-modal {
+            position: fixed; bottom: 135px; right: 20px; width: 320px; max-width: 90vw; height: 390px;
+            background: #0d1321; border: 1px solid var(--glass-border); border-radius: 18px;
+            display: none; flex-direction: column; z-index: 1002; box-shadow: 0 10px 30px rgba(0,0,0,0.6); overflow: hidden;
+        }
+        .ai-header { background: rgba(255,255,255,0.05); padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--glass-border); font-size: 13px; font-weight: 700; }
+        .ai-body { flex: 1; padding: 12px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; font-size: 12px; }
+        .ai-msg { padding: 8px 12px; border-radius: 10px; max-width: 85%; line-height: 1.4; }
+        .ai-msg.bot { background: rgba(16, 185, 129, 0.15); color: #fff; align-self: flex-start; border: 1px solid var(--primary); }
+        .ai-msg.user { background: var(--primary); color: #080c14; align-self: flex-end; font-weight: 600; }
+        .ai-footer { padding: 10px; border-top: 1px solid var(--glass-border); display: flex; gap: 6px; background: rgba(255,255,255,0.02); }
+        .ai-footer input { flex: 1; background: rgba(255,255,255,0.06); border: 1px solid var(--glass-border); padding: 8px 12px; border-radius: 8px; color: white; outline: none; font-size: 12px; }
+        .ai-footer button { background: var(--primary); border: none; padding: 8px 12px; border-radius: 8px; color: #080c14; font-weight: bold; cursor: pointer; }
+
         /* Modals */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(20px);
-            display: none; justify-content: center; align-items: center; z-index: 1001; animation: fadeIn 0.3s ease;
+            display: none; justify-content: center; align-items: center; z-index: 1003; animation: fadeIn 0.3s ease;
         }
         .modal-box {
             background: var(--glass-modal); border: 1px solid var(--glass-border);
@@ -246,7 +266,7 @@
         </div>
 
         <div id="drawer-menu-content" style="display:none;">
-            <a href="#" class="drawer-menu-item"><i class="fa-solid fa-house"></i> <span data-key="nav_home">Home</span></a>
+            <a href="#" class="drawer-menu-item" onclick="toggleDrawer();"><i class="fa-solid fa-house"></i> <span data-key="nav_home">Home</span></a>
             <a href="#" class="drawer-menu-item" onclick="toggleDrawer(); openModal('cart-modal');"><i class="fa-solid fa-bag-shopping"></i> <span data-key="nav_cart">Cart</span></a>
             <a href="#" class="drawer-menu-item" onclick="toggleDrawer(); handleAccountButtonClick();"><i class="fa-solid fa-wallet"></i> <span data-key="wallet_title">Easymart Wallet</span></a>
         </div>
@@ -292,6 +312,21 @@
             <i class="fa-regular fa-user" id="bottom-user-icon"></i>
             <span id="bottom-user-text" data-key="signin">Sign In</span>
         </button>
+    </div>
+
+    <div class="ai-fab" onclick="toggleAiChat()"><i class="fa-solid fa-robot"></i></div>
+    <div class="ai-modal" id="ai-chat-modal">
+        <div class="ai-header">
+            <span><i class="fa-solid fa-headset" style="color:var(--primary)"></i> EASYMART AI Support</span>
+            <i class="fa-solid fa-xmark" style="cursor:pointer;" onclick="toggleAiChat()"></i>
+        </div>
+        <div class="ai-body" id="ai-chat-body">
+            <div class="ai-msg bot">হ্যালো! ইজির্মাট বিডি-তে স্বাগতম। বাংলা বা ইংরেজিতে কী সাহায্য করতে পারি? Hello! How can I help you today?</div>
+        </div>
+        <div class="ai-footer">
+            <input type="text" id="ai-input" placeholder="এখানে আপনার প্রশ্ন লিখুন..." onkeypress="if(event.key==='Enter') sendAiMessage()">
+            <button onclick="sendAiMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
     </div>
 
     <div class="modal-overlay" id="auth-modal">
@@ -351,7 +386,7 @@
         <div class="modal-box">
             <span class="close-btn" onclick="closeModal('topup-modal')">&times;</span>
             <h3 style="margin-bottom:12px; font-size:16px;" data-key="add_money">ওয়ালেটে টাকা এড করুন</h3>
-            <p style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">bKash / Nagad (Personal): <b style="color:var(--primary);">01800000000</b></p>
+            <p style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">bKash / Nagad (Personal): <b style="color:var(--primary);">01818558919</b></p>
 
             <form id="form-topup">
                 <div class="form-group">
@@ -375,7 +410,7 @@
             <div id="cart-items-list" style="max-height: 200px; overflow-y:auto; margin-bottom:14px;">
                 <p style="color:var(--text-muted); text-align:center;">কার্ট খালি রয়েছে</p>
             </div>
-            <div style="display:flex; justify-style:space-between; margin-bottom:14px; font-weight:bold;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:14px; font-weight:bold;">
                 <span>Total:</span>
                 <span id="cart-total-price" style="color:var(--primary);">৳0</span>
             </div>
@@ -400,7 +435,7 @@
                 </div>
                 <div class="form-group"><label data-key="your_name">আপনার নাম</label><input type="text" id="ord-name" required></div>
                 <div class="form-group"><label data-key="phone_number">মোবাইল নম্বর</label><input type="text" id="ord-phone" required></div>
-                <div class="form-group" id="trx-input-group"><label>bKash / Nagad TrxID</label><input type="text" id="ord-trx"></div>
+                <div class="form-group" id="trx-input-group"><label>bKash / Nagad TrxID (01818558919)</label><input type="text" id="ord-trx"></div>
                 <button type="submit" class="btn-glass-action" style="margin-top:10px;" data-key="submit_order">অর্ডার সাবমিট করুন</button>
             </form>
         </div>
@@ -430,6 +465,7 @@
         let currentUser = null;
         window.userWalletBalance = 0;
         window.cartItems = [];
+        window.allProductsList = [];
 
         // Auth State Handler & Profile Circle Update
         onAuthStateChanged(auth, async (user) => {
@@ -440,7 +476,6 @@
                 currentUser = user;
                 const photoURL = user.photoURL || 'https://via.placeholder.com/150';
 
-                // Display User Profile Image directly on Circle Icons
                 headerBtn.innerHTML = `<img src="${photoURL}" class="user-avatar-img">`;
                 bottomBtn.innerHTML = `
                     <img src="${photoURL}" class="bottom-user-avatar">
@@ -452,7 +487,6 @@
                 document.getElementById('prof-name').value = user.displayName || '';
                 document.getElementById('profile-preview-img').src = photoURL;
 
-                // Fetch Wallet & Details
                 const userDoc = await getDoc(doc(db, "users", user.uid));
                 if (userDoc.exists()) {
                     window.userWalletBalance = userDoc.data().wallet || 0;
@@ -519,7 +553,7 @@
             e.target.reset();
         });
 
-        // Add to Cart Logic (100% Workable)
+        // Add to Cart Logic
         window.addToCart = (title, price) => {
             window.cartItems.push({ title, price: parseFloat(price) });
             updateCartUI();
@@ -566,7 +600,7 @@
             buyProduct("Cart Items (" + window.cartItems.length + ")", total);
         };
 
-        // Realtime Products Load
+        // Realtime Products Load & Filtering
         onSnapshot(collection(db, "products"), (snap) => {
             window.allProductsList = [];
             snap.forEach(docSnap => window.allProductsList.push(docSnap.data()));
@@ -577,24 +611,55 @@
             const container = document.getElementById('products-container');
             container.innerHTML = '';
             if (products.length === 0) {
-                container.innerHTML = '<p style="color:var(--text-muted); grid-column: 1/-1; text-align:center;">কোনো প্রোডাক্ট পাওয়া যায়নি।</p>';
+                container.innerHTML = '<p style="color:var(--text-muted); grid-column: 1/-1; text-align:center;">এই ক্যাটাগরিতে কোনো প্রোডাক্ট পাওয়া যায়নি।</p>';
                 return;
             }
             products.forEach(p => {
+                const imgTag = p.image 
+                    ? `<img src="${p.image}" class="product-img" alt="${p.title_bn || 'Product'}">` 
+                    : `<div class="product-img" style="display:flex; align-items:center; justify-content:center;"><i class="fa-solid fa-image" style="font-size:24px; color:var(--text-muted);"></i></div>`;
+
                 container.innerHTML += `
                     <div class="product-card">
                         <div>
-                            <img src="${p.image || ''}" class="product-img" alt="${p.title_bn}">
-                            <div class="product-title">${p.title_bn}</div>
-                            <div class="product-price">৳${p.price}</div>
+                            ${imgTag}
+                            <div class="product-title">${p.title_bn || 'নামবিহীন প্রোডাক্ট'}</div>
+                            <div class="product-price">৳${p.price || 0}</div>
                         </div>
                         <div style="display:flex; flex-direction:column; gap:6px;">
-                            <button class="btn-glass-action" onclick="buyProduct('${p.title_bn}', '${p.price}')"><i class="fa-solid fa-bolt"></i> Buy Now</button>
-                            <button class="btn-glass-action btn-glass-secondary" onclick="addToCart('${p.title_bn}', '${p.price}')"><i class="fa-solid fa-cart-plus"></i> Add to Cart</button>
+                            <button class="btn-glass-action" onclick="buyProduct('${p.title_bn || ''}', '${p.price || 0}')"><i class="fa-solid fa-bolt"></i> Buy Now</button>
+                            <button class="btn-glass-action btn-glass-secondary" onclick="addToCart('${p.title_bn || ''}', '${p.price || 0}')"><i class="fa-solid fa-cart-plus"></i> Add to Cart</button>
                         </div>
                     </div>
                 `;
             });
+        };
+
+        window.filterCategory = (cat, el) => {
+            document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.drawer-menu-item').forEach(m => m.classList.remove('active'));
+            if(el) el.classList.add('active');
+
+            if (cat === 'All') {
+                renderProducts(window.allProductsList || []);
+            } else {
+                const filtered = (window.allProductsList || []).filter(p => p.category === cat);
+                renderProducts(filtered);
+            }
+            if(document.getElementById('drawer').classList.contains('open')) toggleDrawer();
+        };
+
+        window.handleSearch = () => {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            if(!query) {
+                renderProducts(window.allProductsList);
+                return;
+            }
+            const matched = (window.allProductsList || []).filter(p => 
+                (p.title_bn || '').toLowerCase().includes(query) || 
+                (p.category || '').toLowerCase().includes(query)
+            );
+            renderProducts(matched);
         };
 
         window.buyProduct = (title, price) => {
@@ -620,7 +685,6 @@
                     alert("আপনার ওয়ালেটে পর্যাপ্ত ব্যালেন্স নেই! দয়া করে ওয়ালেট টপ-আপ করুন।");
                     return;
                 }
-                // Deduct Balance
                 window.userWalletBalance -= price;
                 await setDoc(doc(db, "users", currentUser.uid), { wallet: window.userWalletBalance }, { merge: true });
                 document.getElementById('user-wallet-balance').innerText = "৳" + window.userWalletBalance.toFixed(2);
@@ -645,7 +709,7 @@
             e.target.reset();
         });
 
-        // Sign Up
+        // Sign Up & Sign In
         document.getElementById('form-signup').addEventListener('submit', async (e) => {
             e.preventDefault();
             try {
@@ -659,7 +723,6 @@
             } catch (err) { alert("Sign Up Error: " + err.message); }
         });
 
-        // Sign In
         document.getElementById('form-login').addEventListener('submit', async (e) => {
             e.preventDefault();
             try {
@@ -670,11 +733,43 @@
                 closeModal('auth-modal');
             } catch (err) { alert("Sign In Error: " + err.message); }
         });
+
+        // AI Chatbot Logic
+        window.toggleAiChat = () => {
+            const modal = document.getElementById('ai-chat-modal');
+            modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+        };
+
+        window.sendAiMessage = () => {
+            const input = document.getElementById('ai-input');
+            const text = input.value.trim();
+            if(!text) return;
+
+            const chatBody = document.getElementById('ai-chat-body');
+            chatBody.innerHTML += `<div class="ai-msg user">${text}</div>`;
+            input.value = "";
+            chatBody.scrollTop = chatBody.scrollHeight;
+
+            setTimeout(() => {
+                let reply = "ধন্যবাদ! বিস্তারিত জানতে আমাদের হোয়াটসঅ্যাপে যোগাযোগ করুন: 01818558919";
+                const lower = text.toLowerCase();
+
+                if(lower.includes('hello') || lower.includes('hi')) {
+                    reply = "Hello! Welcome to EASYMART BD. How can I assist you today? / হ্যালো! ইজির্মাট বিডি-তে স্বাগতম।";
+                } else if(lower.includes('number') || lower.includes('bkash') || lower.includes('nagad') || lower.includes('নাম্বার')) {
+                    reply = "আমাদের অফিশিয়াল বিকাশ/নগদ (Personal) নাম্বার: **01818558919**";
+                } else if(lower.includes('whatsapp') || lower.includes('হোয়াটসঅ্যাপ') || lower.includes('contact') || lower.includes('যোগাযোগ')) {
+                    reply = "আমাদের সাথে সরাসরি হোয়াটসঅ্যাপে কথা বলতে পারেন: [WhatsApp Chat](https://wa.me/8801818558919)";
+                }
+
+                chatBody.innerHTML += `<div class="ai-msg bot">${reply}</div>`;
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }, 600);
+        };
     </script>
 
     <script>
         let currentLang = 'BN';
-
         const dict = {
             BN: {
                 available_products: "উপলব্ধ প্রোডাক্টসমূহ",
@@ -694,18 +789,7 @@
                 change_photo: "ছবি পরিবর্তন",
                 tab_categories: "ক্যাটেগরি",
                 tab_menu: "মেনু",
-                cat_all: "সকল ক্যাটেগরি",
-                cat_ai: "AI Subscriptions",
-                cat_stream: "Streaming",
-                cat_soft: "Software",
-                cat_gift: "Gift card",
-                cat_game: "Game top-ups",
-                cat_google: "Google service",
-                cat_edu: "Education",
-                cat_design: "Design & creative",
-                cat_vpn: "VPN & security",
-                cat_wp: "WordPress tools",
-                cat_mkt: "Marketing tools"
+                cat_all: "সকল ক্যাটেগরি"
             },
             EN: {
                 available_products: "Available Products",
@@ -725,18 +809,7 @@
                 change_photo: "Change Photo",
                 tab_categories: "Categories",
                 tab_menu: "Menu",
-                cat_all: "All Categories",
-                cat_ai: "AI Subscriptions",
-                cat_stream: "Streaming",
-                cat_soft: "Software",
-                cat_gift: "Gift Card",
-                cat_game: "Game Top-ups",
-                cat_google: "Google Services",
-                cat_edu: "Education",
-                cat_design: "Design & Creative",
-                cat_vpn: "VPN & Security",
-                cat_wp: "WordPress Tools",
-                cat_mkt: "Marketing Tools"
+                cat_all: "All Categories"
             }
         };
 
@@ -762,18 +835,6 @@
             document.getElementById('drawer-menu-content').style.display = tab === 'menu' ? 'block' : 'none';
             document.getElementById('drawer-tab-cat').classList.toggle('active', tab === 'cat');
             document.getElementById('drawer-tab-menu').classList.toggle('active', tab === 'menu');
-        }
-
-        function filterCategory(cat, el) {
-            document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-            if(el) el.classList.add('active');
-
-            if (cat === 'All') {
-                renderProducts(window.allProductsList || []);
-            } else {
-                renderProducts((window.allProductsList || []).filter(p => p.category === cat));
-            }
-            if(document.getElementById('drawer').classList.contains('open')) toggleDrawer();
         }
 
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
