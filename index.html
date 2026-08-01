@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EASYMART BD - Digital Store</title>
+    <title>EASYMART BD - Apple Glass Store</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -14,7 +14,7 @@
             --glass-bg: rgba(255, 255, 255, 0.05);
             --glass-card: rgba(255, 255, 255, 0.07);
             --glass-border: rgba(255, 255, 255, 0.15);
-            --glass-modal: rgba(13, 19, 33, 0.85);
+            --glass-modal: rgba(13, 19, 33, 0.88);
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
         }
@@ -29,7 +29,7 @@
             background-attachment: fixed;
         }
 
-        /* Apple Glass Header */
+        /* Header Navigation */
         header {
             background: rgba(8, 12, 20, 0.65);
             backdrop-filter: blur(25px) saturate(200%);
@@ -47,7 +47,7 @@
             color: white; width: 42px; height: 42px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
             cursor: pointer; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-            font-size: 16px; position: relative; outline: none;
+            font-size: 16px; position: relative; outline: none; overflow: hidden;
         }
         .icon-btn:hover, .icon-btn:active { 
             background: rgba(255,255,255,0.2); 
@@ -56,6 +56,8 @@
             box-shadow: 0 0 20px var(--primary-glow); 
         }
         
+        .user-avatar-img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+
         .badge {
             position: absolute; top: -3px; right: -3px; background: var(--primary);
             color: white; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 10px;
@@ -105,7 +107,7 @@
             box-shadow: 0 4px 20px var(--primary-glow); transform: translateY(-2px);
         }
 
-        /* Product Grid Desktop & Mobile Responsive */
+        /* Products Grid */
         .products-grid { 
             display: grid; 
             grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); 
@@ -113,10 +115,7 @@
         }
 
         @media (max-width: 600px) {
-            .products-grid { 
-                grid-template-columns: repeat(2, 1fr); 
-                gap: 12px; 
-            }
+            .products-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
             .banner-slider { height: 140px; }
         }
 
@@ -141,6 +140,7 @@
             box-shadow: 0 4px 15px var(--primary-glow); outline: none;
         }
         .btn-glass-action:hover, .btn-glass-action:active { transform: scale(1.02); background: #059669; }
+        .btn-danger { background: #ef4444 !important; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4) !important; }
 
         /* Side Off-Canvas Drawer Menu */
         .drawer-overlay {
@@ -162,16 +162,22 @@
         .drawer-menu-item { display: flex; align-items: center; gap: 12px; padding: 12px; color: var(--text-main); text-decoration: none; font-size: 14px; font-weight: 600; border-radius: 12px; margin-bottom: 4px; cursor: pointer; }
         .drawer-menu-item:hover, .drawer-menu-item.active { background: var(--glass-card); color: var(--primary); transform: translateX(5px); }
 
-        /* Bottom Glass Nav */
+        /* Bottom Navigation Bar */
         .bottom-nav {
             position: fixed; bottom: 0; left: 0; width: 100%;
             background: rgba(8, 12, 20, 0.75); backdrop-filter: blur(25px) saturate(200%); -webkit-backdrop-filter: blur(25px) saturate(200%);
             border-top: 1px solid var(--glass-border);
-            display: flex; justify-content: space-around; padding: 10px 0; z-index: 99;
+            display: flex; justify-content: space-around; padding: 8px 0; z-index: 99;
         }
-        .nav-item { color: var(--text-muted); text-align: center; font-size: 11px; text-decoration: none; cursor: pointer; background: none; border: none; outline: none; }
+        .nav-item { color: var(--text-muted); text-align: center; font-size: 11px; text-decoration: none; cursor: pointer; background: none; border: none; outline: none; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .nav-item.active, .nav-item:hover { color: var(--primary); }
-        .nav-item i { font-size: 18px; display: block; margin-bottom: 2px; }
+        .nav-item i { font-size: 18px; margin-bottom: 2px; }
+
+        /* Profile Avatar in Bottom Nav */
+        .bottom-user-avatar {
+            width: 24px; height: 24px; border-radius: 50%; object-fit: cover;
+            border: 1px solid var(--primary); margin-bottom: 2px;
+        }
 
         /* Glass Modal Popup */
         .modal-overlay {
@@ -194,6 +200,20 @@
         }
         .form-group input:focus { border-color: var(--primary); box-shadow: 0 0 15px var(--primary-glow); }
 
+        /* Profile Modal Elements */
+        .profile-header-card {
+            display: flex; flex-direction: column; align-items: center; margin-bottom: 16px; position: relative;
+        }
+        .profile-img-container {
+            width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--primary);
+            position: relative; overflow: hidden; margin-bottom: 8px; box-shadow: 0 0 20px var(--primary-glow);
+        }
+        .profile-img-preview { width: 100%; height: 100%; object-fit: cover; }
+        .upload-img-btn {
+            position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(0,0,0,0.65);
+            color: white; font-size: 10px; text-align: center; padding: 4px 0; cursor: pointer;
+        }
+
         .tab-toggle { display: flex; margin-bottom: 18px; background: rgba(255,255,255,0.05); border-radius: 12px; padding: 4px; }
         .tab-btn { flex: 1; padding: 8px; border: none; background: transparent; color: var(--text-muted); font-weight: 700; cursor: pointer; border-radius: 8px; font-size: 13px; }
         .tab-btn.active { background: var(--primary); color: white; box-shadow: 0 2px 10px var(--primary-glow); }
@@ -209,7 +229,7 @@
             <a href="#" class="logo"><div class="logo-icon"><i class="fa-solid fa-bolt"></i></div> EASYMART <span>BD</span></a>
             <div style="display:flex; gap:8px;">
                 <button class="icon-btn" onclick="toggleLanguage()"><i class="fa-solid fa-globe"></i></button>
-                <button class="icon-btn" onclick="openModal('auth-modal')" id="header-user-btn"><i class="fa-regular fa-user"></i></button>
+                <button class="icon-btn" onclick="handleUserAccountAction()" id="header-user-btn"><i class="fa-regular fa-user"></i></button>
                 <button class="icon-btn"><i class="fa-solid fa-cart-shopping"></i><span class="badge">0</span></button>
             </div>
         </div>
@@ -280,7 +300,10 @@
         <button class="nav-item active" onclick="setActiveNavItem(this)"><i class="fa-solid fa-house"></i><span data-key="nav_home">Home</span></button>
         <button class="nav-item" onclick="setActiveNavItem(this); focusSearch();"><i class="fa-solid fa-magnifying-glass"></i><span data-key="nav_search">Search</span></button>
         <button class="nav-item" onclick="setActiveNavItem(this)"><i class="fa-solid fa-cart-shopping"></i><span data-key="nav_cart">Cart</span></button>
-        <button class="nav-item" onclick="setActiveNavItem(this); openModal('auth-modal');"><i class="fa-regular fa-user"></i><span id="bottom-user-text" data-key="signin">Sign In</span></button>
+        <button class="nav-item" onclick="setActiveNavItem(this); handleUserAccountAction();" id="bottom-user-btn">
+            <i class="fa-regular fa-user" id="bottom-nav-icon"></i>
+            <span id="bottom-user-text" data-key="signin">Sign In</span>
+        </button>
     </div>
 
     <div class="modal-overlay" id="auth-modal">
@@ -306,6 +329,30 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="profile-modal">
+        <div class="modal-box">
+            <span class="close-btn" onclick="closeModal('profile-modal')">&times;</span>
+            
+            <div class="profile-header-card">
+                <div class="profile-img-container">
+                    <img src="https://via.placeholder.com/150" id="profile-preview-img" class="profile-img-preview" alt="User Avatar">
+                    <label for="image-upload-input" class="upload-img-btn"><i class="fa-solid fa-camera"></i> Change</label>
+                    <input type="file" id="image-upload-input" accept="image/*" style="display:none;">
+                </div>
+                <h4 id="profile-display-name" style="font-size:16px;">User Name</h4>
+                <p id="profile-display-email" style="font-size:12px; color:var(--text-muted);"></p>
+            </div>
+
+            <form id="form-profile-update">
+                <div class="form-group"><label>Full Name</label><input type="text" id="prof-name" required></div>
+                <div class="form-group"><label>Phone Number</label><input type="text" id="prof-phone" placeholder="017xxxxxxxx"></div>
+                <button type="submit" class="btn-glass-action" style="margin-top:10px;">Save Changes</button>
+            </form>
+
+            <button class="btn-glass-action btn-danger" onclick="logoutUser()" style="margin-top:12px;"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</button>
+        </div>
+    </div>
+
     <div class="modal-overlay" id="checkout-modal">
         <div class="modal-box">
             <span class="close-btn" onclick="closeModal('checkout-modal')">&times;</span>
@@ -324,8 +371,9 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCnrZ8ZF8tGW2R5buFDsAeLHJlWHBwb9hw",
@@ -340,17 +388,99 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+        const storage = getStorage(app);
 
         let currentUser = null;
         window.allProductsList = [];
 
-        onAuthStateChanged(auth, (user) => {
+        // Auth State Handler
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUser = user;
-                document.getElementById('bottom-user-text').innerText = 'Account';
+                const photoURL = user.photoURL || 'https://via.placeholder.com/150';
+
+                // Update Header User Icon to Profile Photo
+                document.getElementById('header-user-btn').innerHTML = `<img src="${photoURL}" class="user-avatar-img">`;
+
+                // Update Bottom Nav to Profile Photo & Text
+                document.getElementById('bottom-nav-icon').outerHTML = `<img src="${photoURL}" class="bottom-user-avatar" id="bottom-nav-icon">`;
+                document.getElementById('bottom-user-text').innerText = 'Profile';
+
+                // Fill Profile Modal Data
+                document.getElementById('profile-display-name').innerText = user.displayName || 'User Profile';
+                document.getElementById('profile-display-email').innerText = user.email;
+                document.getElementById('prof-name').value = user.displayName || '';
+                document.getElementById('profile-preview-img').src = photoURL;
+
+                // Load Additional Info from Firestore
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                if (userDoc.exists()) {
+                    document.getElementById('prof-phone').value = userDoc.data().phone || '';
+                }
             } else {
                 currentUser = null;
-                document.getElementById('bottom-user-text').innerText = 'Sign In';
+                document.getElementById('header-user-btn').innerHTML = `<i class="fa-regular fa-user"></i>`;
+                document.getElementById('bottom-user-btn').innerHTML = `
+                    <i class="fa-regular fa-user" id="bottom-nav-icon"></i>
+                    <span id="bottom-user-text" data-key="signin">Sign In</span>
+                `;
+            }
+        });
+
+        // Toggle Account Modal (Sign In vs Profile)
+        window.handleUserAccountAction = () => {
+            if (currentUser) {
+                openModal('profile-modal');
+            } else {
+                openModal('auth-modal');
+            }
+        };
+
+        // Sign Out
+        window.logoutUser = async () => {
+            await signOut(auth);
+            closeModal('profile-modal');
+            alert("Signed out successfully!");
+        };
+
+        // Profile Image Upload to Firebase Storage
+        document.getElementById('image-upload-input').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file || !currentUser) return;
+
+            try {
+                const storageRef = ref(storage, `users/${currentUser.uid}/profile.jpg`);
+                await uploadBytes(storageRef, file);
+                const downloadURL = await getDownloadURL(storageRef);
+
+                await updateProfile(currentUser, { photoURL: downloadURL });
+                document.getElementById('profile-preview-img').src = downloadURL;
+                document.getElementById('header-user-btn').innerHTML = `<img src="${downloadURL}" class="user-avatar-img">`;
+                document.getElementById('bottom-nav-icon').src = downloadURL;
+
+                alert("Profile image updated successfully!");
+            } catch (err) {
+                alert("Image upload failed: " + err.message);
+            }
+        });
+
+        // Profile Details Update
+        document.getElementById('form-profile-update').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!currentUser) return;
+
+            try {
+                const name = document.getElementById('prof-name').value;
+                const phone = document.getElementById('prof-phone').value;
+
+                await updateProfile(currentUser, { displayName: name });
+                await setDoc(doc(db, "users", currentUser.uid), { name, phone }, { merge: true });
+
+                document.getElementById('profile-display-name').innerText = name;
+                alert("Profile details updated!");
+                closeModal('profile-modal');
+            } catch (err) {
+                alert("Update failed: " + err.message);
             }
         });
 
@@ -508,7 +638,6 @@
         }
 
         function filterCategory(categoryName, element) {
-            // Update Active Pill States
             document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.drawer-menu-item').forEach(d => d.classList.remove('active'));
 
