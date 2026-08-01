@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EASYMART BD - Digital Store</title>
+    <title>EASYMART BD - Digital Store & Wallet</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -14,7 +14,7 @@
             --glass-bg: rgba(255, 255, 255, 0.05);
             --glass-card: rgba(255, 255, 255, 0.07);
             --glass-border: rgba(255, 255, 255, 0.15);
-            --glass-modal: rgba(13, 19, 33, 0.9);
+            --glass-modal: rgba(13, 19, 33, 0.92);
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
         }
@@ -48,14 +48,18 @@
             cursor: pointer; backdrop-filter: blur(16px);
             font-size: 16px; position: relative; outline: none; overflow: hidden;
         }
-        .icon-btn:hover { 
-            background: rgba(255,255,255,0.2); 
-            border-color: var(--primary); 
-            box-shadow: 0 0 20px var(--primary-glow); 
+        .icon-btn:hover, .icon-btn:active { 
+            background: rgba(255,255,255,0.2); border-color: var(--primary); 
+            box-shadow: 0 0 20px var(--primary-glow); transform: translateY(-2px);
         }
 
-        /* Profile Avatar Styling */
         .user-avatar-img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+
+        .badge {
+            position: absolute; top: -2px; right: -2px; background: var(--primary);
+            color: white; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 10px;
+            box-shadow: 0 0 10px var(--primary-glow);
+        }
 
         .logo { font-size: 18px; font-weight: 800; color: white; text-decoration: none; display: flex; align-items: center; gap: 8px; }
         .logo-icon { background: var(--primary); color: white; width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; box-shadow: 0 0 15px var(--primary-glow); }
@@ -80,7 +84,7 @@
             color: var(--text-main); font-weight: 600; margin-bottom: 24px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
         }
 
-        /* Category Chips */
+        /* Category Scroll Chips */
         .category-chips { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 12px; margin-bottom: 24px; scrollbar-width: none; }
         .category-chips::-webkit-scrollbar { display: none; }
         
@@ -94,7 +98,7 @@
             box-shadow: 0 4px 20px var(--primary-glow); transform: translateY(-2px);
         }
 
-        /* Products Grid */
+        /* Product Cards */
         .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
         @media (max-width: 600px) {
             .products-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
@@ -104,19 +108,24 @@
         .product-card {
             background: var(--glass-card); backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border); border-radius: 22px; padding: 14px;
-            display: flex; flex-direction: column; justify-content: space-between;
+            display: flex; flex-direction: column; justify-content: space-between; gap: 10px;
         }
         .product-card:hover { transform: translateY(-6px); border-color: var(--primary); box-shadow: 0 12px 30px var(--primary-glow); }
         .product-img { width: 100%; height: 130px; border-radius: 14px; object-fit: cover; background: rgba(255,255,255,0.03); }
-        .product-title { font-size: 14px; font-weight: 700; margin: 10px 0 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .product-price { font-size: 16px; font-weight: 800; color: var(--primary); margin-bottom: 12px; }
+        .product-title { font-size: 14px; font-weight: 700; margin: 4px 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .product-price { font-size: 16px; font-weight: 800; color: var(--primary); }
         
         .btn-glass-action {
             width: 100%; padding: 10px; background: var(--primary); color: white;
             border: none; border-radius: 14px; font-weight: 700; cursor: pointer; font-size: 13px;
-            box-shadow: 0 4px 15px var(--primary-glow); outline: none;
+            box-shadow: 0 4px 15px var(--primary-glow); outline: none; display: flex; align-items: center; justify-content: center; gap: 6px;
         }
         .btn-glass-action:hover { background: #059669; }
+        .btn-glass-secondary {
+            background: rgba(255,255,255,0.08); border: 1px solid var(--glass-border);
+            color: var(--text-main); box-shadow: none;
+        }
+        .btn-glass-secondary:hover { background: rgba(255,255,255,0.18); border-color: var(--primary); }
         .btn-danger { background: #ef4444 !important; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4) !important; }
 
         /* Side Off-Canvas Drawer Menu */
@@ -133,6 +142,13 @@
         .drawer-tab.active { color: var(--primary); border-bottom: 2px solid var(--primary); }
         .drawer-menu-item { display: flex; align-items: center; gap: 12px; padding: 12px; color: var(--text-main); text-decoration: none; font-size: 14px; font-weight: 600; border-radius: 12px; margin-bottom: 4px; cursor: pointer; }
         .drawer-menu-item:hover, .drawer-menu-item.active { background: var(--glass-card); color: var(--primary); }
+
+        /* Wallet Badge / Card inside Profile */
+        .wallet-card {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(59, 130, 246, 0.2));
+            border: 1px solid var(--primary); border-radius: 18px; padding: 16px; margin-bottom: 16px; text-align: center;
+        }
+        .wallet-balance { font-size: 22px; font-weight: 800; color: var(--primary); margin: 6px 0; }
 
         /* Bottom Glass Nav */
         .bottom-nav {
@@ -156,17 +172,17 @@
         .modal-box {
             background: var(--glass-modal); border: 1px solid var(--glass-border);
             padding: 26px; border-radius: 26px; width: 90%; max-width: 380px; position: relative;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7); max-height: 90vh; overflow-y: auto;
         }
         .close-btn { position: absolute; top: 16px; right: 20px; font-size: 22px; cursor: pointer; color: var(--text-muted); }
 
         .form-group { margin-bottom: 14px; }
         .form-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
-        .form-group input {
+        .form-group input, .form-group select {
             width: 100%; padding: 11px 14px; background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--glass-border); border-radius: 12px; color: white; outline: none; font-size: 13px;
         }
-        .form-group input:focus { border-color: var(--primary); box-shadow: 0 0 15px var(--primary-glow); }
+        .form-group input:focus, .form-group select:focus { border-color: var(--primary); box-shadow: 0 0 15px var(--primary-glow); }
 
         .profile-header-card { display: flex; flex-direction: column; align-items: center; margin-bottom: 16px; }
         .profile-img-container {
@@ -183,6 +199,8 @@
         .tab-btn { flex: 1; padding: 8px; border: none; background: transparent; color: var(--text-muted); font-weight: 700; cursor: pointer; border-radius: 8px; font-size: 13px; }
         .tab-btn.active { background: var(--primary); color: white; }
 
+        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 12px; margin-bottom: 8px; }
+
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
     </style>
 </head>
@@ -197,7 +215,10 @@
                 <button class="icon-btn" onclick="handleAccountButtonClick()" id="header-user-btn">
                     <i class="fa-regular fa-user"></i>
                 </button>
-                <button class="icon-btn"><i class="fa-solid fa-cart-shopping"></i></button>
+                <button class="icon-btn" onclick="openModal('cart-modal')">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span class="badge" id="cart-badge-count">0</span>
+                </button>
             </div>
         </div>
     </header>
@@ -205,29 +226,29 @@
     <div class="drawer-overlay" id="drawer-overlay" onclick="toggleDrawer()"></div>
     <div class="drawer" id="drawer">
         <div class="drawer-tabs">
-            <button class="drawer-tab active" id="drawer-tab-cat" onclick="switchDrawerTab('cat')">Categories</button>
-            <button class="drawer-tab" id="drawer-tab-menu" onclick="switchDrawerTab('menu')">Menu</button>
+            <button class="drawer-tab active" id="drawer-tab-cat" onclick="switchDrawerTab('cat')" data-key="tab_categories">Categories</button>
+            <button class="drawer-tab" id="drawer-tab-menu" onclick="switchDrawerTab('menu')" data-key="tab_menu">Menu</button>
         </div>
         
         <div id="drawer-cat-content">
-            <div class="drawer-menu-item active" onclick="filterCategory('All', this)"><i class="fa-solid fa-border-all"></i> All Categories</div>
-            <div class="drawer-menu-item" onclick="filterCategory('AI Subscriptions', this)"><i class="fa-solid fa-robot"></i> AI Subscriptions</div>
-            <div class="drawer-menu-item" onclick="filterCategory('Streaming', this)"><i class="fa-solid fa-tv"></i> Streaming</div>
-            <div class="drawer-menu-item" onclick="filterCategory('Software', this)"><i class="fa-solid fa-code"></i> Software</div>
-            <div class="drawer-menu-item" onclick="filterCategory('Gift card', this)"><i class="fa-solid fa-gift"></i> Gift card</div>
-            <div class="drawer-menu-item" onclick="filterCategory('Game top-ups', this)"><i class="fa-solid fa-gamepad"></i> Game top-ups</div>
-            <div class="drawer-menu-item" onclick="filterCategory('Google service', this)"><i class="fa-brands fa-google"></i> Google service</div>
-            <div class="drawer-menu-item" onclick="filterCategory('Education', this)"><i class="fa-solid fa-graduation-cap"></i> Education</div>
-            <div class="drawer-menu-item" onclick="filterCategory('Design & creative', this)"><i class="fa-solid fa-palette"></i> Design & creative</div>
-            <div class="drawer-menu-item" onclick="filterCategory('VPN & security', this)"><i class="fa-solid fa-shield-halved"></i> VPN & security</div>
-            <div class="drawer-menu-item" onclick="filterCategory('WordPress tools', this)"><i class="fa-brands fa-wordpress"></i> WordPress tools</div>
-            <div class="drawer-menu-item" onclick="filterCategory('Marketing tools', this)"><i class="fa-solid fa-bullhorn"></i> Marketing tools</div>
+            <div class="drawer-menu-item active" onclick="filterCategory('All', this)"><i class="fa-solid fa-border-all"></i> <span data-key="cat_all">All Categories</span></div>
+            <div class="drawer-menu-item" onclick="filterCategory('AI Subscriptions', this)"><i class="fa-solid fa-robot"></i> <span data-key="cat_ai">AI Subscriptions</span></div>
+            <div class="drawer-menu-item" onclick="filterCategory('Streaming', this)"><i class="fa-solid fa-tv"></i> <span data-key="cat_stream">Streaming</span></div>
+            <div class="drawer-menu-item" onclick="filterCategory('Software', this)"><i class="fa-solid fa-code"></i> <span data-key="cat_soft">Software</span></div>
+            <div class="drawer-menu-item" onclick="filterCategory('Gift card', this)"><i class="fa-solid fa-gift"></i> <span data-key="cat_gift">Gift card</span></div>
+            <div class="drawer-menu-item" onclick="filterCategory('Game top-ups', this)"><i class="fa-solid fa-gamepad"></i> <span data-key="cat_game">Game top-ups</span></div>
+            <div class="drawer-menu-item" onclick="filterCategory('Google service', this)"><i class="fa-brands fa-google"></i> <span data-key="cat_google">Google service</span></div>
+            <div class="drawer-menu-item" onclick="filterCategory('Education', this)"><i class="fa-solid fa-graduation-cap"></i> <span data-key="cat_edu">Education</span></div>
+            <div class="drawer-menu-item" onclick="filterCategory('Design & creative', this)"><i class="fa-solid fa-palette"></i> <span data-key="cat_design">Design & creative</span></div>
+            <div class="drawer-menu-item" onclick="filterCategory('VPN & security', this)"><i class="fa-solid fa-shield-halved"></i> <span data-key="cat_vpn">VPN & security</span></div>
+            <div class="drawer-menu-item" onclick="filterCategory('WordPress tools', this)"><i class="fa-brands fa-wordpress"></i> <span data-key="cat_wp">WordPress tools</span></div>
+            <div class="drawer-menu-item" onclick="filterCategory('Marketing tools', this)"><i class="fa-solid fa-bullhorn"></i> <span data-key="cat_mkt">Marketing tools</span></div>
         </div>
 
         <div id="drawer-menu-content" style="display:none;">
-            <a href="#" class="drawer-menu-item"><i class="fa-solid fa-house"></i> Home</a>
-            <a href="#" class="drawer-menu-item"><i class="fa-solid fa-bag-shopping"></i> My Orders</a>
-            <a href="#" class="drawer-menu-item"><i class="fa-solid fa-headset"></i> Support</a>
+            <a href="#" class="drawer-menu-item"><i class="fa-solid fa-house"></i> <span data-key="nav_home">Home</span></a>
+            <a href="#" class="drawer-menu-item" onclick="toggleDrawer(); openModal('cart-modal');"><i class="fa-solid fa-bag-shopping"></i> <span data-key="nav_cart">Cart</span></a>
+            <a href="#" class="drawer-menu-item" onclick="toggleDrawer(); handleAccountButtonClick();"><i class="fa-solid fa-wallet"></i> <span data-key="wallet_title">Easymart Wallet</span></a>
         </div>
     </div>
 
@@ -242,21 +263,21 @@
         </div>
 
         <div class="category-chips">
-            <div class="chip active" onclick="filterCategory('All', this)">All</div>
-            <div class="chip" onclick="filterCategory('AI Subscriptions', this)">AI Subscriptions</div>
-            <div class="chip" onclick="filterCategory('Streaming', this)">Streaming</div>
-            <div class="chip" onclick="filterCategory('Software', this)">Software</div>
-            <div class="chip" onclick="filterCategory('Gift card', this)">Gift card</div>
-            <div class="chip" onclick="filterCategory('Game top-ups', this)">Game top-ups</div>
-            <div class="chip" onclick="filterCategory('Google service', this)">Google service</div>
-            <div class="chip" onclick="filterCategory('Education', this)">Education</div>
-            <div class="chip" onclick="filterCategory('Design & creative', this)">Design & creative</div>
-            <div class="chip" onclick="filterCategory('VPN & security', this)">VPN & security</div>
-            <div class="chip" onclick="filterCategory('WordPress tools', this)">WordPress tools</div>
-            <div class="chip" onclick="filterCategory('Marketing tools', this)">Marketing tools</div>
+            <div class="chip active" onclick="filterCategory('All', this)" data-key="cat_all">All</div>
+            <div class="chip" onclick="filterCategory('AI Subscriptions', this)" data-key="cat_ai">AI Subscriptions</div>
+            <div class="chip" onclick="filterCategory('Streaming', this)" data-key="cat_stream">Streaming</div>
+            <div class="chip" onclick="filterCategory('Software', this)" data-key="cat_soft">Software</div>
+            <div class="chip" onclick="filterCategory('Gift card', this)" data-key="cat_gift">Gift card</div>
+            <div class="chip" onclick="filterCategory('Game top-ups', this)" data-key="cat_game">Game top-ups</div>
+            <div class="chip" onclick="filterCategory('Google service', this)" data-key="cat_google">Google service</div>
+            <div class="chip" onclick="filterCategory('Education', this)" data-key="cat_edu">Education</div>
+            <div class="chip" onclick="filterCategory('Design & creative', this)" data-key="cat_design">Design & creative</div>
+            <div class="chip" onclick="filterCategory('VPN & security', this)" data-key="cat_vpn">VPN & security</div>
+            <div class="chip" onclick="filterCategory('WordPress tools', this)" data-key="cat_wp">WordPress tools</div>
+            <div class="chip" onclick="filterCategory('Marketing tools', this)" data-key="cat_mkt">Marketing tools</div>
         </div>
 
-        <h3 style="font-size: 16px; margin-bottom: 14px;" id="prod-sec-title">উপলব্ধ প্রোডাক্টসমূহ</h3>
+        <h3 style="font-size: 16px; margin-bottom: 14px;" id="prod-sec-title" data-key="available_products">উপলব্ধ প্রোডাক্টসমূহ</h3>
         
         <div class="products-grid" id="products-container">
             <p style="color:var(--text-muted)">প্রোডাক্ট লোড হচ্ছে...</p>
@@ -264,12 +285,12 @@
     </div>
 
     <div class="bottom-nav">
-        <button class="nav-item active" onclick="setActiveNavItem(this)"><i class="fa-solid fa-house"></i><span>Home</span></button>
-        <button class="nav-item" onclick="setActiveNavItem(this); focusSearch();"><i class="fa-solid fa-magnifying-glass"></i><span>Search</span></button>
-        <button class="nav-item" onclick="setActiveNavItem(this)"><i class="fa-solid fa-cart-shopping"></i><span>Cart</span></button>
+        <button class="nav-item active" onclick="setActiveNavItem(this)"><i class="fa-solid fa-house"></i><span data-key="nav_home">Home</span></button>
+        <button class="nav-item" onclick="setActiveNavItem(this); focusSearch();"><i class="fa-solid fa-magnifying-glass"></i><span data-key="nav_search">Search</span></button>
+        <button class="nav-item" onclick="setActiveNavItem(this); openModal('cart-modal');"><i class="fa-solid fa-cart-shopping"></i><span data-key="nav_cart">Cart</span></button>
         <button class="nav-item" onclick="setActiveNavItem(this); handleAccountButtonClick();" id="bottom-user-btn">
             <i class="fa-regular fa-user" id="bottom-user-icon"></i>
-            <span id="bottom-user-text">Sign In</span>
+            <span id="bottom-user-text" data-key="signin">Sign In</span>
         </button>
     </div>
 
@@ -277,21 +298,21 @@
         <div class="modal-box">
             <span class="close-btn" onclick="closeModal('auth-modal')">&times;</span>
             <div class="tab-toggle">
-                <button class="tab-btn active" id="tab-login" onclick="switchAuthTab('login')">Sign In</button>
-                <button class="tab-btn" id="tab-signup" onclick="switchAuthTab('signup')">Sign Up</button>
+                <button class="tab-btn active" id="tab-login" onclick="switchAuthTab('login')" data-key="signin">Sign In</button>
+                <button class="tab-btn" id="tab-signup" onclick="switchAuthTab('signup')" data-key="signup">Sign Up</button>
             </div>
 
             <form id="form-login">
                 <div class="form-group"><label>Email</label><input type="email" id="login-email" required></div>
                 <div class="form-group"><label>Password</label><input type="password" id="login-pass" required></div>
-                <button type="submit" class="btn-glass-action" style="margin-top:10px;">Sign In</button>
+                <button type="submit" class="btn-glass-action" style="margin-top:10px;" data-key="signin">Sign In</button>
             </form>
 
             <form id="form-signup" style="display:none;">
                 <div class="form-group"><label>Full Name</label><input type="text" id="signup-name" required></div>
                 <div class="form-group"><label>Email</label><input type="email" id="signup-email" required></div>
                 <div class="form-group"><label>Password</label><input type="password" id="signup-pass" required></div>
-                <button type="submit" class="btn-glass-action" style="margin-top:10px;">Create Account</button>
+                <button type="submit" class="btn-glass-action" style="margin-top:10px;" data-key="signup">Create Account</button>
             </form>
         </div>
     </div>
@@ -303,20 +324,85 @@
             <div class="profile-header-card">
                 <div class="profile-img-container">
                     <img src="https://via.placeholder.com/150" id="profile-preview-img" class="profile-img-preview" alt="User Avatar">
-                    <label for="image-upload-input" class="upload-img-btn"><i class="fa-solid fa-camera"></i> Change</label>
+                    <label for="image-upload-input" class="upload-img-btn"><i class="fa-solid fa-camera"></i> <span data-key="change_photo">Change</span></label>
                     <input type="file" id="image-upload-input" accept="image/*" style="display:none;">
                 </div>
                 <h4 id="profile-display-name" style="font-size:16px;">User Name</h4>
                 <p id="profile-display-email" style="font-size:12px; color:var(--text-muted);"></p>
             </div>
 
+            <div class="wallet-card">
+                <div style="font-size:12px; color:var(--text-muted);" data-key="wallet_title">Easymart BD Wallet</div>
+                <div class="wallet-balance" id="user-wallet-balance">৳0.00</div>
+                <button class="btn-glass-action" onclick="openModal('topup-modal')" style="font-size:11px; padding:6px 12px; width:auto; margin:0 auto;" data-key="add_money">+ Add Money</button>
+            </div>
+
             <form id="form-profile-update">
-                <div class="form-group"><label>Full Name</label><input type="text" id="prof-name" required></div>
-                <div class="form-group"><label>Phone Number</label><input type="text" id="prof-phone" placeholder="017xxxxxxxx"></div>
-                <button type="submit" class="btn-glass-action" style="margin-top:10px;">Save Changes</button>
+                <div class="form-group"><label data-key="your_name">Full Name</label><input type="text" id="prof-name" required></div>
+                <div class="form-group"><label data-key="phone_number">Phone Number</label><input type="text" id="prof-phone" placeholder="017xxxxxxxx"></div>
+                <button type="submit" class="btn-glass-action" style="margin-top:10px;" data-key="save_changes">Save Changes</button>
             </form>
 
-            <button class="btn-glass-action btn-danger" onclick="logoutUser()" style="margin-top:12px;"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</button>
+            <button class="btn-glass-action btn-danger" onclick="logoutUser()" style="margin-top:12px;"><i class="fa-solid fa-right-from-bracket"></i> <span data-key="signout">Sign Out</span></button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="topup-modal">
+        <div class="modal-box">
+            <span class="close-btn" onclick="closeModal('topup-modal')">&times;</span>
+            <h3 style="margin-bottom:12px; font-size:16px;" data-key="add_money">ওয়ালেটে টাকা এড করুন</h3>
+            <p style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">bKash / Nagad (Personal): <b style="color:var(--primary);">01800000000</b></p>
+
+            <form id="form-topup">
+                <div class="form-group">
+                    <label>Payment Method</label>
+                    <select id="topup-method">
+                        <option value="bKash">bKash Personal</option>
+                        <option value="Nagad">Nagad Personal</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>Amount (BDT)</label><input type="number" id="topup-amount" min="10" required></div>
+                <div class="form-group"><label>Transaction ID (TrxID)</label><input type="text" id="topup-trx" required></div>
+                <button type="submit" class="btn-glass-action" style="margin-top:10px;">Request Deposit</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="cart-modal">
+        <div class="modal-box">
+            <span class="close-btn" onclick="closeModal('cart-modal')">&times;</span>
+            <h3 style="margin-bottom:14px; font-size:16px;" data-key="nav_cart">আপনার কার্ট</h3>
+            <div id="cart-items-list" style="max-height: 200px; overflow-y:auto; margin-bottom:14px;">
+                <p style="color:var(--text-muted); text-align:center;">কার্ট খালি রয়েছে</p>
+            </div>
+            <div style="display:flex; justify-style:space-between; margin-bottom:14px; font-weight:bold;">
+                <span>Total:</span>
+                <span id="cart-total-price" style="color:var(--primary);">৳0</span>
+            </div>
+            <button class="btn-glass-action" onclick="checkoutFromCart()" data-key="submit_order">চেকআউট করুন</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="checkout-modal">
+        <div class="modal-box">
+            <span class="close-btn" onclick="closeModal('checkout-modal')">&times;</span>
+            <h3 style="margin-bottom:10px; font-size:16px;" data-key="checkout_title">অর্ডার চেকআউট</h3>
+            <p id="checkout-prod-name" style="color:var(--primary); font-weight:bold; font-size:14px;"></p>
+            <p id="checkout-prod-price" style="margin-bottom:12px; font-weight:bold; font-size:14px;"></p>
+
+            <form id="form-checkout">
+                <div class="form-group">
+                    <label>Payment Method</label>
+                    <select id="checkout-payment-method">
+                        <option value="Wallet">Easymart Wallet Balance</option>
+                        <option value="bKash/Nagad">bKash / Nagad Direct Trx</option>
+                    </select>
+                </div>
+                <div class="form-group"><label data-key="your_name">আপনার নাম</label><input type="text" id="ord-name" required></div>
+                <div class="form-group"><label data-key="phone_number">মোবাইল নম্বর</label><input type="text" id="ord-phone" required></div>
+                <div class="form-group" id="trx-input-group"><label>bKash / Nagad TrxID</label><input type="text" id="ord-trx"></div>
+                <button type="submit" class="btn-glass-action" style="margin-top:10px;" data-key="submit_order">অর্ডার সাবমিট করুন</button>
+            </form>
         </div>
     </div>
 
@@ -342,64 +428,59 @@
         const storage = getStorage(app);
 
         let currentUser = null;
+        window.userWalletBalance = 0;
+        window.cartItems = [];
 
-        // Firebase Auth Realtime State Listener
+        // Auth State Handler & Profile Circle Update
         onAuthStateChanged(auth, async (user) => {
             const headerBtn = document.getElementById('header-user-btn');
-            const bottomText = document.getElementById('bottom-user-text');
             const bottomBtn = document.getElementById('bottom-user-btn');
 
             if (user) {
                 currentUser = user;
                 const photoURL = user.photoURL || 'https://via.placeholder.com/150';
 
-                // Update Header Button to User Profile Photo
+                // Display User Profile Image directly on Circle Icons
                 headerBtn.innerHTML = `<img src="${photoURL}" class="user-avatar-img">`;
-
-                // Update Bottom Nav Button to User Profile Photo
                 bottomBtn.innerHTML = `
                     <img src="${photoURL}" class="bottom-user-avatar">
                     <span id="bottom-user-text">Profile</span>
                 `;
 
-                // Populate Profile Modal
                 document.getElementById('profile-display-name').innerText = user.displayName || 'User Profile';
                 document.getElementById('profile-display-email').innerText = user.email;
                 document.getElementById('prof-name').value = user.displayName || '';
                 document.getElementById('profile-preview-img').src = photoURL;
 
+                // Fetch Wallet & Details
                 const userDoc = await getDoc(doc(db, "users", user.uid));
                 if (userDoc.exists()) {
+                    window.userWalletBalance = userDoc.data().wallet || 0;
+                    document.getElementById('user-wallet-balance').innerText = "৳" + window.userWalletBalance.toFixed(2);
                     document.getElementById('prof-phone').value = userDoc.data().phone || '';
                 }
             } else {
                 currentUser = null;
-                // Reset to default Sign In buttons
                 headerBtn.innerHTML = `<i class="fa-regular fa-user"></i>`;
                 bottomBtn.innerHTML = `
                     <i class="fa-regular fa-user" id="bottom-user-icon"></i>
-                    <span id="bottom-user-text">Sign In</span>
+                    <span id="bottom-user-text" data-key="signin">Sign In</span>
                 `;
             }
         });
 
-        // Dynamic Modal Trigger
         window.handleAccountButtonClick = () => {
-            if (currentUser) {
-                openModal('profile-modal');
-            } else {
-                openModal('auth-modal');
-            }
+            if (currentUser) openModal('profile-modal');
+            else openModal('auth-modal');
         };
 
-        // Sign Out
         window.logoutUser = async () => {
             await signOut(auth);
             closeModal('profile-modal');
             alert("Signed out successfully!");
         };
 
-        // Profile Avatar Upload to Firebase Storage
+        // Upload Profile Image
         document.getElementById('image-upload-input').addEventListener('change', async (e) => {
             const file = e.target.files[0];
             if (!file || !currentUser) return;
@@ -411,62 +492,79 @@
 
                 await updateProfile(currentUser, { photoURL: downloadURL });
                 document.getElementById('profile-preview-img').src = downloadURL;
-
-                // Update UI instantly
                 document.getElementById('header-user-btn').innerHTML = `<img src="${downloadURL}" class="user-avatar-img">`;
                 document.getElementById('bottom-user-btn').querySelector('img').src = downloadURL;
 
-                alert("Profile image updated successfully!");
-            } catch (err) {
-                alert("Upload failed: " + err.message);
+                alert("Profile picture updated!");
+            } catch (err) { alert("Upload failed: " + err.message); }
+        });
+
+        // Top-up Deposit Request
+        document.getElementById('form-topup').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if(!currentUser) return;
+
+            await addDoc(collection(db, "topups"), {
+                userId: currentUser.uid,
+                userEmail: currentUser.email,
+                amount: parseFloat(document.getElementById('topup-amount').value),
+                method: document.getElementById('topup-method').value,
+                trxId: document.getElementById('topup-trx').value,
+                status: "Pending",
+                createdAt: new Date().toISOString()
+            });
+
+            alert("Top-up request submitted! Money will be added after admin review.");
+            closeModal('topup-modal');
+            e.target.reset();
+        });
+
+        // Add to Cart Logic (100% Workable)
+        window.addToCart = (title, price) => {
+            window.cartItems.push({ title, price: parseFloat(price) });
+            updateCartUI();
+            alert(`"${title}" added to your cart!`);
+        };
+
+        function updateCartUI() {
+            document.getElementById('cart-badge-count').innerText = window.cartItems.length;
+            const container = document.getElementById('cart-items-list');
+            container.innerHTML = '';
+            
+            let total = 0;
+            if (window.cartItems.length === 0) {
+                container.innerHTML = '<p style="color:var(--text-muted); text-align:center;">কার্ট খালি রয়েছে</p>';
+            } else {
+                window.cartItems.forEach((item, index) => {
+                    total += item.price;
+                    container.innerHTML += `
+                        <div class="cart-item">
+                            <div>
+                                <div style="font-weight:bold; font-size:13px;">${item.title}</div>
+                                <div style="color:var(--primary); font-size:12px;">৳${item.price}</div>
+                            </div>
+                            <i class="fa-solid fa-trash" style="color:#ef4444; cursor:pointer;" onclick="removeFromCart(${index})"></i>
+                        </div>
+                    `;
+                });
             }
-        });
+            document.getElementById('cart-total-price').innerText = "৳" + total;
+        }
 
-        // Update Name & Phone
-        document.getElementById('form-profile-update').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            if (!currentUser) return;
+        window.removeFromCart = (index) => {
+            window.cartItems.splice(index, 1);
+            updateCartUI();
+        };
 
-            try {
-                const name = document.getElementById('prof-name').value;
-                const phone = document.getElementById('prof-phone').value;
-
-                await updateProfile(currentUser, { displayName: name });
-                await setDoc(doc(db, "users", currentUser.uid), { name, phone }, { merge: true });
-
-                document.getElementById('profile-display-name').innerText = name;
-                alert("Profile details updated!");
-                closeModal('profile-modal');
-            } catch (err) { alert("Error updating profile: " + err.message); }
-        });
-
-        // Sign Up
-        document.getElementById('form-signup').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            try {
-                const name = document.getElementById('signup-name').value;
-                const email = document.getElementById('signup-email').value;
-                const pass = document.getElementById('signup-pass').value;
-
-                const res = await createUserWithEmailAndPassword(auth, email, pass);
-                await updateProfile(res.user, { displayName: name });
-                alert("Account created!");
-                closeModal('auth-modal');
-            } catch (err) { alert("Sign Up Failed: " + err.message); }
-        });
-
-        // Sign In
-        document.getElementById('form-login').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            try {
-                const email = document.getElementById('login-email').value;
-                const pass = document.getElementById('login-pass').value;
-
-                await signInWithEmailAndPassword(auth, email, pass);
-                alert("Logged in successfully!");
-                closeModal('auth-modal');
-            } catch (err) { alert("Sign In Failed: " + err.message); }
-        });
+        window.checkoutFromCart = () => {
+            if(window.cartItems.length === 0) {
+                alert("Your cart is empty!");
+                return;
+            }
+            closeModal('cart-modal');
+            const total = window.cartItems.reduce((sum, item) => sum + item.price, 0);
+            buyProduct("Cart Items (" + window.cartItems.length + ")", total);
+        };
 
         // Realtime Products Load
         onSnapshot(collection(db, "products"), (snap) => {
@@ -490,14 +588,168 @@
                             <div class="product-title">${p.title_bn}</div>
                             <div class="product-price">৳${p.price}</div>
                         </div>
-                        <button class="btn-glass-action" onclick="buyProduct('${p.title_bn}', '${p.price}')">Buy Now</button>
+                        <div style="display:flex; flex-direction:column; gap:6px;">
+                            <button class="btn-glass-action" onclick="buyProduct('${p.title_bn}', '${p.price}')"><i class="fa-solid fa-bolt"></i> Buy Now</button>
+                            <button class="btn-glass-action btn-glass-secondary" onclick="addToCart('${p.title_bn}', '${p.price}')"><i class="fa-solid fa-cart-plus"></i> Add to Cart</button>
+                        </div>
                     </div>
                 `;
             });
         };
+
+        window.buyProduct = (title, price) => {
+            if (!currentUser) {
+                alert("অর্ডার করতে হলে আপনাকে প্রথমে Sign In করতে হবে!");
+                openModal('auth-modal');
+                return;
+            }
+            document.getElementById('checkout-prod-name').innerText = title;
+            document.getElementById('checkout-prod-price').innerText = "Price: ৳" + price;
+            openModal('checkout-modal');
+        };
+
+        // Submit Order
+        document.getElementById('form-checkout').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const payMethod = document.getElementById('checkout-payment-method').value;
+            const priceText = document.getElementById('checkout-prod-price').innerText;
+            const price = parseFloat(priceText.replace(/[^0-9.]/g, ''));
+
+            if (payMethod === 'Wallet') {
+                if (window.userWalletBalance < price) {
+                    alert("আপনার ওয়ালেটে পর্যাপ্ত ব্যালেন্স নেই! দয়া করে ওয়ালেট টপ-আপ করুন।");
+                    return;
+                }
+                // Deduct Balance
+                window.userWalletBalance -= price;
+                await setDoc(doc(db, "users", currentUser.uid), { wallet: window.userWalletBalance }, { merge: true });
+                document.getElementById('user-wallet-balance').innerText = "৳" + window.userWalletBalance.toFixed(2);
+            }
+
+            await addDoc(collection(db, "orders"), {
+                customerName: document.getElementById('ord-name').value,
+                phone: document.getElementById('ord-phone').value,
+                paymentMethod: payMethod,
+                trxId: document.getElementById('ord-trx').value || 'Wallet Payment',
+                product: document.getElementById('checkout-prod-name').innerText,
+                total: price,
+                userId: currentUser.uid,
+                userEmail: currentUser.email,
+                createdAt: new Date().toISOString()
+            });
+
+            alert("অর্ডার সফলভাবে প্লেস করা হয়েছে!");
+            window.cartItems = [];
+            updateCartUI();
+            closeModal('checkout-modal');
+            e.target.reset();
+        });
+
+        // Sign Up
+        document.getElementById('form-signup').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                const name = document.getElementById('signup-name').value;
+                const email = document.getElementById('signup-email').value;
+                const pass = document.getElementById('signup-pass').value;
+
+                const res = await createUserWithEmailAndPassword(auth, email, pass);
+                await updateProfile(res.user, { displayName: name });
+                closeModal('auth-modal');
+            } catch (err) { alert("Sign Up Error: " + err.message); }
+        });
+
+        // Sign In
+        document.getElementById('form-login').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                const email = document.getElementById('login-email').value;
+                const pass = document.getElementById('login-pass').value;
+
+                await signInWithEmailAndPassword(auth, email, pass);
+                closeModal('auth-modal');
+            } catch (err) { alert("Sign In Error: " + err.message); }
+        });
     </script>
 
     <script>
+        let currentLang = 'BN';
+
+        const dict = {
+            BN: {
+                available_products: "উপলব্ধ প্রোডাক্টসমূহ",
+                nav_home: "হোম",
+                nav_search: "সার্চ",
+                nav_cart: "কার্ট",
+                signin: "Sign In",
+                signup: "Sign Up",
+                checkout_title: "অর্ডার চেকআউট",
+                your_name: "আপনার নাম",
+                phone_number: "মোবাইল নম্বর",
+                submit_order: "অর্ডার সাবমিট করুন",
+                wallet_title: "Easymart BD ওয়ালেট",
+                add_money: "+ টাকা এড করুন",
+                save_changes: "সেভ করুন",
+                signout: "সাইন আউট",
+                change_photo: "ছবি পরিবর্তন",
+                tab_categories: "ক্যাটেগরি",
+                tab_menu: "মেনু",
+                cat_all: "সকল ক্যাটেগরি",
+                cat_ai: "AI Subscriptions",
+                cat_stream: "Streaming",
+                cat_soft: "Software",
+                cat_gift: "Gift card",
+                cat_game: "Game top-ups",
+                cat_google: "Google service",
+                cat_edu: "Education",
+                cat_design: "Design & creative",
+                cat_vpn: "VPN & security",
+                cat_wp: "WordPress tools",
+                cat_mkt: "Marketing tools"
+            },
+            EN: {
+                available_products: "Available Products",
+                nav_home: "Home",
+                nav_search: "Search",
+                nav_cart: "Cart",
+                signin: "Sign In",
+                signup: "Sign Up",
+                checkout_title: "Order Checkout",
+                your_name: "Your Name",
+                phone_number: "Phone Number",
+                submit_order: "Submit Order",
+                wallet_title: "Easymart BD Wallet",
+                add_money: "+ Add Money",
+                save_changes: "Save Changes",
+                signout: "Sign Out",
+                change_photo: "Change Photo",
+                tab_categories: "Categories",
+                tab_menu: "Menu",
+                cat_all: "All Categories",
+                cat_ai: "AI Subscriptions",
+                cat_stream: "Streaming",
+                cat_soft: "Software",
+                cat_gift: "Gift Card",
+                cat_game: "Game Top-ups",
+                cat_google: "Google Services",
+                cat_edu: "Education",
+                cat_design: "Design & Creative",
+                cat_vpn: "VPN & Security",
+                cat_wp: "WordPress Tools",
+                cat_mkt: "Marketing Tools"
+            }
+        };
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'BN' ? 'EN' : 'BN';
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (dict[currentLang][key]) {
+                    el.innerText = dict[currentLang][key];
+                }
+            });
+        }
+
         function toggleDrawer() {
             const drawer = document.getElementById('drawer');
             const overlay = document.getElementById('drawer-overlay');
@@ -541,4 +793,4 @@
         }
     </script>
 </body>
-    </html>
+</html>
