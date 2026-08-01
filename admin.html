@@ -36,13 +36,16 @@
             padding: 24px; max-width: 800px; margin: 0 auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 24px; }
+        .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 24px; }
         .menu-btn {
             background: rgba(255, 255, 255, 0.03); border: 1px solid var(--glass-border);
             color: var(--text-muted); padding: 14px; border-radius: 14px; text-align: left;
             font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 14px;
         }
         .menu-btn.active, .menu-btn:hover { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 15px var(--primary-glow); }
+
+        .section-panel { display: none; }
+        .section-panel.active { display: block; }
 
         .form-group { margin-bottom: 16px; }
         .form-group label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 8px; font-weight: 600; }
@@ -53,7 +56,6 @@
             color: white !important; outline: none; font-size: 14px !important;
         }
 
-        /* সুন্দর ডার্ক থিম ড্রপডাউন CSS */
         .custom-select {
             cursor: pointer;
             -webkit-appearance: none; -moz-appearance: none; appearance: none;
@@ -79,60 +81,90 @@
             cursor: pointer; box-shadow: 0 4px 15px var(--primary-glow); margin-top: 10px;
         }
         .submit-btn:hover { background: #059669; }
+
+        .order-card, .cat-item { background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); padding: 12px; border-radius: 12px; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
     <div class="header">
         <div class="title"><i class="fa-solid fa-shield-halved" style="color:var(--primary)"></i> EASYMART Admin Console</div>
-        <button class="logout-btn" onclick="alert('Logged out!')">Logout</button>
+        <button class="logout-btn" id="btn-logout">Logout</button>
     </div>
 
     <div class="admin-card">
         <div class="menu-grid">
-            <button class="menu-btn active"><i class="fa-solid fa-box"></i> Manage Products</button>
-            <button class="menu-btn"><i class="fa-solid fa-layer-group"></i> Manage Categories</button>
-            <button class="menu-btn"><i class="fa-solid fa-images"></i> Manage Banners</button>
-            <button class="menu-btn"><i class="fa-solid fa-cart-shopping"></i> Customer Orders</button>
+            <button class="menu-btn active" onclick="switchTab('products', this)"><i class="fa-solid fa-box"></i> Manage Products</button>
+            <button class="menu-btn" onclick="switchTab('categories', this)"><i class="fa-solid fa-layer-group"></i> Manage Categories</button>
+            <button class="menu-btn" onclick="switchTab('banners', this)"><i class="fa-solid fa-images"></i> Manage Banners</button>
+            <button class="menu-btn" onclick="switchTab('orders', this)"><i class="fa-solid fa-cart-shopping"></i> Customer Orders</button>
         </div>
 
-        <form id="product-form">
-            <h3 style="margin-bottom: 16px; font-size: 16px;">নতুন প্রোডাক্ট যোগ করুন</h3>
+        <div id="panel-products" class="section-panel active">
+            <form id="product-form">
+                <h3 style="margin-bottom: 16px; font-size: 16px;">নতুন প্রোডাক্ট যোগ করুন</h3>
 
+                <div class="form-group">
+                    <label>পণ্যের নাম</label>
+                    <input type="text" id="prod-title" placeholder="যেমন: ChatGPT Plus" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>মূল্য (৳)</label>
+                        <input type="number" id="prod-price" placeholder="2750" required>
+                    </div>
+                    <div class="form-group">
+                        <label>ডিসকাউন্ট (%)</label>
+                        <input type="number" id="prod-discount" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label>ক্যাটাগরি</label>
+                        <select id="prod-category" class="custom-select" required>
+                            <option value="" disabled selected>ক্যাটাগরি সিলেক্ট করুন</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>ছবি ফাইল (অপশনাল)</label>
+                    <input type="file" id="prod-image-file" accept="image/*">
+                </div>
+
+                <button type="submit" class="submit-btn" id="btn-upload">প্রোডাক্ট আপলোড করুন</button>
+            </form>
+        </div>
+
+        <div id="panel-categories" class="section-panel">
+            <h3 style="margin-bottom: 16px; font-size: 16px;">নতুন ক্যাটাগরি যোগ করুন</h3>
             <div class="form-group">
-                <label>পণ্যের নাম</label>
-                <input type="text" id="prod-title" placeholder="যেমন: ChatGPT Plus" required>
+                <label>ক্যাটাগরির নাম</label>
+                <input type="text" id="cat-title" placeholder="যেমন: AI Subscriptions">
             </div>
+            <button class="submit-btn" onclick="addNewCategory()">ক্যাটাগরি সেভ করুন</button>
+        </div>
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label>মূল্য (৳)</label>
-                    <input type="number" id="prod-price" placeholder="2750" required>
-                </div>
-                <div class="form-group">
-                    <label>ডিসকাউন্ট (%)</label>
-                    <input type="number" id="prod-discount" value="0">
-                </div>
-                <div class="form-group">
-                    <label>ক্যাটাগরি</label>
-                    <select id="prod-category" class="custom-select" required>
-                        <option value="" disabled selected>ক্যাটাগরি সিলেক্ট করুন</option>
-                    </select>
-                </div>
-            </div>
-
+        <div id="panel-banners" class="section-panel">
+            <h3 style="margin-bottom: 16px; font-size: 16px;">ব্যনার আপলোড</h3>
             <div class="form-group">
-                <label>ছবি ফাইল (অপশনাল)</label>
-                <input type="file" id="prod-image-file" accept="image/*">
+                <label>ব্যনার ইমেজ ফাইল</label>
+                <input type="file" id="banner-file" accept="image/*">
             </div>
+            <button class="submit-btn" onclick="uploadBanner()">ব্যনার সেট করুন</button>
+        </div>
 
-            <button type="submit" class="submit-btn">প্রোডাক্ট আপলোড করুন</button>
-        </form>
+        <div id="panel-orders" class="section-panel">
+            <h3 style="margin-bottom: 16px; font-size: 16px;">গ্রাহকদের সাম্প্রতিক অর্ডারসমূহ</h3>
+            <div id="orders-list-container">
+                <p style="color:var(--text-muted)">অর্ডার লোড হচ্ছে...</p>
+            </div>
+        </div>
+
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
         const firebaseConfig = {
@@ -149,22 +181,29 @@
         const db = getFirestore(app);
         const storage = getStorage(app);
 
-        // ডিফল্ট ক্যাটাগরি লিস্ট (ফায়ারবেসে না থাকলেও এগুলো ব্যাকআপ হিসেবে দেখাবে)
+        // গ্লোবাল ফাংশন: মেনু ট্যাব সুইচিং (১০০% কাজ করবে)
+        window.switchTab = function(panelName, btnElement) {
+            document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
+
+            btnElement.classList.add('active');
+            document.getElementById(`panel-${panelName}`).classList.add('active');
+        };
+
+        // লগআউট বাটন
+        document.getElementById('btn-logout').addEventListener('click', () => {
+            alert("Logged out successfully!");
+            window.location.href = "index.html";
+        });
+
+        // ডিফল্ট ক্যাটাগরি লিস্ট
         const defaultCategories = [
-            "AI Subscriptions",
-            "Streaming",
-            "Software",
-            "Gift card",
-            "Game top-ups",
-            "Google service",
-            "Education",
-            "Design & creative",
-            "VPN & security",
-            "WordPress tools",
-            "Marketing tools"
+            "AI Subscriptions", "Streaming", "Software", "Gift card", 
+            "Game top-ups", "Google service", "Education", 
+            "Design & creative", "VPN & security", "WordPress tools", "Marketing tools"
         ];
 
-        // ড্রপডাউনে ক্যাটাগরি লোড করার ফাংশন
+        // ক্যাটাগরি লোড করার ফাংশন
         function loadCategories() {
             const selectEl = document.getElementById('prod-category');
             
@@ -178,30 +217,26 @@
                     selectEl.innerHTML += `<option value="${catName}">${catName}</option>`;
                 });
 
-                // যদি ফায়ারবেসে ক্যাটাগরি না থাকে তবে ডিফল্ট লিস্ট লোড হবে
                 if (count === 0) {
                     defaultCategories.forEach(cat => {
                         selectEl.innerHTML += `<option value="${cat}">${cat}</option>`;
                     });
                 }
-            }, (error) => {
-                // কোনো এরর হলেও ডিফল্ট ক্যাটাগরিগুলো লোড হবে
+            }, () => {
                 selectEl.innerHTML = '<option value="" disabled selected>ক্যাটাগরি সিলেক্ট করুন</option>';
                 defaultCategories.forEach(cat => {
                     selectEl.innerHTML += `<option value="${cat}">${cat}</option>`;
                 });
             });
         }
-
-        // পেজ লোডে অটোমেটিক কল
         loadCategories();
 
-        // প্রোডাক্ট আপলোড হ্যান্ডলার
+        // নতুন প্রোডাক্ট আপলোড
         document.getElementById('product-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const submitBtn = e.target.querySelector('button[type="submit"]');
-            submitBtn.innerText = "আপলোড হচ্ছে...";
-            submitBtn.disabled = true;
+            const btn = document.getElementById('btn-upload');
+            btn.innerText = "আপলোড হচ্ছে...";
+            btn.disabled = true;
 
             try {
                 const title = document.getElementById('prod-title').value;
@@ -230,11 +265,57 @@
                 alert("প্রোডাক্ট সফলভাবে আপলোড হয়েছে!");
                 e.target.reset();
             } catch (err) {
-                alert("Upload Failed: " + err.message);
+                alert("Upload Error: " + err.message);
             } finally {
-                submitBtn.innerText = "প্রোডাক্ট আপলোড করুন";
-                submitBtn.disabled = false;
+                btn.innerText = "প্রোডাক্ট আপলোড করুন";
+                btn.disabled = false;
             }
+        });
+
+        // নতুন ক্যাটাগরি সেভ
+        window.addNewCategory = async function() {
+            const catName = document.getElementById('cat-title').value;
+            if(!catName) { alert("ক্যাটাগরির নাম দিন!"); return; }
+
+            await addDoc(collection(db, "categories"), { name: catName });
+            alert("ক্যাটাগরি যুক্ত করা হয়েছে!");
+            document.getElementById('cat-title').value = "";
+        };
+
+        // ব্যনার আপলোড
+        window.uploadBanner = async function() {
+            const file = document.getElementById('banner-file').files[0];
+            if(!file) { alert("একটি ইমেজ সিলেক্ট করুন!"); return; }
+
+            const storageRef = ref(storage, `banners/${Date.now()}_${file.name}`);
+            await uploadBytes(storageRef, file);
+            const bannerUrl = await getDownloadURL(storageRef);
+
+            await addDoc(collection(db, "banners"), { url: bannerUrl, createdAt: new Date().toISOString() });
+            alert("ব্যনার সেট হয়েছে!");
+        };
+
+        // অর্ডার লিস্ট রিয়েলটাইম লোড
+        onSnapshot(collection(db, "orders"), (snapshot) => {
+            const container = document.getElementById('orders-list-container');
+            container.innerHTML = "";
+            
+            if(snapshot.empty) {
+                container.innerHTML = "<p style='color:var(--text-muted)'>কোনো অর্ডার পাওয়া যায়নি।</p>";
+                return;
+            }
+
+            snapshot.forEach(docSnap => {
+                const ord = docSnap.data();
+                container.innerHTML += `
+                    <div class="order-card">
+                        <div style="font-weight:bold; color:var(--primary);">${ord.product || 'Product'}</div>
+                        <div style="font-size:12px;">Customer: ${ord.customerName} (${ord.phone})</div>
+                        <div style="font-size:12px;">Total: ৳${ord.total} | Payment: ${ord.paymentMethod}</div>
+                        <div style="font-size:11px; color:var(--text-muted);">TrxID: ${ord.trxId}</div>
+                    </div>
+                `;
+            });
         });
     </script>
 </body>
