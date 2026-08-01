@@ -28,6 +28,53 @@
             background-attachment: fixed;
         }
 
+        /* Login Overlay Screen */
+        #auth-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(8, 12, 20, 0.95); backdrop-filter: blur(25px);
+            display: flex; justify-content: center; align-items: center; z-index: 9999;
+        }
+
+        .auth-card {
+            background: var(--glass-card); backdrop-filter: blur(30px);
+            border: 1px solid var(--glass-border); border-radius: 24px;
+            padding: 30px; width: 100%; max-width: 380px; text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+        }
+
+        .auth-card h2 { font-size: 20px; font-weight: 800; color: white; margin-bottom: 6px; }
+        .auth-card p { font-size: 12px; color: var(--text-muted); margin-bottom: 24px; }
+
+        .auth-input-group { margin-bottom: 16px; text-align: left; }
+        .auth-input-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; font-weight: 600; }
+        .auth-input-group input {
+            width: 100%; padding: 12px 16px; background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--glass-border); border-radius: 12px;
+            color: white; outline: none; font-size: 14px;
+        }
+        .auth-input-group input:focus { border-color: var(--primary); box-shadow: 0 0 15px var(--primary-glow); }
+
+        .auth-btn {
+            width: 100%; padding: 12px; background: var(--primary); color: white;
+            border: none; border-radius: 12px; font-weight: 700; font-size: 14px;
+            cursor: pointer; box-shadow: 0 4px 15px var(--primary-glow); margin-top: 10px;
+        }
+        .auth-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        /* Shake animation for wrong password */
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            20% { transform: translateX(-10px); border-color: var(--danger); box-shadow: 0 0 15px rgba(239, 68, 68, 0.4); }
+            40% { transform: translateX(10px); border-color: var(--danger); box-shadow: 0 0 15px rgba(239, 68, 68, 0.4); }
+            60% { transform: translateX(-10px); border-color: var(--danger); box-shadow: 0 0 15px rgba(239, 68, 68, 0.4); }
+            80% { transform: translateX(10px); border-color: var(--danger); box-shadow: 0 0 15px rgba(239, 68, 68, 0.4); }
+            100% { transform: translateX(0); }
+        }
+        .shake-animation { animation: shake 0.4s ease-in-out; }
+
+        /* Main Admin Panel */
+        #main-admin-panel { display: none; }
+
         .header { display: flex; justify-content: space-between; align-items: center; max-width: 1000px; margin: 0 auto 16px; padding: 4px; }
         .title { font-size: 18px; font-weight: 800; color: white; display: flex; align-items: center; gap: 8px; }
         .logout-btn { background: var(--danger); color: white; border: none; padding: 6px 14px; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 13px; }
@@ -108,185 +155,207 @@
 </head>
 <body>
 
-    <div class="header">
-        <div class="title"><i class="fa-solid fa-shield-halved" style="color:var(--primary)"></i> EASYMART Admin</div>
-        <button class="logout-btn" onclick="adminLogout()">Logout</button>
+    <div id="auth-overlay">
+        <div class="auth-card" id="auth-card-box">
+            <div style="font-size: 32px; color: var(--primary); margin-bottom: 10px;"><i class="fa-solid fa-shield-halved"></i></div>
+            <h2>EasyMart Admin</h2>
+            <p>অ্যাডমিন প্যানেলে প্রবেশ করতে লগইন করুন</p>
+            
+            <form id="admin-login-form">
+                <div class="auth-input-group">
+                    <label>Username (Email)</label>
+                    <input type="text" id="admin-user" placeholder="Admin" required>
+                </div>
+                <div class="auth-input-group">
+                    <label>Password</label>
+                    <input type="password" id="admin-pass" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="auth-btn">Login</button>
+            </form>
+        </div>
     </div>
 
-    <div class="admin-card">
-        
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div style="font-size:10px; color:var(--text-muted);">Orders</div>
-                <div class="stat-num" id="stat-total-orders">0</div>
-            </div>
-            <div class="stat-card">
-                <div style="font-size:10px; color:var(--text-muted);">Users</div>
-                <div class="stat-num" id="stat-total-users">0</div>
-            </div>
-            <div class="stat-card">
-                <div style="font-size:10px; color:var(--text-muted);">Deposits</div>
-                <div class="stat-num" id="stat-pending-topups" style="color:var(--warning);">0</div>
-            </div>
+    <div id="main-admin-panel">
+        <div class="header">
+            <div class="title"><i class="fa-solid fa-shield-halved" style="color:var(--primary)"></i> EASYMART Admin</div>
+            <button class="logout-btn" onclick="adminLogout()">Logout</button>
         </div>
 
-        <div class="menu-grid">
-            <button class="menu-btn active" onclick="switchTab('products', this)"><i class="fa-solid fa-box"></i> Products</button>
-            <button class="menu-btn" onclick="switchTab('banners', this)"><i class="fa-solid fa-images"></i> Banners</button>
-            <button class="menu-btn" onclick="switchTab('orders', this)"><i class="fa-solid fa-cart-shopping"></i> Orders</button>
-            <button class="menu-btn" onclick="switchTab('wallet', this)"><i class="fa-solid fa-wallet"></i> Topups</button>
-            <button class="menu-btn" onclick="switchTab('categories', this)"><i class="fa-solid fa-layer-group"></i> Categories</button>
-            <button class="menu-btn" onclick="switchTab('users', this)"><i class="fa-solid fa-users"></i> Users</button>
-        </div>
-
-        <div id="panel-products" class="section-panel active">
-            <div class="sub-tab-container">
-                <button class="sub-tab-btn active" onclick="switchSubTab('add-product', this)"><i class="fa-solid fa-plus"></i> নতুন প্রোডাক্ট যুক্ত করুন</button>
-                <button class="sub-tab-btn" onclick="switchSubTab('all-products', this)"><i class="fa-solid fa-list"></i> সব প্রোডাক্ট</button>
-            </div>
-
-            <div id="sub-panel-add-product">
-                <form id="product-form">
-                    <h3 style="margin-bottom: 12px; font-size: 14px;" id="form-heading">নতুন প্রোডাক্ট ফর্ম</h3>
-                    <input type="hidden" id="edit-prod-id">
-                    <input type="hidden" id="existing-prod-image">
-
-                    <div class="form-group">
-                        <label>পণ্যের নাম</label>
-                        <input type="text" id="prod-title" placeholder="যেমন: ChatGPT Plus" required>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>মূল্য (৳)</label>
-                            <input type="number" id="prod-price" placeholder="2750" required>
-                        </div>
-                        <div class="form-group">
-                            <label>ডিসকাউন্ট (%)</label>
-                            <input type="number" id="prod-discount" value="0">
-                        </div>
-                        <div class="form-group">
-                            <label>ক্যাটাগরি</label>
-                            <select id="prod-category" class="custom-select" required>
-                                <option value="" disabled selected>ক্যাটাগরি সিলেক্ট করুন</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>ছবি (ইমেজ লিঙ্ক অথবা ফাইল)</label>
-                        <input type="text" id="prod-image-url" placeholder="ইমেজ লিঙ্ক বসান (যেমন: https://...)" style="margin-bottom: 6px;">
-                        <input type="file" id="prod-image-file" accept="image/*" onchange="previewImage(this, 'prod-img-preview')">
-                        <img id="prod-img-preview" class="img-preview">
-                    </div>
-
-                    <button type="submit" class="submit-btn" id="btn-upload">প্রোডাক্ট সেভ করুন</button>
-                    <button type="button" class="submit-btn" id="btn-cancel-edit" style="background:#4b5563; display:none; margin-top:6px;" onclick="resetProductForm()">এডিট বাতিল করুন</button>
-                </form>
-            </div>
-
-            <div id="sub-panel-all-products" style="display:none;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px;">
-                    <h3 style="font-size: 14px;">সব প্রোডাক্ট লিস্ট</h3>
-                    <input type="text" id="search-prod-input" placeholder="সার্চ করুন..." onkeyup="filterProducts()" style="padding:6px 12px; background:rgba(255,255,255,0.06); border:1px solid var(--glass-border); border-radius:8px; color:white; outline:none; font-size:12px; width:150px;">
+        <div class="admin-card">
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div style="font-size:10px; color:var(--text-muted);">Orders</div>
+                    <div class="stat-num" id="stat-total-orders">0</div>
                 </div>
+                <div class="stat-card">
+                    <div style="font-size:10px; color:var(--text-muted);">Users</div>
+                    <div class="stat-num" id="stat-total-users">0</div>
+                </div>
+                <div class="stat-card">
+                    <div style="font-size:10px; color:var(--text-muted);">Deposits</div>
+                    <div class="stat-num" id="stat-pending-topups" style="color:var(--warning);">0</div>
+                </div>
+            </div>
+
+            <div class="menu-grid">
+                <button class="menu-btn active" onclick="switchTab('products', this)"><i class="fa-solid fa-box"></i> Products</button>
+                <button class="menu-btn" onclick="switchTab('banners', this)"><i class="fa-solid fa-images"></i> Banners</button>
+                <button class="menu-btn" onclick="switchTab('orders', this)"><i class="fa-solid fa-cart-shopping"></i> Orders</button>
+                <button class="menu-btn" onclick="switchTab('wallet', this)"><i class="fa-solid fa-wallet"></i> Topups</button>
+                <button class="menu-btn" onclick="switchTab('categories', this)"><i class="fa-solid fa-layer-group"></i> Categories</button>
+                <button class="menu-btn" onclick="switchTab('users', this)"><i class="fa-solid fa-users"></i> Users</button>
+            </div>
+
+            <div id="panel-products" class="section-panel active">
+                <div class="sub-tab-container">
+                    <button class="sub-tab-btn active" onclick="switchSubTab('add-product', this)"><i class="fa-solid fa-plus"></i> নতুন প্রোডাক্ট যুক্ত করুন</button>
+                    <button class="sub-tab-btn" onclick="switchSubTab('all-products', this)"><i class="fa-solid fa-list"></i> সব প্রোডাক্ট</button>
+                </div>
+
+                <div id="sub-panel-add-product">
+                    <form id="product-form">
+                        <h3 style="margin-bottom: 12px; font-size: 14px;" id="form-heading">নতুন প্রোডাক্ট ফর্ম</h3>
+                        <input type="hidden" id="edit-prod-id">
+                        <input type="hidden" id="existing-prod-image">
+
+                        <div class="form-group">
+                            <label>পণ্যের নাম</label>
+                            <input type="text" id="prod-title" placeholder="যেমন: ChatGPT Plus" required>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>মূল্য (৳)</label>
+                                <input type="number" id="prod-price" placeholder="2750" required>
+                            </div>
+                            <div class="form-group">
+                                <label>ডিসকাউন্ট (%)</label>
+                                <input type="number" id="prod-discount" value="0">
+                            </div>
+                            <div class="form-group">
+                                <label>ক্যাটাগরি</label>
+                                <select id="prod-category" class="custom-select" required>
+                                    <option value="" disabled selected>ক্যাটাগরি সিলেক্ট করুন</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>ছবি (ইমেজ লিঙ্ক অথবা ফাইল)</label>
+                            <input type="text" id="prod-image-url" placeholder="ইমেজ লিঙ্ক বসান (যেমন: https://...)" style="margin-bottom: 6px;">
+                            <input type="file" id="prod-image-file" accept="image/*" onchange="previewImage(this, 'prod-img-preview')">
+                            <img id="prod-img-preview" class="img-preview">
+                        </div>
+
+                        <button type="submit" class="submit-btn" id="btn-upload">প্রোডাক্ট সেভ করুন</button>
+                        <button type="button" class="submit-btn" id="btn-cancel-edit" style="background:#4b5563; display:none; margin-top:6px;" onclick="resetProductForm()">এডিট বাতিল করুন</button>
+                    </form>
+                </div>
+
+                <div id="sub-panel-all-products" style="display:none;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px;">
+                        <h3 style="font-size: 14px;">সব প্রোডাক্ট লিস্ট</h3>
+                        <input type="text" id="search-prod-input" placeholder="সার্চ করুন..." onkeyup="filterProducts()" style="padding:6px 12px; background:rgba(255,255,255,0.06); border:1px solid var(--glass-border); border-radius:8px; color:white; outline:none; font-size:12px; width:150px;">
+                    </div>
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ছবি</th>
+                                    <th>নাম</th>
+                                    <th>ক্যাটাগরি</th>
+                                    <th>মূল্য</th>
+                                    <th>অ্যাকশন</th>
+                                </tr>
+                            </thead>
+                            <tbody id="products-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="panel-banners" class="section-panel">
+                <h3 style="margin-bottom: 12px; font-size: 14px;">নতুন ব্যনার যোগ করুন</h3>
+                <div class="form-group">
+                    <label>ব্যনার লিংক বা ফাইল</label>
+                    <input type="text" id="banner-url-input" placeholder="https://..." style="margin-bottom: 6px;">
+                    <input type="file" id="banner-file" accept="image/*" onchange="previewImage(this, 'banner-img-preview')">
+                    <img id="banner-img-preview" class="img-preview">
+                </div>
+                <button class="submit-btn" onclick="uploadBanner()">ব্যনার আপলোড করুন</button>
+
+                <h3 style="margin-top: 24px; margin-bottom: 10px; font-size: 14px;">বর্তমান ব্যনারসমূহ</h3>
+                <div class="banner-grid" id="banner-list-container"></div>
+            </div>
+
+            <div id="panel-orders" class="section-panel">
+                <h3 style="margin-bottom: 12px; font-size: 14px;">সাম্প্রতিক অর্ডারসমূহ</h3>
                 <div class="table-wrapper">
                     <table class="data-table">
                         <thead>
                             <tr>
-                                <th>ছবি</th>
-                                <th>নাম</th>
-                                <th>ক্যাটাগরি</th>
+                                <th>গ্রাহক</th>
+                                <th>মোবাইল</th>
+                                <th>প্রোডাক্ট</th>
                                 <th>মূল্য</th>
+                                <th>স্ট্যাটাস</th>
                                 <th>অ্যাকশন</th>
                             </tr>
                         </thead>
-                        <tbody id="products-table-body"></tbody>
+                        <tbody id="orders-table-body"></tbody>
                     </table>
                 </div>
             </div>
-        </div>
 
-        <div id="panel-banners" class="section-panel">
-            <h3 style="margin-bottom: 12px; font-size: 14px;">নতুন ব্যনার যোগ করুন</h3>
-            <div class="form-group">
-                <label>ব্যনার লিংক বা ফাইল</label>
-                <input type="text" id="banner-url-input" placeholder="https://..." style="margin-bottom: 6px;">
-                <input type="file" id="banner-file" accept="image/*" onchange="previewImage(this, 'banner-img-preview')">
-                <img id="banner-img-preview" class="img-preview">
+            <div id="panel-wallet" class="section-panel">
+                <h3 style="margin-bottom: 12px; font-size: 14px;">টপ-আপ রিকোয়েস্ট</h3>
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ইমেইল</th>
+                                <th>মেথড</th>
+                                <th>পরিমাণ</th>
+                                <th>TrxID</th>
+                                <th>স্ট্যাটাস</th>
+                                <th>অ্যাকশন</th>
+                            </tr>
+                        </thead>
+                        <tbody id="topups-table-body"></tbody>
+                    </table>
+                </div>
             </div>
-            <button class="submit-btn" onclick="uploadBanner()">ব্যনার আপলোড করুন</button>
 
-            <h3 style="margin-top: 24px; margin-bottom: 10px; font-size: 14px;">বর্তমান ব্যনারসমূহ</h3>
-            <div class="banner-grid" id="banner-list-container"></div>
-        </div>
+            <div id="panel-categories" class="section-panel">
+                <h3 style="margin-bottom: 12px; font-size: 14px;">নতুন ক্যাটাগরি যোগ করুন</h3>
+                <div class="form-group">
+                    <label>ক্যাটাগরির নাম</label>
+                    <input type="text" id="cat-title" placeholder="যেমন: AI Subscriptions">
+                </div>
+                <button class="submit-btn" onclick="addNewCategory()">ক্যাটাগরি সেভ করুন</button>
 
-        <div id="panel-orders" class="section-panel">
-            <h3 style="margin-bottom: 12px; font-size: 14px;">সাম্প্রতিক অর্ডারসমূহ</h3>
-            <div class="table-wrapper">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>গ্রাহক</th>
-                            <th>মোবাইল</th>
-                            <th>প্রোডাক্ট</th>
-                            <th>মূল্য</th>
-                            <th>স্ট্যাটাস</th>
-                            <th>অ্যাকশন</th>
-                        </tr>
-                    </thead>
-                    <tbody id="orders-table-body"></tbody>
-                </table>
+                <h3 style="margin-top: 20px; margin-bottom: 10px; font-size: 14px;">বর্তমান ক্যাটাগরিসমূহ</h3>
+                <div id="category-list-container" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
             </div>
-        </div>
 
-        <div id="panel-wallet" class="section-panel">
-            <h3 style="margin-bottom: 12px; font-size: 14px;">টপ-আপ রিকোয়েস্ট</h3>
-            <div class="table-wrapper">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>ইমেইল</th>
-                            <th>মেথড</th>
-                            <th>পরিমাণ</th>
-                            <th>TrxID</th>
-                            <th>স্ট্যাটাস</th>
-                            <th>অ্যাকশন</th>
-                        </tr>
-                    </thead>
-                    <tbody id="topups-table-body"></tbody>
-                </table>
+            <div id="panel-users" class="section-panel">
+                <h3 style="margin-bottom: 12px; font-size: 14px;">ইউজার লিস্ট</h3>
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ইমেইল</th>
+                                <th>মোবাইল</th>
+                                <th>ব্যালেন্স</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table-body"></tbody>
+                    </table>
+                </div>
             </div>
+
         </div>
-
-        <div id="panel-categories" class="section-panel">
-            <h3 style="margin-bottom: 12px; font-size: 14px;">নতুন ক্যাটাগরি যোগ করুন</h3>
-            <div class="form-group">
-                <label>ক্যাটাগরির নাম</label>
-                <input type="text" id="cat-title" placeholder="যেমন: AI Subscriptions">
-            </div>
-            <button class="submit-btn" onclick="addNewCategory()">ক্যাটাগরি সেভ করুন</button>
-
-            <h3 style="margin-top: 20px; margin-bottom: 10px; font-size: 14px;">বর্তমান ক্যাটাগরিসমূহ</h3>
-            <div id="category-list-container" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
-        </div>
-
-        <div id="panel-users" class="section-panel">
-            <h3 style="margin-bottom: 12px; font-size: 14px;">ইউজার লিস্ট</h3>
-            <div class="table-wrapper">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>ইমেইল</th>
-                            <th>মোবাইল</th>
-                            <th>ব্যালেন্স</th>
-                        </tr>
-                    </thead>
-                    <tbody id="users-table-body"></tbody>
-                </table>
-            </div>
-        </div>
-
     </div>
 
     <script type="module">
@@ -308,38 +377,55 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // লগইন সিকিউরিটি চেক
+        // ফায়ারবেস অথ স্টেট চেক
         onAuthStateChanged(auth, (user) => {
-            if (!user) {
-                let email = prompt("অ্যাডমিন প্যানেলে প্রবেশ করতে আপনার অ্যাডমিন ইমেল দিন:");
-                let password = prompt("পাসওয়ার্ড দিন:");
-                
-                if (email && password) {
-                    signInWithEmailAndPassword(auth, email, password)
-                    .then(() => {
-                        alert("সফলভাবে লগইন হয়েছে!");
-                    })
-                    .catch((error) => {
-                        alert("লগইন ব্যর্থ হয়েছে: " + error.message);
-                        window.location.reload();
-                    });
-                } else {
-                    alert("অনুগ্রহ করে সঠিক তথ্য দিন!");
-                    window.location.reload();
-                }
+            if (user) {
+                document.getElementById('auth-overlay').style.display = 'none';
+                document.getElementById('main-admin-panel').style.display = 'block';
+            } else {
+                document.getElementById('auth-overlay').style.display = 'flex';
+                document.getElementById('main-admin-panel').style.display = 'none';
             }
+        });
+
+        // কাস্টম গ্লাসি লগইন ফর্ম হ্যান্ডলার
+        document.getElementById('admin-login-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const usernameInput = document.getElementById('admin-user').value.trim();
+            const passwordInput = document.getElementById('admin-pass').value.trim();
+            const authCard = document.getElementById('auth-card-box');
+
+            // আপনার ইউজারনেম 'Admin' ইনপুট দিলে সেটিকে আপনার ফায়ারবেস বা নির্ধারিত ইমেলে কনভার্ট করে নিতে পারেন, অথবা সরাসরি ইমেল দিতে পারেন। 
+            // যেহেতু আপনি ইউজারনেম "Admin" এবং পাসওয়ার্ড "tTtTahsin26" চেয়েছেন, এখানে চেক করা হলো:
+            let targetEmail = usernameInput;
+            if(usernameInput.toLowerCase() === 'admin') {
+                // যদি এডমিন লেখে, তাহলে আপনার ফায়ারবেস আসল এডমিন ইমেল এখানে বসিয়ে নিবেন (অথবা সরাসরি ইমেল দিতে পারেন)
+                targetEmail = "tahsin@easymartbd.com"; // <-- আপনার আসল ফায়ারবেস এডমিন ইমেল এখানে দিয়ে দিবেন
+            }
+
+            signInWithEmailAndPassword(auth, targetEmail, passwordInput)
+            .then(() => {
+                alert("Welcome to the admin panel of EasyMart BD 🎉");
+            })
+            .catch((error) => {
+                // ভুল হলে গ্লাস কার্ডে সুন্দর ঝাঁকুনি (Shake animation) এবং ওয়ার্নিং পপআপ
+                authCard.classList.add('shake-animation');
+                alert("⚠️ ভুল ইউজারনেম বা পাসওয়ার্ড! দয়া করে সঠিক তথ্য দিন।");
+                setTimeout(() => {
+                    authCard.classList.remove('shake-animation');
+                }, 400);
+            });
         });
 
         window.adminLogout = function() {
             signOut(auth).then(() => {
                 alert("সফলভাবে লগআউট হয়েছে!");
-                window.location.reload();
             }).catch(() => {
                 alert("লগআউট করতে সমস্যা হয়েছে!");
             });
         };
 
-        // ফাইলকে সরাসরি Base64 স্ট্রিং এ রূপান্তর করার ফাংশন
+        // বাকি সব আগের অপশন ও ফাংশনসমূহ অপরিবর্তিত আছে
         function fileToBase64(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -461,7 +547,6 @@
             renderProductsTable(filtered);
         };
 
-        // প্রোডাক্ট সাবমিট ও আপডেট
         document.getElementById('product-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btn-upload');
@@ -677,11 +762,11 @@
             alert("টপআপ বাতিল করা হয়েছে!");
         };
 
-        onSnapshot(collection(db, "users"), (snapshot) => {
-            document.getElementById('stat-total-users').innerText = snapshot.size;
+        onSnapshot(collection(db, "users"), (stats) => {
+            document.getElementById('stat-total-users').innerText = stats.size;
             const tbody = document.getElementById('users-table-body');
             tbody.innerHTML = "";
-            snapshot.forEach((docSnap) => {
+            stats.forEach((docSnap) => {
                 const u = docSnap.data();
                 tbody.innerHTML += `
                     <tr>
