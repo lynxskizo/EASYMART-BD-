@@ -3,184 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EASYMART BD - Pro Admin Console</title>
+    <title>EASYMART Admin Console</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+    
     <style>
         :root {
-            --primary: #059669;
-            --bg-dark: #0f172a;
-            --glass-card: rgba(30, 41, 59, 0.75);
+            --primary: #10b981;
+            --primary-glow: rgba(16, 185, 129, 0.45);
+            --bg-dark: #080c14;
+            --glass-card: rgba(255, 255, 255, 0.05);
             --glass-border: rgba(255, 255, 255, 0.12);
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Hind Siliguri', 'Plus Jakarta Sans', sans-serif; }
-        body { background-color: var(--bg-dark); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
-
-        /* Security Login Modal */
-        #login-overlay {
-            position: fixed; top:0; left:0; width:100%; height:100%;
-            background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(16px);
-            display: flex; justify-content: center; align-items: center; z-index: 9999;
-        }
-        .login-card {
-            background: var(--glass-card); border: 1px solid var(--glass-border);
-            padding: 30px; border-radius: 20px; width: 90%; max-width: 380px; text-align: center;
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Hind Siliguri', 'Plus Jakarta Sans', sans-serif; transition: all 0.25s ease; }
+        
+        body { 
+            background: var(--bg-dark); color: var(--text-main); min-height: 100vh; padding: 20px;
+            background-image: radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.15) 0%, transparent 40%);
+            background-attachment: fixed;
         }
 
-        header {
-            background: rgba(30, 41, 59, 0.85); backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--glass-border); padding: 16px 24px;
-            display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100;
+        .header { display: flex; justify-content: space-between; align-items: center; max-width: 800px; margin: 0 auto 20px; }
+        .title { font-size: 20px; font-weight: 800; color: white; display: flex; align-items: center; gap: 8px; }
+        .logout-btn { background: #ef4444; color: white; border: none; padding: 8px 16px; border-radius: 12px; font-weight: 700; cursor: pointer; }
+
+        .admin-card {
+            background: var(--glass-card); backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border); border-radius: 20px;
+            padding: 24px; max-width: 800px; margin: 0 auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        .admin-container { max-width: 1100px; margin: 24px auto; width: 92%; flex: 1; display: grid; grid-template-columns: 240px 1fr; gap: 20px; }
-
-        .sidebar {
-            background: var(--glass-card); border: 1px solid var(--glass-border);
-            border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 8px; height: fit-content;
+        .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 24px; }
+        .menu-btn {
+            background: rgba(255, 255, 255, 0.03); border: 1px solid var(--glass-border);
+            color: var(--text-muted); padding: 14px; border-radius: 14px; text-align: left;
+            font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 14px;
         }
-        .nav-tab {
-            padding: 12px 16px; border-radius: 12px; color: var(--text-muted); cursor: pointer;
-            font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 10px; transition: 0.3s;
-        }
-        .nav-tab:hover, .nav-tab.active { background: var(--primary); color: white; }
+        .menu-btn.active, .menu-btn:hover { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 15px var(--primary-glow); }
 
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-
-        .glass-box {
-            background: var(--glass-card); backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border); border-radius: 18px; padding: 24px; margin-bottom: 20px;
-        }
-        .glass-box h3 { font-size: 18px; margin-bottom: 16px; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; }
-
-        .form-group { margin-bottom: 14px; }
-        label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px; }
-        input, select {
-            width: 100%; padding: 10px 14px; background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--glass-border); border-radius: 10px; color: white; outline: none; font-size: 14px;
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 8px; font-weight: 600; }
+        
+        .form-group input, .custom-select {
+            width: 100%; padding: 12px 16px; background: rgba(255, 255, 255, 0.06) !important;
+            border: 1px solid var(--glass-border) !important; border-radius: 14px !important;
+            color: white !important; outline: none; font-size: 14px !important;
         }
 
-        .btn-submit {
-            width: 100%; padding: 12px; background: var(--primary); border: none;
-            border-radius: 10px; color: white; font-weight: 700; cursor: pointer; font-size: 14px; margin-top: 5px;
-        }
-        .btn-cancel {
-            width: 100%; padding: 10px; background: #64748b; border: none;
-            border-radius: 10px; color: white; font-weight: 700; cursor: pointer; font-size: 13px; margin-top: 8px; display: none;
+        /* সুন্দর ডার্ক থিম ড্রপডাউন CSS */
+        .custom-select {
+            cursor: pointer;
+            -webkit-appearance: none; -moz-appearance: none; appearance: none;
+            background-image: url("data:image/svg+xml;utf8,<svg fill='%2310b981' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>") !important;
+            background-repeat: no-repeat !important;
+            background-position: right 14px center !important;
         }
 
-        .item-row {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 12px 16px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--glass-border);
-            border-radius: 12px; margin-bottom: 10px;
+        .custom-select option {
+            background-color: #0d1321 !important;
+            color: #ffffff !important;
+            padding: 12px;
         }
-        .action-btns { display: flex; gap: 8px; }
-        .btn-edit { background: #3b82f6; border: none; color: white; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 12px; }
-        .btn-delete { background: #ef4444; border: none; color: white; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 12px; }
 
-        @media (max-width: 768px) { .admin-container { grid-template-columns: 1fr; } }
+        .form-group input:focus, .custom-select:focus { border-color: var(--primary) !important; box-shadow: 0 0 15px var(--primary-glow) !important; }
+
+        .form-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+        @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+
+        .submit-btn {
+            width: 100%; padding: 14px; background: var(--primary); color: white;
+            border: none; border-radius: 14px; font-weight: 700; font-size: 15px;
+            cursor: pointer; box-shadow: 0 4px 15px var(--primary-glow); margin-top: 10px;
+        }
+        .submit-btn:hover { background: #059669; }
     </style>
 </head>
 <body>
 
-    <div id="login-overlay">
-        <div class="login-card">
-            <h2 style="margin-bottom:15px; font-size:20px;">Admin Login</h2>
-            <div class="form-group"><input type="text" id="admin-user" placeholder="Username"></div>
-            <div class="form-group"><input type="password" id="admin-pass" placeholder="Password"></div>
-            <button class="btn-submit" onclick="checkAuth()">Login</button>
-        </div>
+    <div class="header">
+        <div class="title"><i class="fa-solid fa-shield-halved" style="color:var(--primary)"></i> EASYMART Admin Console</div>
+        <button class="logout-btn" onclick="alert('Logged out!')">Logout</button>
     </div>
 
-    <header>
-        <div style="font-weight:800; font-size:18px;">EASYMART Admin Console</div>
-        <button style="background:#ef4444; border:none; color:white; padding:8px 16px; border-radius:8px; cursor:pointer;" onclick="logout()">Logout</button>
-    </header>
-
-    <div class="admin-container">
-        <div class="sidebar">
-            <div class="nav-tab active" onclick="switchTab('products', this)"><i class="fa-solid fa-box"></i> Manage Products</div>
-            <div class="nav-tab" onclick="switchTab('categories', this)"><i class="fa-solid fa-layer-group"></i> Manage Categories</div>
-            <div class="nav-tab" onclick="switchTab('banners', this)"><i class="fa-solid fa-images"></i> Manage Banners</div>
-            <div class="nav-tab" onclick="switchTab('orders', this)"><i class="fa-solid fa-cart-shopping"></i> Customer Orders</div>
+    <div class="admin-card">
+        <div class="menu-grid">
+            <button class="menu-btn active"><i class="fa-solid fa-box"></i> Manage Products</button>
+            <button class="menu-btn"><i class="fa-solid fa-layer-group"></i> Manage Categories</button>
+            <button class="menu-btn"><i class="fa-solid fa-images"></i> Manage Banners</button>
+            <button class="menu-btn"><i class="fa-solid fa-cart-shopping"></i> Customer Orders</button>
         </div>
 
-        <div class="content-area">
+        <form id="product-form">
+            <h3 style="margin-bottom: 16px; font-size: 16px;">নতুন প্রোডাক্ট যোগ করুন</h3>
 
-            <div id="tab-products" class="tab-content active">
-                <div class="glass-box">
-                    <h3 id="form-title">নতুন প্রোডাক্ট যুক্ত করুন</h3>
-                    <form id="prod-form">
-                        <input type="hidden" id="p-id">
-                        <input type="hidden" id="p-current-img">
-                        <div class="form-group"><label>পণ্যের নাম</label><input type="text" id="p-name" required></div>
-                        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;">
-                            <div class="form-group"><label>মূল্য (৳)</label><input type="number" id="p-price" required></div>
-                            <div class="form-group"><label>ডিসকাউন্ট (%)</label><input type="number" id="p-discount" placeholder="যেমন: 10"></div>
-                            <div class="form-group">
-                                <label>ক্যাটাগরি</label>
-                                <select id="p-cat" required><option value="All">All</option></select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>ছবি ফাইল <small style="color:var(--primary);">(অপশনাল - না দিলে পরবর্তীতে এড করতে পারবেন)</small></label>
-                            <input type="file" id="p-img" accept="image/*">
-                        </div>
-                        <button type="submit" class="btn-submit" id="btn-save">পাবলিশ করুন</button>
-                        <button type="button" class="btn-cancel" id="btn-cancel-edit" onclick="resetProductForm()">বাতিল করুন</button>
-                    </form>
+            <div class="form-group">
+                <label>পণ্যের নাম</label>
+                <input type="text" id="prod-title" placeholder="যেমন: ChatGPT Plus" required>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>মূল্য (৳)</label>
+                    <input type="number" id="prod-price" placeholder="2750" required>
                 </div>
-                <div class="glass-box">
-                    <h3>বর্তমান প্রোডাক্ট লিস্ট</h3>
-                    <div id="all-products-list"></div>
+                <div class="form-group">
+                    <label>ডিসকাউন্ট (%)</label>
+                    <input type="number" id="prod-discount" value="0">
+                </div>
+                <div class="form-group">
+                    <label>ক্যাটাগরি</label>
+                    <select id="prod-category" class="custom-select" required>
+                        <option value="" disabled selected>ক্যাটাগরি সিলেক্ট করুন</option>
+                    </select>
                 </div>
             </div>
 
-            <div id="tab-categories" class="tab-content">
-                <div class="glass-box">
-                    <h3>নতুন ক্যাটাগরি যুক্ত করুন</h3>
-                    <form id="cat-form">
-                        <div class="form-group"><label>ক্যাটাগরি টাইটেল</label><input type="text" id="c-name" required></div>
-                        <button type="submit" class="btn-submit">সেভ ক্যাটাগরি</button>
-                    </form>
-                </div>
-                <div class="glass-box">
-                    <h3>ক্যাটাগরি লিস্ট</h3>
-                    <div id="all-categories-list"></div>
-                </div>
+            <div class="form-group">
+                <label>ছবি ফাইল (অপশনাল)</label>
+                <input type="file" id="prod-image-file" accept="image/*">
             </div>
 
-            <div id="tab-banners" class="tab-content">
-                <div class="glass-box">
-                    <h3>স্লাইডার ব্যানার আপলোড</h3>
-                    <form id="banner-form">
-                        <div class="form-group"><label>ব্যানার পিকচার</label><input type="file" id="b-img" accept="image/*" required></div>
-                        <button type="submit" class="btn-submit">আপলোড ব্যানার</button>
-                    </form>
-                </div>
-                <div class="glass-box">
-                    <h3>বর্তমান ব্যানারসমূহ</h3>
-                    <div id="all-banners-list"></div>
-                </div>
-            </div>
-
-            <div id="tab-orders" class="tab-content">
-                <div class="glass-box">
-                    <h3>কাস্টমার অর্ডারস</h3>
-                    <div id="all-orders-list"></div>
-                </div>
-            </div>
-
-        </div>
+            <button type="submit" class="submit-btn">প্রোডাক্ট আপলোড করুন</button>
+        </form>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc, updateDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCnrZ8ZF8tGW2R5buFDsAeLHJlWHBwb9hw",
@@ -194,228 +147,95 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        const storage = getStorage(app);
 
-        const defaultPlaceholderImg = "data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22200%22%20height%3D%22200%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20200%20200%22%3E%3Crect%20fill%3D%22%231e293b%22%20width%3D%22200%22%20height%3D%22200%22%2F%3E%3Ctext%20fill%3D%22%2394a3b8%22%20font-family%3D%22sans-serif%22%20font-size%3D%2214%22%20x%3D%2250%25%22%20y%3D%2250%25%22%20text-anchor%3D%22middle%22%3ENo%20Image%3C%2Ftext%3E%3C%2Fsvg%3E";
+        // ডিফল্ট ক্যাটাগরি লিস্ট (ফায়ারবেসে না থাকলেও এগুলো ব্যাকআপ হিসেবে দেখাবে)
+        const defaultCategories = [
+            "AI Subscriptions",
+            "Streaming",
+            "Software",
+            "Gift card",
+            "Game top-ups",
+            "Google service",
+            "Education",
+            "Design & creative",
+            "VPN & security",
+            "WordPress tools",
+            "Marketing tools"
+        ];
 
-        window.productsData = {};
+        // ড্রপডাউনে ক্যাটাগরি লোড করার ফাংশন
+        function loadCategories() {
+            const selectEl = document.getElementById('prod-category');
+            
+            onSnapshot(collection(db, "categories"), (snapshot) => {
+                selectEl.innerHTML = '<option value="" disabled selected>ক্যাটাগরি সিলেক্ট করুন</option>';
+                let count = 0;
 
-        // Fetch Categories to Dropdown
-        onSnapshot(collection(db, "categories"), (snap) => {
-            const select = document.getElementById('p-cat');
-            const list = document.getElementById('all-categories-list');
-            select.innerHTML = '<option value="All">All</option>';
-            list.innerHTML = '';
-            snap.forEach(d => {
-                const name = d.data().name;
-                select.innerHTML += `<option value="${name}">${name}</option>`;
-                list.innerHTML += `
-                    <div class="item-row">
-                        <span>${name}</span>
-                        <button class="btn-delete" onclick="deleteItem('categories', '${d.id}')">Delete</button>
-                    </div>
-                `;
-            });
-        });
+                snapshot.forEach((doc) => {
+                    count++;
+                    const catName = doc.data().name || doc.data().title || doc.id;
+                    selectEl.innerHTML += `<option value="${catName}">${catName}</option>`;
+                });
 
-        // Add Category
-        document.getElementById('cat-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            await addDoc(collection(db, "categories"), { name: document.getElementById('c-name').value });
-            alert("ক্যাটাগরি যুক্ত হয়েছে!");
-            e.target.reset();
-        });
-
-        // Add / Update Product
-        document.getElementById('prod-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const id = document.getElementById('p-id').value;
-            const title_bn = document.getElementById('p-name').value;
-            const price = Number(document.getElementById('p-price').value);
-            const discount = Number(document.getElementById('p-discount').value) || 0;
-            const category = document.getElementById('p-cat').value;
-            const fileInput = document.getElementById('p-img');
-            const currentImg = document.getElementById('p-current-img').value;
-
-            const saveProduct = async (imgData) => {
-                const payload = { title_bn, price, discount, category, image: imgData };
-                if (id) {
-                    await updateDoc(doc(db, "products", id), payload);
-                    alert("প্রোডাক্ট আপডেট করা হয়েছে!");
-                } else {
-                    await addDoc(collection(db, "products"), payload);
-                    alert("প্রোডাক্ট সফলভাবে পোস্ট করা হয়েছে!");
-                }
-                resetProductForm();
-            };
-
-            if (fileInput.files.length > 0) {
-                const reader = new FileReader();
-                reader.onload = () => saveProduct(reader.result);
-                reader.readAsDataURL(fileInput.files[0]);
-            } else {
-                saveProduct(id ? (currentImg || defaultPlaceholderImg) : defaultPlaceholderImg);
-            }
-        });
-
-        // Read Products
-        onSnapshot(collection(db, "products"), (snap) => {
-            const list = document.getElementById('all-products-list');
-            list.innerHTML = '';
-            window.productsData = {};
-            snap.forEach(d => {
-                const p = d.data();
-                window.productsData[d.id] = p;
-                list.innerHTML += `
-                    <div class="item-row">
-                        <div style="display:flex; align-items:center; gap:10px;">
-                            <img src="${p.image || defaultPlaceholderImg}" style="width:36px; height:36px; border-radius:6px; object-fit:cover;">
-                            <div>
-                                <strong>${p.title_bn}</strong><br>
-                                <small style="color:var(--primary)">৳${p.price} (${p.category || 'All'})</small>
-                            </div>
-                        </div>
-                        <div class="action-btns">
-                            <button class="btn-edit" onclick="editProduct('${d.id}')">Edit</button>
-                            <button class="btn-delete" onclick="deleteItem('products', '${d.id}')">Delete</button>
-                        </div>
-                    </div>
-                `;
-            });
-        });
-
-        // Edit Product Handler
-        window.editProduct = (id) => {
-            const p = window.productsData[id];
-            if (!p) return;
-            document.getElementById('p-id').value = id;
-            document.getElementById('p-name').value = p.title_bn;
-            document.getElementById('p-price').value = p.price;
-            document.getElementById('p-discount').value = p.discount || 0;
-            document.getElementById('p-cat').value = p.category || 'All';
-            document.getElementById('p-current-img').value = p.image || '';
-            document.getElementById('form-title').innerText = "প্রোডাক্ট এডিট করুন";
-            document.getElementById('btn-save').innerText = "আপডেট করুন";
-            document.getElementById('btn-cancel-edit').style.display = "block";
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        };
-
-        window.resetProductForm = () => {
-            document.getElementById('prod-form').reset();
-            document.getElementById('p-id').value = '';
-            document.getElementById('p-current-img').value = '';
-            document.getElementById('form-title').innerText = "নতুন প্রোডাক্ট যুক্ত করুন";
-            document.getElementById('btn-save').innerText = "পাবলিশ করুন";
-            document.getElementById('btn-cancel-edit').style.display = "none";
-        };
-
-        // Add Banner
-        document.getElementById('banner-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const file = document.getElementById('b-img').files[0];
-            const reader = new FileReader();
-            reader.onload = async () => {
-                await addDoc(collection(db, "banners"), { image: reader.result });
-                alert("ব্যানার আপলোড সফল!");
-                e.target.reset();
-            };
-            reader.readAsDataURL(file);
-        });
-
-        // Read Banners
-        onSnapshot(collection(db, "banners"), (snap) => {
-            const list = document.getElementById('all-banners-list');
-            list.innerHTML = '';
-            snap.forEach(d => {
-                list.innerHTML += `
-                    <div class="item-row">
-                        <img src="${d.data().image}" style="height:40px; border-radius:6px;">
-                        <button class="btn-delete" onclick="deleteItem('banners', '${d.id}')">Delete</button>
-                    </div>
-                `;
-            });
-        });
-
-        // Read Orders
-        onSnapshot(collection(db, "orders"), (snap) => {
-            const list = document.getElementById('all-orders-list');
-            list.innerHTML = '';
-            snap.forEach(d => {
-                const o = d.data();
-                list.innerHTML += `
-                    <div class="item-row" style="flex-direction:column; align-items:flex-start;">
-                        <div style="display:flex; justify-content:space-between; width:100%;">
-                            <strong>${o.customerName} (${o.phone})</strong>
-                            <span style="color:var(--primary); font-weight:bold;">৳${o.total}</span>
-                        </div>
-                        <small style="color:var(--text-muted); margin-top:4px;">TrxID: ${o.trxId}</small>
-                        <button class="btn-delete" style="margin-top:8px;" onclick="deleteItem('orders', '${d.id}')">অর্ডার মুছুন</button>
-                    </div>
-                `;
-            });
-        });
-
-        window.deleteItem = async (col, id) => {
-            if(confirm("মুছে ফেলতে চান?")) await deleteDoc(doc(db, col, id));
-        };
-
-        // Automatic Product & Category Seeder
-        async function autoSeedInitialData() {
-            const catSnap = await getDocs(collection(db, "categories"));
-            let aiCatExists = false;
-            catSnap.forEach(d => {
-                if (d.data().name === "AI & Research Tools") aiCatExists = true;
-            });
-
-            if (!aiCatExists) {
-                await addDoc(collection(db, "categories"), { name: "AI & Research Tools" });
-            }
-
-            const prodSnap = await getDocs(collection(db, "products"));
-            if (prodSnap.empty) {
-                const initialProducts = [
-                    { title_bn: "Claude AI Pro (1 Month 100% Private Account)", price: 2790, category: "AI & Research Tools", discount: 0 },
-                    { title_bn: "ChatGPT Plus (1 Month Personal Plan)", price: 2750, category: "AI & Research Tools", discount: 0 },
-                    { title_bn: "Google Gemini (Gemini Pro / Ultra + 5TB Storage)", price: 750, category: "AI & Research Tools", discount: 0 },
-                    { title_bn: "Grok AI (SuperGrok Personal & Shared)", price: 2350, category: "AI & Research Tools", discount: 0 },
-                    { title_bn: "Gamma AI Pro Premium Monthly Access", price: 1990, category: "AI & Research Tools", discount: 0 },
-                    { title_bn: "Grammarly Premium Shared/Personal", price: 199, category: "AI & Research Tools", discount: 0 },
-                    { title_bn: "QuillBot Premium Shared/Personal", price: 199, category: "AI & Research Tools", discount: 0 },
-                    { title_bn: "Ideogram AI Basic & Plus Plans", price: 650, category: "AI & Research Tools", discount: 0 },
-                    { title_bn: "Paperpal Prime Personal", price: 1250, category: "AI & Research Tools", discount: 0 },
-                    { title_bn: "StealthWriter AI Premium Basic, Plus, Pro", price: 3250, category: "AI & Research Tools", discount: 0 }
-                ];
-
-                for (const p of initialProducts) {
-                    await addDoc(collection(db, "products"), {
-                        title_bn: p.title_bn,
-                        price: p.price,
-                        discount: p.discount,
-                        category: p.category,
-                        image: defaultPlaceholderImg
+                // যদি ফায়ারবেসে ক্যাটাগরি না থাকে তবে ডিফল্ট লিস্ট লোড হবে
+                if (count === 0) {
+                    defaultCategories.forEach(cat => {
+                        selectEl.innerHTML += `<option value="${cat}">${cat}</option>`;
                     });
                 }
+            }, (error) => {
+                // কোনো এরর হলেও ডিফল্ট ক্যাটাগরিগুলো লোড হবে
+                selectEl.innerHTML = '<option value="" disabled selected>ক্যাটাগরি সিলেক্ট করুন</option>';
+                defaultCategories.forEach(cat => {
+                    selectEl.innerHTML += `<option value="${cat}">${cat}</option>`;
+                });
+            });
+        }
+
+        // পেজ লোডে অটোমেটিক কল
+        loadCategories();
+
+        // প্রোডাক্ট আপলোড হ্যান্ডলার
+        document.getElementById('product-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            submitBtn.innerText = "আপলোড হচ্ছে...";
+            submitBtn.disabled = true;
+
+            try {
+                const title = document.getElementById('prod-title').value;
+                const price = parseFloat(document.getElementById('prod-price').value);
+                const discount = parseFloat(document.getElementById('prod-discount').value) || 0;
+                const category = document.getElementById('prod-category').value;
+                const file = document.getElementById('prod-image-file').files[0];
+
+                let imageUrl = "";
+
+                if (file) {
+                    const storageRef = ref(storage, `products/${Date.now()}_${file.name}`);
+                    await uploadBytes(storageRef, file);
+                    imageUrl = await getDownloadURL(storageRef);
+                }
+
+                await addDoc(collection(db, "products"), {
+                    title_bn: title,
+                    price: price,
+                    discount: discount,
+                    category: category,
+                    image: imageUrl,
+                    createdAt: new Date().toISOString()
+                });
+
+                alert("প্রোডাক্ট সফলভাবে আপলোড হয়েছে!");
+                e.target.reset();
+            } catch (err) {
+                alert("Upload Failed: " + err.message);
+            } finally {
+                submitBtn.innerText = "প্রোডাক্ট আপলোড করুন";
+                submitBtn.disabled = false;
             }
-        }
-        autoSeedInitialData();
-    </script>
-
-    <script>
-        function switchTab(tab, el) {
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-            document.getElementById('tab-' + tab).classList.add('active');
-            el.classList.add('active');
-        }
-
-        function checkAuth() {
-            if(document.getElementById('admin-user').value === 'Admin' && document.getElementById('admin-pass').value === 'tTtTahsin26') {
-                document.getElementById('login-overlay').style.display = 'none';
-                sessionStorage.setItem('admin_logged', 'true');
-            } else alert("ভুল তথ্য!");
-        }
-
-        function logout() { sessionStorage.removeItem('admin_logged'); location.reload(); }
-        if(sessionStorage.getItem('admin_logged') === 'true') document.getElementById('login-overlay').style.display = 'none';
+        });
     </script>
 </body>
 </html>
