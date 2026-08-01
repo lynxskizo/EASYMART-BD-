@@ -64,13 +64,11 @@
         .form-group { margin-bottom: 14px; }
         .form-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; font-weight: 600; }
         
-        .form-group input, .form-group textarea, .custom-select {
+        .form-group input, .custom-select {
             width: 100%; padding: 10px 14px; background: rgba(255, 255, 255, 0.06) !important;
             border: 1px solid var(--glass-border) !important; border-radius: 12px !important;
             color: white !important; outline: none; font-size: 13px !important;
         }
-
-        .form-group textarea { resize: vertical; height: 100px; }
 
         .custom-select {
             cursor: pointer; -webkit-appearance: none; -moz-appearance: none; appearance: none;
@@ -112,7 +110,7 @@
 
     <div class="header">
         <div class="title"><i class="fa-solid fa-shield-halved" style="color:var(--primary)"></i> EASYMART Admin</div>
-        <button class="logout-btn" onclick="alert('Logged out!')">Logout</button>
+        <button class="logout-btn" onclick="adminLogout()">Logout</button>
     </div>
 
     <div class="admin-card">
@@ -173,11 +171,6 @@
                                 <option value="" disabled selected>ক্যাটাগরি সিলেক্ট করুন</option>
                             </select>
                         </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>প্রোডাক্ট ডেসক্রিপশন (ল্যান্ডিং পেজের জন্য বিস্তারিত)</label>
-                        <textarea id="prod-desc" placeholder="এখানে প্রোডাক্ট সম্পর্কে বিস্তারিত বিবরণ লিখুন..."></textarea>
                     </div>
 
                     <div class="form-group">
@@ -298,6 +291,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc, updateDoc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -311,8 +305,41 @@
         };
 
         const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
         const db = getFirestore(app);
 
+        // লগইন সিকিউরিটি চেক
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                let email = prompt("অ্যাডমিন প্যানেলে প্রবেশ করতে আপনার অ্যাডমিন ইমেল দিন:");
+                let password = prompt("পাসওয়ার্ড দিন:");
+                
+                if (email && password) {
+                    signInWithEmailAndPassword(auth, email, password)
+                    .then(() => {
+                        alert("সফলভাবে লগইন হয়েছে!");
+                    })
+                    .catch((error) => {
+                        alert("লগইন ব্যর্থ হয়েছে: " + error.message);
+                        window.location.reload();
+                    });
+                } else {
+                    alert("অনুগ্রহ করে সঠিক তথ্য দিন!");
+                    window.location.reload();
+                }
+            }
+        });
+
+        window.adminLogout = function() {
+            signOut(auth).then(() => {
+                alert("সফলভাবে লগআউট হয়েছে!");
+                window.location.reload();
+            }).catch(() => {
+                alert("লগআউট করতে সমস্যা হয়েছে!");
+            });
+        };
+
+        // ফাইলকে সরাসরি Base64 স্ট্রিং এ রূপান্তর করার ফাংশন
         function fileToBase64(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -434,7 +461,7 @@
             renderProductsTable(filtered);
         };
 
-        // প্রোডাক্ট সাবমিট ও আপডেট (ডিসক্রিপশনসহ)
+        // প্রোডাক্ট সাবমিট ও আপডেট
         document.getElementById('product-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btn-upload');
@@ -450,7 +477,6 @@
                 const price = parseFloat(document.getElementById('prod-price').value);
                 const discount = parseFloat(document.getElementById('prod-discount').value) || 0;
                 const category = document.getElementById('prod-category').value;
-                const description = document.getElementById('prod-desc').value;
                 const file = document.getElementById('prod-image-file').files[0];
 
                 let imageUrl = urlInput || existingImg || "";
@@ -465,7 +491,6 @@
                         price: price,
                         discount: discount,
                         category: category,
-                        description: description,
                         image: imageUrl
                     });
                     alert("প্রোডাক্ট আপডেট সফল হয়েছে!");
@@ -475,7 +500,6 @@
                         price: price,
                         discount: discount,
                         category: category,
-                        description: description,
                         image: imageUrl,
                         createdAt: new Date().toISOString()
                     });
@@ -500,7 +524,6 @@
             document.getElementById('prod-price').value = p.price || 0;
             document.getElementById('prod-discount').value = p.discount || 0;
             document.getElementById('prod-category').value = p.category || '';
-            document.getElementById('prod-desc').value = p.description || '';
             document.getElementById('existing-prod-image').value = p.image || '';
             
             if(p.image && !p.image.startsWith('data:')) {
