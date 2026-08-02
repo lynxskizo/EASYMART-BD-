@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EASYMART BD - Digital Store & Wallet</title>
+    <title id="store-title-tag">EASYMART BD - Digital Store & Wallet</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -11,7 +11,6 @@
             --primary: #10b981;
             --primary-glow: rgba(16, 185, 129, 0.45);
             --bg-dark: #080c14;
-            --glass-bg: rgba(255, 255, 255, 0.05);
             --glass-card: rgba(255, 255, 255, 0.07);
             --glass-border: rgba(255, 255, 255, 0.15);
             --glass-modal: rgba(13, 19, 33, 0.95);
@@ -35,29 +34,20 @@
             border-bottom: 1px solid var(--glass-border);
             position: sticky; top: 0; z-index: 100;
         }
-        .nav-container {
-            max-width: 1200px; margin: 0 auto; padding: 12px 20px;
-            display: flex; justify-content: space-between; align-items: center; gap: 12px;
-        }
+        .nav-container { max-width: 1200px; margin: 0 auto; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
         
         .icon-btn {
-            background: var(--glass-bg); border: 1px solid var(--glass-border);
+            background: var(--glass-card); border: 1px solid var(--glass-border);
             color: white; width: 42px; height: 42px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            cursor: pointer; backdrop-filter: blur(16px);
-            font-size: 16px; position: relative; outline: none; overflow: hidden;
+            cursor: pointer; font-size: 16px; position: relative; outline: none;
         }
-        .icon-btn:hover, .icon-btn:active { 
-            background: rgba(255,255,255,0.2); border-color: var(--primary); 
-            box-shadow: 0 0 20px var(--primary-glow); transform: translateY(-2px);
-        }
+        .icon-btn:hover { background: rgba(255,255,255,0.2); border-color: var(--primary); box-shadow: 0 0 20px var(--primary-glow); transform: translateY(-2px); }
 
         .user-avatar-img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
-
         .badge {
             position: absolute; top: -2px; right: -2px; background: var(--primary);
             color: white; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 10px;
-            box-shadow: 0 0 10px var(--primary-glow);
         }
 
         .logo { font-size: 18px; font-weight: 800; color: white; text-decoration: none; display: flex; align-items: center; gap: 8px; }
@@ -68,8 +58,7 @@
         .search-box { position: relative; margin-bottom: 20px; }
         .search-box input {
             width: 100%; padding: 14px 16px 14px 44px; background: var(--glass-card);
-            border: 1px solid var(--glass-border); border-radius: 18px;
-            color: white; outline: none; backdrop-filter: blur(20px); font-size: 14px;
+            border: 1px solid var(--glass-border); border-radius: 18px; color: white; outline: none; font-size: 14px;
         }
         .search-box input:focus { border-color: var(--primary); box-shadow: 0 0 20px var(--primary-glow); }
         .search-box i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
@@ -77,8 +66,8 @@
         .banner-slider {
             width: 100%; height: 180px; background: var(--glass-card);
             border: 1px solid var(--glass-border); border-radius: 22px;
-            backdrop-filter: blur(20px); display: flex; align-items: center; justify-content: center;
-            color: var(--text-main); font-weight: 600; margin-bottom: 24px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--text-main); font-weight: 600; margin-bottom: 24px;
             overflow: hidden; position: relative;
         }
         .banner-slider img { width: 100%; height: 100%; object-fit: cover; }
@@ -89,18 +78,12 @@
         .chip {
             background: var(--glass-card); border: 1px solid var(--glass-border);
             padding: 10px 18px; border-radius: 20px; font-size: 13px; font-weight: 600;
-            white-space: nowrap; cursor: pointer; color: var(--text-muted); backdrop-filter: blur(16px);
+            white-space: nowrap; cursor: pointer; color: var(--text-muted);
         }
-        .chip.active, .chip:hover { 
-            background: var(--primary); color: white; border-color: var(--primary); 
-            box-shadow: 0 4px 20px var(--primary-glow); transform: translateY(-2px);
-        }
+        .chip.active, .chip:hover { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 20px var(--primary-glow); }
 
         .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
-        @media (max-width: 600px) {
-            .products-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-            .banner-slider { height: 140px; }
-        }
+        @media (max-width: 600px) { .products-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; } }
 
         .product-card {
             background: var(--glass-card); backdrop-filter: blur(20px);
@@ -115,15 +98,12 @@
         .btn-glass-action {
             width: 100%; padding: 10px; background: var(--primary); color: white;
             border: none; border-radius: 14px; font-weight: 700; cursor: pointer; font-size: 13px;
-            box-shadow: 0 4px 15px var(--primary-glow); outline: none; display: flex; align-items: center; justify-content: center; gap: 6px;
+            box-shadow: 0 4px 15px var(--primary-glow); display: flex; align-items: center; justify-content: center; gap: 6px;
         }
         .btn-glass-action:hover { background: #059669; }
-        .btn-glass-secondary {
-            background: rgba(255,255,255,0.08); border: 1px solid var(--glass-border);
-            color: var(--text-main); box-shadow: none;
-        }
+        .btn-glass-secondary { background: rgba(255,255,255,0.08); border: 1px solid var(--glass-border); color: var(--text-main); box-shadow: none; }
         .btn-glass-secondary:hover { background: rgba(255,255,255,0.18); border-color: var(--primary); }
-        .btn-danger { background: #ef4444 !important; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4) !important; }
+        .btn-danger { background: #ef4444 !important; }
 
         .drawer-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(12px); display: none; z-index: 999; }
         .drawer {
@@ -151,13 +131,11 @@
             border-top: 1px solid var(--glass-border);
             display: flex; justify-content: space-around; padding: 8px 0; z-index: 99;
         }
-        .nav-item { color: var(--text-muted); text-align: center; font-size: 11px; text-decoration: none; cursor: pointer; background: none; border: none; outline: none; display: flex; flex-direction: column; align-items: center; }
+        .nav-item { color: var(--text-muted); text-align: center; font-size: 11px; text-decoration: none; cursor: pointer; background: none; border: none; display: flex; flex-direction: column; align-items: center; }
         .nav-item.active, .nav-item:hover { color: var(--primary); }
         .nav-item i { font-size: 18px; margin-bottom: 2px; }
-
         .bottom-user-avatar { width: 22px; height: 22px; border-radius: 50%; object-fit: cover; border: 1.5px solid var(--primary); margin-bottom: 2px; }
 
-        /* AI Support Floating Widget Styles */
         .ai-fab {
             position: fixed; bottom: 76px; right: 20px; background: var(--primary); color: #080c14;
             width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
@@ -180,12 +158,11 @@
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(20px);
-            display: none; justify-content: center; align-items: center; z-index: 1003; animation: fadeIn 0.3s ease;
+            display: none; justify-content: center; align-items: center; z-index: 1003;
         }
         .modal-box {
             background: var(--glass-modal); border: 1px solid var(--glass-border);
-            padding: 26px; border-radius: 26px; width: 90%; max-width: 400px; position: relative;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7); max-height: 90vh; overflow-y: auto;
+            padding: 26px; border-radius: 26px; width: 90%; max-width: 400px; position: relative; max-height: 90vh; overflow-y: auto;
         }
         .close-btn { position: absolute; top: 16px; right: 20px; font-size: 22px; cursor: pointer; color: var(--text-muted); }
 
@@ -195,26 +172,16 @@
             width: 100%; padding: 11px 14px; background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--glass-border); border-radius: 12px; color: white; outline: none; font-size: 13px;
         }
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--primary); box-shadow: 0 0 15px var(--primary-glow); }
 
         .profile-header-card { display: flex; flex-direction: column; align-items: center; margin-bottom: 16px; }
-        .profile-img-container {
-            width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--primary);
-            position: relative; overflow: hidden; margin-bottom: 8px; box-shadow: 0 0 20px var(--primary-glow);
-        }
+        .profile-img-container { width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--primary); position: relative; overflow: hidden; margin-bottom: 8px; }
         .profile-img-preview { width: 100%; height: 100%; object-fit: cover; }
-        .upload-img-btn {
-            position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(0,0,0,0.7);
-            color: white; font-size: 10px; text-align: center; padding: 4px 0; cursor: pointer;
-        }
+        .upload-img-btn { position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(0,0,0,0.7); color: white; font-size: 10px; text-align: center; padding: 4px 0; cursor: pointer; }
 
         .tab-toggle { display: flex; margin-bottom: 18px; background: rgba(255,255,255,0.05); border-radius: 12px; padding: 4px; }
         .tab-btn { flex: 1; padding: 8px; border: none; background: transparent; color: var(--text-muted); font-weight: 700; cursor: pointer; border-radius: 8px; font-size: 13px; }
         .tab-btn.active { background: var(--primary); color: white; }
-
         .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 12px; margin-bottom: 8px; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
     </style>
 </head>
 <body>
@@ -222,12 +189,9 @@
     <header>
         <div class="nav-container">
             <button class="icon-btn" onclick="toggleDrawer()"><i class="fa-solid fa-bars"></i></button>
-            <a href="#" class="logo"><div class="logo-icon"><i class="fa-solid fa-bolt"></i></div> EASYMART <span>BD</span></a>
+            <a href="#" class="logo"><div class="logo-icon"><i class="fa-solid fa-bolt"></i></div> <span id="store-brand-name">EASYMART</span> <span id="store-brand-sub" style="color:var(--primary)">BD</span></a>
             <div style="display:flex; gap:8px;">
-                <button class="icon-btn" onclick="toggleLanguage()"><i class="fa-solid fa-globe"></i></button>
-                <button class="icon-btn" onclick="handleAccountButtonClick()" id="header-user-btn">
-                    <i class="fa-regular fa-user"></i>
-                </button>
+                <button class="icon-btn" onclick="handleAccountButtonClick()" id="header-user-btn"><i class="fa-regular fa-user"></i></button>
                 <button class="icon-btn" onclick="openModal('cart-modal')">
                     <i class="fa-solid fa-cart-shopping"></i>
                     <span class="badge" id="cart-badge-count">0</span>
@@ -239,71 +203,49 @@
     <div class="drawer-overlay" id="drawer-overlay" onclick="toggleDrawer()"></div>
     <div class="drawer" id="drawer">
         <div class="drawer-tabs">
-            <button class="drawer-tab active" id="drawer-tab-cat" onclick="switchDrawerTab('cat')" data-key="tab_categories">Categories</button>
-            <button class="drawer-tab" id="drawer-tab-menu" onclick="switchDrawerTab('menu')" data-key="tab_menu">Menu</button>
+            <button class="drawer-tab active" id="drawer-tab-cat" onclick="switchDrawerTab('cat')">ক্যাটাগরি</button>
+            <button class="drawer-tab" id="drawer-tab-menu" onclick="switchDrawerTab('menu')">মেনু</button>
         </div>
         
         <div id="drawer-cat-content">
-            <div class="drawer-menu-item active" onclick="filterCategory('All', this)"><i class="fa-solid fa-border-all"></i> <span data-key="cat_all">All Categories</span></div>
-            <div class="drawer-menu-item" onclick="filterCategory('AI Subscriptions', this)"><i class="fa-solid fa-robot"></i> <span data-key="cat_ai">AI Subscriptions</span></div>
-            <div class="drawer-menu-item" onclick="filterCategory('Streaming', this)"><i class="fa-solid fa-tv"></i> <span data-key="cat_stream">Streaming</span></div>
-            <div class="drawer-menu-item" onclick="filterCategory('Software', this)"><i class="fa-solid fa-code"></i> <span data-key="cat_soft">Software</span></div>
-            <div class="drawer-menu-item" onclick="filterCategory('Gift card', this)"><i class="fa-solid fa-gift"></i> <span data-key="cat_gift">Gift card</span></div>
-            <div class="drawer-menu-item" onclick="filterCategory('Game top-ups', this)"><i class="fa-solid fa-gamepad"></i> <span data-key="cat_game">Game top-ups</span></div>
-            <div class="drawer-menu-item" onclick="filterCategory('Google service', this)"><i class="fa-brands fa-google"></i> <span data-key="cat_google">Google service</span></div>
-            <div class="drawer-menu-item" onclick="filterCategory('Education', this)"><i class="fa-solid fa-graduation-cap"></i> <span data-key="cat_edu">Education</span></div>
-            <div class="drawer-menu-item" onclick="filterCategory('Design & creative', this)"><i class="fa-solid fa-palette"></i> <span data-key="cat_design">Design & creative</span></div>
-            <div class="drawer-menu-item" onclick="filterCategory('VPN & security', this)"><i class="fa-solid fa-shield-halved"></i> <span data-key="cat_vpn">VPN & security</span></div>
-            <div class="drawer-menu-item" onclick="filterCategory('WordPress tools', this)"><i class="fa-brands fa-wordpress"></i> <span data-key="cat_wp">WordPress tools</span></div>
-            <div class="drawer-menu-item" onclick="filterCategory('Marketing tools', this)"><i class="fa-solid fa-bullhorn"></i> <span data-key="cat_mkt">Marketing tools</span></div>
+            <div class="drawer-menu-item active" onclick="filterCategory('All', this)"><i class="fa-solid fa-border-all"></i> সকল ক্যাটেগরি</div>
+            <div id="dynamic-drawer-categories"></div>
         </div>
 
         <div id="drawer-menu-content" style="display:none;">
-            <a href="#" class="drawer-menu-item" onclick="toggleDrawer();"><i class="fa-solid fa-house"></i> <span data-key="nav_home">Home</span></a>
-            <a href="#" class="drawer-menu-item" onclick="toggleDrawer(); openModal('cart-modal');"><i class="fa-solid fa-bag-shopping"></i> <span data-key="nav_cart">Cart</span></a>
-            <a href="#" class="drawer-menu-item" onclick="toggleDrawer(); handleAccountButtonClick();"><i class="fa-solid fa-wallet"></i> <span data-key="wallet_title">Easymart Wallet</span></a>
+            <a href="#" class="drawer-menu-item" onclick="toggleDrawer();"><i class="fa-solid fa-house"></i> হোম</a>
+            <a href="#" class="drawer-menu-item" onclick="toggleDrawer(); openModal('cart-modal');"><i class="fa-solid fa-bag-shopping"></i> কার্ট</a>
+            <a href="#" class="drawer-menu-item" onclick="toggleDrawer(); handleAccountButtonClick();"><i class="fa-solid fa-wallet"></i> ওয়ালেট</a>
         </div>
     </div>
 
     <div class="container">
         <div class="search-box">
             <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" placeholder="Search products..." id="search-input" onkeyup="handleSearch()">
+            <input type="text" placeholder="প্রোডাক্ট সার্চ করুন..." id="search-input" onkeyup="handleSearch()">
         </div>
 
         <div class="banner-slider" id="banner-slider-box">
             <i class="fa-regular fa-images" style="margin-right:8px;"></i> EASYMART BD Digital Store
         </div>
 
-        <div class="category-chips">
-            <div class="chip active" onclick="filterCategory('All', this)" data-key="cat_all">All</div>
-            <div class="chip" onclick="filterCategory('AI Subscriptions', this)" data-key="cat_ai">AI Subscriptions</div>
-            <div class="chip" onclick="filterCategory('Streaming', this)" data-key="cat_stream">Streaming</div>
-            <div class="chip" onclick="filterCategory('Software', this)" data-key="cat_soft">Software</div>
-            <div class="chip" onclick="filterCategory('Gift card', this)" data-key="cat_gift">Gift card</div>
-            <div class="chip" onclick="filterCategory('Game top-ups', this)" data-key="cat_game">Game top-ups</div>
-            <div class="chip" onclick="filterCategory('Google service', this)" data-key="cat_google">Google service</div>
-            <div class="chip" onclick="filterCategory('Education', this)" data-key="cat_edu">Education</div>
-            <div class="chip" onclick="filterCategory('Design & creative', this)" data-key="cat_design">Design & creative</div>
-            <div class="chip" onclick="filterCategory('VPN & security', this)" data-key="cat_vpn">VPN & security</div>
-            <div class="chip" onclick="filterCategory('WordPress tools', this)" data-key="cat_wp">WordPress tools</div>
-            <div class="chip" onclick="filterCategory('Marketing tools', this)" data-key="cat_mkt">Marketing tools</div>
+        <div class="category-chips" id="dynamic-chips-container">
+            <div class="chip active" onclick="filterCategory('All', this)">All</div>
         </div>
 
-        <h3 style="font-size: 16px; margin-bottom: 14px;" id="prod-sec-title" data-key="available_products">উপলব্ধ প্রোডাক্টসমূহ</h3>
-        
+        <h3 style="font-size: 16px; margin-bottom: 14px;">উপলব্ধ প্রোডাক্টসমূহ</h3>
         <div class="products-grid" id="products-container">
             <p style="color:var(--text-muted)">প্রোডাক্ট লোড হচ্ছে...</p>
         </div>
     </div>
 
     <div class="bottom-nav">
-        <button class="nav-item active" onclick="setActiveNavItem(this)"><i class="fa-solid fa-house"></i><span data-key="nav_home">Home</span></button>
-        <button class="nav-item" onclick="setActiveNavItem(this); focusSearch();"><i class="fa-solid fa-magnifying-glass"></i><span data-key="nav_search">Search</span></button>
-        <button class="nav-item" onclick="setActiveNavItem(this); openModal('cart-modal');"><i class="fa-solid fa-cart-shopping"></i><span data-key="nav_cart">Cart</span></button>
+        <button class="nav-item active" onclick="setActiveNavItem(this)"><i class="fa-solid fa-house"></i><span>হোম</span></button>
+        <button class="nav-item" onclick="setActiveNavItem(this); focusSearch();"><i class="fa-solid fa-magnifying-glass"></i><span>সার্চ</span></button>
+        <button class="nav-item" onclick="setActiveNavItem(this); openModal('cart-modal');"><i class="fa-solid fa-cart-shopping"></i><span>কার্ট</span></button>
         <button class="nav-item" onclick="setActiveNavItem(this); handleAccountButtonClick();" id="bottom-user-btn">
-            <i class="fa-regular fa-user" id="bottom-user-icon"></i>
-            <span id="bottom-user-text" data-key="signin">Sign In</span>
+            <i class="fa-regular fa-user"></i>
+            <span id="bottom-user-text">Sign In</span>
         </button>
     </div>
 
@@ -314,10 +256,10 @@
             <i class="fa-solid fa-xmark" style="cursor:pointer;" onclick="toggleAiChat()"></i>
         </div>
         <div class="ai-body" id="ai-chat-body">
-            <div class="ai-msg bot">হ্যালো! ইজির্মাট বিডি-তে স্বাগতম। আমাদের স্টোরের যেকোনো প্রোডাক্ট, দাম বা পেমেন্ট নিয়ে জানতে আমাকে জিজ্ঞেস করুন। Delivery takes within 2 DAYS!</div>
+            <div class="ai-msg bot">হ্যালো! ইজির্মাট বিডি-তে স্বাগতম। 🎉 আমাদের স্টোরের যেকোনো প্রোডাক্ট, সাবস্ক্রিপশন, প্রাইস বা পেমেন্ট নিয়ে যেকোনো প্রশ্ন করুন! (Delivery takes within 2 Days).</div>
         </div>
         <div class="ai-footer">
-            <input type="text" id="ai-input" placeholder="প্রশ্ন করুন অথবা পেমেন্ট সমস্যা..." onkeypress="if(event.key==='Enter') sendAiMessage()">
+            <input type="text" id="ai-input" placeholder="প্রশ্ন করুন..." onkeypress="if(event.key==='Enter') sendAiMessage()">
             <button onclick="sendAiMessage()"><i class="fa-solid fa-paper-plane"></i></button>
         </div>
     </div>
@@ -326,21 +268,19 @@
         <div class="modal-box">
             <span class="close-btn" onclick="closeModal('auth-modal')">&times;</span>
             <div class="tab-toggle">
-                <button class="tab-btn active" id="tab-login" onclick="switchAuthTab('login')" data-key="signin">Sign In</button>
-                <button class="tab-btn" id="tab-signup" onclick="switchAuthTab('signup')" data-key="signup">Sign Up</button>
+                <button class="tab-btn active" id="tab-login" onclick="switchAuthTab('login')">Sign In</button>
+                <button class="tab-btn" id="tab-signup" onclick="switchAuthTab('signup')">Sign Up</button>
             </div>
-
             <form id="form-login">
                 <div class="form-group"><label>Email</label><input type="email" id="login-email" required></div>
                 <div class="form-group"><label>Password</label><input type="password" id="login-pass" required></div>
-                <button type="submit" class="btn-glass-action" style="margin-top:10px;" data-key="signin">Sign In</button>
+                <button type="submit" class="btn-glass-action" style="margin-top:10px;">Sign In</button>
             </form>
-
             <form id="form-signup" style="display:none;">
                 <div class="form-group"><label>Full Name</label><input type="text" id="signup-name" required></div>
                 <div class="form-group"><label>Email</label><input type="email" id="signup-email" required></div>
                 <div class="form-group"><label>Password</label><input type="password" id="signup-pass" required></div>
-                <button type="submit" class="btn-glass-action" style="margin-top:10px;" data-key="signup">Create Account</button>
+                <button type="submit" class="btn-glass-action" style="margin-top:10px;">Create Account</button>
             </form>
         </div>
     </div>
@@ -348,49 +288,37 @@
     <div class="modal-overlay" id="profile-modal">
         <div class="modal-box">
             <span class="close-btn" onclick="closeModal('profile-modal')">&times;</span>
-            
             <div class="profile-header-card">
                 <div class="profile-img-container">
-                    <img src="https://via.placeholder.com/150" id="profile-preview-img" class="profile-img-preview" alt="User Avatar">
-                    <label for="image-upload-input" class="upload-img-btn"><i class="fa-solid fa-camera"></i> <span data-key="change_photo">Change</span></label>
+                    <img src="https://via.placeholder.com/150" id="profile-preview-img" class="profile-img-preview" alt="Avatar">
+                    <label for="image-upload-input" class="upload-img-btn"><i class="fa-solid fa-camera"></i> Change</label>
                     <input type="file" id="image-upload-input" accept="image/*" style="display:none;">
                 </div>
                 <h4 id="profile-display-name" style="font-size:16px;">User Name</h4>
                 <p id="profile-display-email" style="font-size:12px; color:var(--text-muted);"></p>
             </div>
-
             <div class="wallet-card">
-                <div style="font-size:12px; color:var(--text-muted);" data-key="wallet_title">Easymart BD Wallet</div>
+                <div style="font-size:12px; color:var(--text-muted);">Easymart BD Wallet</div>
                 <div class="wallet-balance" id="user-wallet-balance">৳0.00</div>
-                <button class="btn-glass-action" onclick="openModal('topup-modal')" style="font-size:11px; padding:6px 12px; width:auto; margin:0 auto;" data-key="add_money">+ Add Money</button>
+                <button class="btn-glass-action" onclick="openModal('topup-modal')" style="font-size:11px; padding:6px 12px; width:auto; margin:0 auto;">+ Add Money</button>
             </div>
-
             <form id="form-profile-update">
-                <div class="form-group"><label data-key="your_name">Full Name</label><input type="text" id="prof-name" required></div>
-                <div class="form-group"><label data-key="phone_number">Phone Number</label><input type="text" id="prof-phone" placeholder="017xxxxxxxx"></div>
-                <button type="submit" class="btn-glass-action" style="margin-top:10px;" data-key="save_changes">Save Changes</button>
+                <div class="form-group"><label>Full Name</label><input type="text" id="prof-name" required></div>
+                <div class="form-group"><label>Phone Number</label><input type="text" id="prof-phone" placeholder="017xxxxxxxx"></div>
+                <button type="submit" class="btn-glass-action" style="margin-top:10px;">Save Changes</button>
             </form>
-
-            <button class="btn-glass-action btn-danger" onclick="logoutUser()" style="margin-top:12px;"><i class="fa-solid fa-right-from-bracket"></i> <span data-key="signout">Sign Out</span></button>
+            <button class="btn-glass-action btn-danger" onclick="logoutUser()" style="margin-top:12px;"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</button>
         </div>
     </div>
 
     <div class="modal-overlay" id="topup-modal">
         <div class="modal-box">
             <span class="close-btn" onclick="closeModal('topup-modal')">&times;</span>
-            <h3 style="margin-bottom:12px; font-size:16px;" data-key="add_money">ওয়ালেটে টাকা এড করুন</h3>
-            <p style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">Nagad Personal: <b style="color:var(--primary);">01818558919</b></p>
-            <p style="font-size:11px; color:#ef4444; margin-bottom:10px;">Send money to 01818558919 and put TrxID below.</p>
-
+            <h3 style="margin-bottom:12px; font-size:16px;">ওয়ালেটে টাকা এড করুন</h3>
+            <p style="font-size:12px; color:var(--text-muted); margin-bottom:12px;" id="topup-nagad-info">Nagad Personal: <b style="color:var(--primary);">01818558919</b></p>
             <form id="form-topup">
-                <div class="form-group">
-                    <label>Payment Method</label>
-                    <select id="topup-method">
-                        <option value="Nagad">Nagad Personal (01818558919)</option>
-                    </select>
-                </div>
                 <div class="form-group"><label>Amount (BDT)</label><input type="number" id="topup-amount" min="10" required></div>
-                <div class="form-group"><label>Transaction ID (TrxID) - Must needed</label><input type="text" id="topup-trx" required></div>
+                <div class="form-group"><label>Transaction ID (TrxID)</label><input type="text" id="topup-trx" required></div>
                 <button type="submit" class="btn-glass-action" style="margin-top:10px;">Request Deposit</button>
             </form>
         </div>
@@ -406,7 +334,7 @@
     <div class="modal-overlay" id="cart-modal">
         <div class="modal-box">
             <span class="close-btn" onclick="closeModal('cart-modal')">&times;</span>
-            <h3 style="margin-bottom:14px; font-size:16px;" data-key="nav_cart">আপনার কার্ট</h3>
+            <h3 style="margin-bottom:14px; font-size:16px;">আপনার কার্ট</h3>
             <div id="cart-items-list" style="max-height: 200px; overflow-y:auto; margin-bottom:14px;">
                 <p style="color:var(--text-muted); text-align:center;">কার্ট খালি রয়েছে</p>
             </div>
@@ -414,14 +342,14 @@
                 <span>Total:</span>
                 <span id="cart-total-price" style="color:var(--primary);">৳0</span>
             </div>
-            <button class="btn-glass-action" onclick="checkoutFromCart()" data-key="submit_order">চেকআউট করুন</button>
+            <button class="btn-glass-action" onclick="checkoutFromCart()">চেকআউট করুন</button>
         </div>
     </div>
 
     <div class="modal-overlay" id="checkout-modal">
         <div class="modal-box">
             <span class="close-btn" onclick="closeModal('checkout-modal')">&times;</span>
-            <h3 style="margin-bottom:10px; font-size:16px;" data-key="checkout_title">অর্ডার চেকআউট (Delivery in 2 DAYS)</h3>
+            <h3 style="margin-bottom:10px; font-size:16px;">অর্ডার চেকআউট</h3>
             <p id="checkout-prod-name" style="color:var(--primary); font-weight:bold; font-size:14px;"></p>
             <p id="checkout-prod-price" style="margin-bottom:12px; font-weight:bold; font-size:14px;"></p>
             <p style="font-size:11px; color:var(--primary); margin-bottom:10px;"><i class="fa-solid fa-clock"></i> Delivery Time: Within 2 Days</p>
@@ -430,15 +358,15 @@
                 <div class="form-group">
                     <label>Payment Method</label>
                     <select id="checkout-payment-method" onchange="toggleCheckoutTrx()">
-                        <option value="Nagad">Nagad Direct (Send to 01818558919)</option>
+                        <option value="Nagad">Nagad Direct</option>
                         <option value="Wallet">Easymart Wallet Balance</option>
                     </select>
                 </div>
-                <div class="form-group"><label data-key="your_name">আপনার নাম</label><input type="text" id="ord-name" required></div>
-                <div class="form-group"><label data-key="phone_number">মোবাইল নম্বর</label><input type="text" id="ord-phone" required></div>
-                <div class="form-group"><label>Subscription Email (যে ইমেইলে সাবস্ক্রিপশন নিতে চান)</label><input type="email" id="ord-sub-email" placeholder="client@gmail.com" required></div>
-                <div class="form-group" id="trx-input-group"><label>Nagad Transaction ID (TrxID) - To 01818558919 *</label><input type="text" id="ord-trx" required></div>
-                <button type="submit" class="btn-glass-action" style="margin-top:10px;" data-key="submit_order">অর্ডার সাবমিট করুন</button>
+                <div class="form-group"><label>আপনার নাম</label><input type="text" id="ord-name" required></div>
+                <div class="form-group"><label>মোবাইল নম্বর</label><input type="text" id="ord-phone" required></div>
+                <div class="form-group"><label>Subscription Email (সাবস্ক্রিপশনের ইমেইল)</label><input type="email" id="ord-sub-email" required></div>
+                <div class="form-group" id="trx-input-group"><label>Transaction ID (TrxID)</label><input type="text" id="ord-trx" required></div>
+                <button type="submit" class="btn-glass-action" style="margin-top:10px;">অর্ডার সাবমিট করুন</button>
             </form>
         </div>
     </div>
@@ -447,7 +375,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCnrZ8ZF8tGW2R5buFDsAeLHJlWHBwb9hw",
@@ -462,12 +389,23 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const storage = getStorage(app);
 
         let currentUser = null;
         window.userWalletBalance = 0;
         window.cartItems = [];
         window.allProductsList = [];
+        window.storeSettings = {};
+
+        // Fetch Store Settings
+        onSnapshot(doc(db, "settings", "storeInfo"), (docSnap) => {
+            if(docSnap.exists()) {
+                window.storeSettings = docSnap.data();
+                if(window.storeSettings.storeName) {
+                    document.getElementById('store-brand-name').innerText = window.storeSettings.storeName;
+                    document.getElementById('store-title-tag').innerText = window.storeSettings.storeName + " - Digital Store";
+                }
+            }
+        });
 
         onAuthStateChanged(auth, async (user) => {
             const headerBtn = document.getElementById('header-user-btn');
@@ -476,12 +414,8 @@
             if (user) {
                 currentUser = user;
                 const photoURL = user.photoURL || 'https://via.placeholder.com/150';
-
                 headerBtn.innerHTML = `<img src="${photoURL}" class="user-avatar-img">`;
-                bottomBtn.innerHTML = `
-                    <img src="${photoURL}" class="bottom-user-avatar">
-                    <span id="bottom-user-text">Profile</span>
-                `;
+                bottomBtn.innerHTML = `<img src="${photoURL}" class="bottom-user-avatar"><span>Profile</span>`;
 
                 document.getElementById('profile-display-name').innerText = user.displayName || 'User Profile';
                 document.getElementById('profile-display-email').innerText = user.email;
@@ -497,96 +431,56 @@
                     document.getElementById('prof-phone').value = userDoc.data().phone || '';
                     document.getElementById('ord-phone').value = userDoc.data().phone || '';
                     document.getElementById('ord-name').value = user.displayName || '';
-                } else {
-                    await setDoc(userDocRef, {
-                        email: user.email,
-                        name: user.displayName || '',
-                        wallet: 0,
-                        phone: ''
-                    }, { merge: true });
                 }
             } else {
                 currentUser = null;
                 headerBtn.innerHTML = `<i class="fa-regular fa-user"></i>`;
-                bottomBtn.innerHTML = `
-                    <i class="fa-regular fa-user" id="bottom-user-icon"></i>
-                    <span id="bottom-user-text" data-key="signin">Sign In</span>
-                `;
+                bottomBtn.innerHTML = `<i class="fa-regular fa-user"></i><span>Sign In</span>`;
             }
         });
 
-        window.handleAccountButtonClick = () => {
-            if (currentUser) openModal('profile-modal');
-            else openModal('auth-modal');
-        };
-
-        window.logoutUser = async () => {
-            await signOut(auth);
-            closeModal('profile-modal');
-            alert("Signed out successfully!");
-        };
+        window.handleAccountButtonClick = () => { currentUser ? openModal('profile-modal') : openModal('auth-modal'); };
+        window.logoutUser = async () => { await signOut(auth); closeModal('profile-modal'); alert("Signed out!"); };
 
         document.getElementById('form-profile-update').addEventListener('submit', async (e) => {
             e.preventDefault();
             if(!currentUser) return;
-            try {
-                const newName = document.getElementById('prof-name').value;
-                const newPhone = document.getElementById('prof-phone').value;
-
-                await updateProfile(currentUser, { displayName: newName });
-                await setDoc(doc(db, "users", currentUser.uid), {
-                    name: newName,
-                    phone: newPhone
-                }, { merge: true });
-
-                document.getElementById('profile-display-name').innerText = newName;
-                alert("Profile updated successfully!");
-                closeModal('profile-modal');
-            } catch(err) {
-                alert("Update failed: " + err.message);
-            }
+            const newName = document.getElementById('prof-name').value;
+            const newPhone = document.getElementById('prof-phone').value;
+            await updateProfile(currentUser, { displayName: newName });
+            await setDoc(doc(db, "users", currentUser.uid), { name: newName, phone: newPhone }, { merge: true });
+            alert("Profile updated!");
+            closeModal('profile-modal');
         });
 
         document.getElementById('image-upload-input').addEventListener('change', async (e) => {
             const file = e.target.files[0];
             if (!file || !currentUser) return;
-
-            try {
-                const storageRef = ref(storage, `users/${currentUser.uid}/profile.jpg`);
-                await uploadBytes(storageRef, file);
-                const downloadURL = await getDownloadURL(storageRef);
-
-                await updateProfile(currentUser, { photoURL: downloadURL });
-                await setDoc(doc(db, "users", currentUser.uid), { photoURL: downloadURL }, { merge: true });
-                document.getElementById('profile-preview-img').src = downloadURL;
-                document.getElementById('header-user-btn').innerHTML = `<img src="${downloadURL}" class="user-avatar-img">`;
-                document.getElementById('bottom-user-btn').querySelector('img').src = downloadURL;
-
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = async () => {
+                const base64Img = reader.result;
+                await updateProfile(currentUser, { photoURL: base64Img });
+                await setDoc(doc(db, "users", currentUser.uid), { photoURL: base64Img }, { merge: true });
+                document.getElementById('profile-preview-img').src = base64Img;
+                document.getElementById('header-user-btn').innerHTML = `<img src="${base64Img}" class="user-avatar-img">`;
                 alert("Profile picture updated!");
-            } catch (err) { alert("Upload failed: " + err.message); }
+            };
         });
 
         document.getElementById('form-topup').addEventListener('submit', async (e) => {
             e.preventDefault();
             if(!currentUser) return;
-
-            const trx = document.getElementById('topup-trx').value.trim();
-            if(!trx) {
-                alert("Please give Transaction ID for Nagad (01818558919)");
-                return;
-            }
-
             await addDoc(collection(db, "topups"), {
                 userId: currentUser.uid,
                 userEmail: currentUser.email,
                 amount: parseFloat(document.getElementById('topup-amount').value),
-                method: document.getElementById('topup-method').value,
-                trxId: trx,
+                method: "Nagad",
+                trxId: document.getElementById('topup-trx').value.trim(),
                 status: "Pending",
                 createdAt: new Date().toISOString()
             });
-
-            alert("Top-up request submitted with Nagad TrxID! Balance will be added after admin confirmation.");
+            alert("Top-up request submitted!");
             closeModal('topup-modal');
             e.target.reset();
         });
@@ -594,14 +488,13 @@
         window.addToCart = (title, price) => {
             window.cartItems.push({ title, price: parseFloat(price) });
             updateCartUI();
-            alert(`"${title}" added to your cart!`);
+            alert(`"${title}" added to cart!`);
         };
 
         function updateCartUI() {
             document.getElementById('cart-badge-count').innerText = window.cartItems.length;
             const container = document.getElementById('cart-items-list');
             container.innerHTML = '';
-            
             let total = 0;
             if (window.cartItems.length === 0) {
                 container.innerHTML = '<p style="color:var(--text-muted); text-align:center;">কার্ট খালি রয়েছে</p>';
@@ -610,58 +503,54 @@
                     total += item.price;
                     container.innerHTML += `
                         <div class="cart-item">
-                            <div>
-                                <div style="font-weight:bold; font-size:13px;">${item.title}</div>
-                                <div style="color:var(--primary); font-size:12px;">৳${item.price}</div>
-                            </div>
+                            <div><div style="font-weight:bold; font-size:13px;">${item.title}</div><div style="color:var(--primary); font-size:12px;">৳${item.price}</div></div>
                             <i class="fa-solid fa-trash" style="color:#ef4444; cursor:pointer;" onclick="removeFromCart(${index})"></i>
-                        </div>
-                    `;
+                        </div>`;
                 });
             }
             document.getElementById('cart-total-price').innerText = "৳" + total;
         }
 
-        window.removeFromCart = (index) => {
-            window.cartItems.splice(index, 1);
-            updateCartUI();
+        window.removeFromCart = (index) => { window.cartItems.splice(index, 1); updateCartUI(); };
+        window.checkoutFromCart = () => {
+            if(window.cartItems.length === 0) { alert("Cart empty!"); return; }
+            closeModal('cart-modal');
+            buyProduct("Cart Items (" + window.cartItems.length + ")", window.cartItems.reduce((sum, item) => sum + item.price, 0));
         };
 
-        window.checkoutFromCart = () => {
-            if(window.cartItems.length === 0) {
-                alert("Your cart is empty!");
-                return;
-            }
-            closeModal('cart-modal');
-            const total = window.cartItems.reduce((sum, item) => sum + item.price, 0);
-            buyProduct("Cart Items (" + window.cartItems.length + ")", total);
-        };
+        // Render Categories dynamically in Chips and Drawer
+        onSnapshot(collection(db, "categories"), (snap) => {
+            const chipsContainer = document.getElementById('dynamic-chips-container');
+            const drawerContainer = document.getElementById('dynamic-drawer-categories');
+            chipsContainer.innerHTML = `<div class="chip active" onclick="filterCategory('All', this)">All</div>`;
+            drawerContainer.innerHTML = "";
+
+            snap.forEach(d => {
+                const cat = d.data().name;
+                chipsContainer.innerHTML += `<div class="chip" onclick="filterCategory('${cat}', this)">${cat}</div>`;
+                drawerContainer.innerHTML += `<div class="drawer-menu-item" onclick="filterCategory('${cat}', this)"><i class="fa-solid fa-tag"></i> ${cat}</div>`;
+            });
+        });
 
         onSnapshot(collection(db, "products"), (snap) => {
             window.allProductsList = [];
-            snap.forEach(docSnap => {
-                window.allProductsList.push({ id: docSnap.id, ...docSnap.data() });
-            });
+            snap.forEach(docSnap => window.allProductsList.push({ id: docSnap.id, ...docSnap.data() }));
             renderProducts(window.allProductsList);
         });
 
-        // Sliding Banners Fetch & Render
         onSnapshot(collection(db, "banners"), (snap) => {
             const sliderBox = document.getElementById('banner-slider-box');
             let banners = [];
             snap.forEach(d => banners.push(d.data().url));
-
             if(banners.length > 0) {
-                let currentIndex = 0;
+                let idx = 0;
                 sliderBox.innerHTML = `<img src="${banners[0]}" alt="Banner">`;
                 if(banners.length > 1) {
                     setInterval(() => {
-                        currentIndex = (currentIndex + 1) % banners.length;
-                        sliderBox.innerHTML = `<img src="${banners[currentIndex]}" alt="Banner">`;
+                        idx = (idx + 1) % banners.length;
+                        sliderBox.innerHTML = `<img src="${banners[idx]}" alt="Banner">`;
                     }, 4000);
                 }
-            } else {
-                sliderBox.innerHTML = `<i class="fa-regular fa-images" style="margin-right:8px;"></i> EASYMART BD Digital Store`;
             }
         });
 
@@ -669,87 +558,61 @@
             const container = document.getElementById('products-container');
             container.innerHTML = '';
             if (products.length === 0) {
-                container.innerHTML = '<p style="color:var(--text-muted); grid-column: 1/-1; text-align:center;">এই ক্যাটাগরিতে কোনো প্রোডাক্ট পাওয়া যায়নি।</p>';
+                container.innerHTML = '<p style="color:var(--text-muted); grid-column: 1/-1; text-align:center;">কোনো প্রোডাক্ট পাওয়া যায়নি।</p>';
                 return;
             }
             products.forEach(p => {
-                const imgTag = p.image 
-                    ? `<img src="${p.image}" class="product-img" alt="${p.title_bn || 'Product'}">` 
-                    : `<div class="product-img" style="display:flex; align-items:center; justify-content:center;"><i class="fa-solid fa-image" style="font-size:24px; color:var(--text-muted);"></i></div>`;
-
+                const imgTag = p.image ? `<img src="${p.image}" class="product-img">` : `<div class="product-img" style="display:flex; align-items:center; justify-content:center;"><i class="fa-solid fa-image" style="color:var(--text-muted)"></i></div>`;
                 container.innerHTML += `
                     <div class="product-card" onclick="openProductDetail('${p.id}')">
                         <div>
                             ${imgTag}
-                            <div class="product-title">${p.title_bn || 'নামবিহীন প্রোডাক্ট'}</div>
+                            <div class="product-title">${p.title_bn || ''}</div>
                             <div class="product-price">৳${p.price || 0}</div>
                         </div>
                         <div style="display:flex; flex-direction:column; gap:6px;" onclick="event.stopPropagation();">
-                            <button class="btn-glass-action" onclick="buyProduct('${p.title_bn || ''}', '${p.price || 0}')"><i class="fa-solid fa-bolt"></i> Buy Now</button>
-                            <button class="btn-glass-action btn-glass-secondary" onclick="addToCart('${p.title_bn || ''}', '${p.price || 0}')"><i class="fa-solid fa-cart-plus"></i> Add to Cart</button>
+                            <button class="btn-glass-action" onclick="buyProduct('${p.title_bn}', '${p.price}')"><i class="fa-solid fa-bolt"></i> Buy Now</button>
+                            <button class="btn-glass-action btn-glass-secondary" onclick="addToCart('${p.title_bn}', '${p.price}')"><i class="fa-solid fa-cart-plus"></i> Add to Cart</button>
                         </div>
-                    </div>
-                `;
+                    </div>`;
             });
         };
 
         window.openProductDetail = (productId) => {
-            const product = (window.allProductsList || []).find(p => p.id === productId);
+            const product = window.allProductsList.find(p => p.id === productId);
             if(!product) return;
-
             const content = document.getElementById('detail-modal-content');
             const imgHtml = product.image ? `<img src="${product.image}" style="width:100%; height:180px; border-radius:14px; object-fit:cover; margin-bottom:12px;">` : '';
-            
             content.innerHTML = `
                 ${imgHtml}
-                <h3 style="font-size:18px; font-weight:bold; margin-bottom:6px;">${product.title_bn || ''}</h3>
-                <div style="color:var(--primary); font-size:18px; font-weight:800; margin-bottom:12px;">৳${product.price || 0}</div>
-                <div style="font-size:12px; color:var(--text-muted); margin-bottom:8px; font-weight:bold;">ক্যাটাগরি: ${product.category || 'General'}</div>
-                <div style="background:rgba(255,255,255,0.04); padding:12px; border-radius:12px; font-size:13px; line-height:1.5; margin-bottom:16px; border:1px solid var(--glass-border);">
-                    <b>বিবরণ (Description):</b><br>
-                    ${product.description || 'এই প্রোডাক্টের কোনো বিস্তারিত বিবরণ দেওয়া হয়নি। ডেলিভারি সময়: সর্বোচ্চ ২ দিন (2 Days).'}
+                <h3 style="font-size:18px; font-weight:bold; margin-bottom:6px;">${product.title_bn}</h3>
+                <div style="color:var(--primary); font-size:18px; font-weight:800; margin-bottom:12px;">৳${product.price}</div>
+                <div style="background:rgba(255,255,255,0.04); padding:12px; border-radius:12px; font-size:13px; line-height:1.5; margin-bottom:16px;">
+                    <b>বিবরণ:</b><br>${product.description || 'এই প্রোডাক্টের বিবরণ দেওয়া হয়নি। ডেলিভারি সময়: সর্বোচ্চ ২ দিন (2 Days).'}
                 </div>
                 <div style="display:flex; gap:10px;">
-                    <button class="btn-glass-action" onclick="closeModal('product-detail-modal'); buyProduct('${product.title_bn}', '${product.price}')"><i class="fa-solid fa-bolt"></i> Buy Now</button>
-                    <button class="btn-glass-action btn-glass-secondary" onclick="closeModal('product-detail-modal'); addToCart('${product.title_bn}', '${product.price}')"><i class="fa-solid fa-cart-plus"></i> Add to Cart</button>
-                </div>
-            `;
+                    <button class="btn-glass-action" onclick="closeModal('product-detail-modal'); buyProduct('${product.title_bn}', '${product.price}')">Buy Now</button>
+                    <button class="btn-glass-action btn-glass-secondary" onclick="closeModal('product-detail-modal'); addToCart('${product.title_bn}', '${product.price}')">Add to Cart</button>
+                </div>`;
             openModal('product-detail-modal');
         };
 
         window.filterCategory = (cat, el) => {
             document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-            document.querySelectorAll('.drawer-menu-item').forEach(m => m.classList.remove('active'));
             if(el) el.classList.add('active');
-
-            if (cat === 'All') {
-                renderProducts(window.allProductsList || []);
-            } else {
-                const filtered = (window.allProductsList || []).filter(p => p.category === cat);
-                renderProducts(filtered);
-            }
+            if (cat === 'All') renderProducts(window.allProductsList);
+            else renderProducts(window.allProductsList.filter(p => p.category === cat));
             if(document.getElementById('drawer').classList.contains('open')) toggleDrawer();
         };
 
         window.handleSearch = () => {
             const query = document.getElementById('search-input').value.toLowerCase();
-            if(!query) {
-                renderProducts(window.allProductsList);
-                return;
-            }
-            const matched = (window.allProductsList || []).filter(p => 
-                (p.title_bn || '').toLowerCase().includes(query) || 
-                (p.category || '').toLowerCase().includes(query)
-            );
-            renderProducts(matched);
+            if(!query) { renderProducts(window.allProductsList); return; }
+            renderProducts(window.allProductsList.filter(p => (p.title_bn || '').toLowerCase().includes(query)));
         };
 
         window.buyProduct = (title, price) => {
-            if (!currentUser) {
-                alert("অর্ডার করতে হলে আপনাকে প্রথমে Sign In করতে হবে!");
-                openModal('auth-modal');
-                return;
-            }
+            if (!currentUser) { alert("লগইন করুন!"); openModal('auth-modal'); return; }
             document.getElementById('checkout-prod-name').innerText = title;
             document.getElementById('checkout-prod-price').innerText = "Price: ৳" + price;
             openModal('checkout-modal');
@@ -757,113 +620,76 @@
 
         window.toggleCheckoutTrx = () => {
             const method = document.getElementById('checkout-payment-method').value;
-            const trxGroup = document.getElementById('trx-input-group');
-            if(method === 'Wallet') {
-                trxGroup.style.display = 'none';
-                document.getElementById('ord-trx').required = false;
-            } else {
-                trxGroup.style.display = 'block';
-                document.getElementById('ord-trx').required = true;
-            }
+            document.getElementById('trx-input-group').style.display = (method === 'Wallet') ? 'none' : 'block';
         };
 
         document.getElementById('form-checkout').addEventListener('submit', async (e) => {
             e.preventDefault();
             const payMethod = document.getElementById('checkout-payment-method').value;
-            const priceText = document.getElementById('checkout-prod-price').innerText;
-            const price = parseFloat(priceText.replace(/[^0-9.]/g, ''));
-            const subscriptionEmail = document.getElementById('ord-sub-email').value.trim();
-            const trxId = document.getElementById('ord-trx').value.trim();
-
-            if(payMethod !== 'Wallet' && !trxId) {
-                alert("Nagad Transaction ID is required for order verification!");
-                return;
+            const price = parseFloat(document.getElementById('checkout-prod-price').innerText.replace(/[^0-9.]/g, ''));
+            
+            if (payMethod === 'Wallet' && window.userWalletBalance < price) {
+                alert("ওয়ালেটে পর্যাপ্ত ব্যালেন্স নেই!"); return;
             }
-
             if (payMethod === 'Wallet') {
-                if (window.userWalletBalance < price) {
-                    alert("আপনার ওয়ালেটে পর্যাপ্ত ব্যালেন্স নেই! দয়া করে ওয়ালেট টপ-আপ করুন (Nagad: 01818558919)");
-                    return;
-                }
                 window.userWalletBalance -= price;
                 await setDoc(doc(db, "users", currentUser.uid), { wallet: window.userWalletBalance }, { merge: true });
-                document.getElementById('user-wallet-balance').innerText = "৳" + window.userWalletBalance.toFixed(2);
             }
 
             await addDoc(collection(db, "orders"), {
                 customerName: document.getElementById('ord-name').value,
                 phone: document.getElementById('ord-phone').value,
-                subscriptionEmail: subscriptionEmail,
+                subscriptionEmail: document.getElementById('ord-sub-email').value,
                 paymentMethod: payMethod,
-                trxId: payMethod === 'Wallet' ? 'Wallet Payment' : trxId,
+                trxId: payMethod === 'Wallet' ? 'Wallet' : document.getElementById('ord-trx').value,
                 product: document.getElementById('checkout-prod-name').innerText,
                 total: price,
                 userId: currentUser.uid,
-                userEmail: currentUser.email,
-                deliveryTime: "Within 2 Days",
                 status: "Pending",
                 createdAt: new Date().toISOString()
             });
 
-            alert("অর্ডার সফলভাবে প্লেস করা হয়েছে! এটি ২ দিনের মধ্যে প্রসেস করা হবে। ধন্যবাদ।");
+            alert("অর্ডার সফল! ডেলিভারি সময়: সর্বোচ্চ ২ দিন (2 Days)।");
             window.cartItems = [];
             updateCartUI();
             closeModal('checkout-modal');
-            e.target.reset();
         });
 
         document.getElementById('form-signup').addEventListener('submit', async (e) => {
             e.preventDefault();
-            try {
-                const name = document.getElementById('signup-name').value;
-                const email = document.getElementById('signup-email').value;
-                const pass = document.getElementById('signup-pass').value;
-
-                const res = await createUserWithEmailAndPassword(auth, email, pass);
-                await updateProfile(res.user, { displayName: name });
-                await setDoc(doc(db, "users", res.user.uid), { email, name, wallet: 0, phone: '' });
-                closeModal('auth-modal');
-            } catch (err) { alert("Sign Up Error: " + err.message); }
+            const res = await createUserWithEmailAndPassword(auth, document.getElementById('signup-email').value, document.getElementById('signup-pass').value);
+            await updateProfile(res.user, { displayName: document.getElementById('signup-name').value });
+            await setDoc(doc(db, "users", res.user.uid), { email: res.user.email, name: document.getElementById('signup-name').value, wallet: 0 });
+            closeModal('auth-modal');
         });
 
         document.getElementById('form-login').addEventListener('submit', async (e) => {
             e.preventDefault();
-            try {
-                const email = document.getElementById('login-email').value;
-                const pass = document.getElementById('login-pass').value;
-
-                await signInWithEmailAndPassword(auth, email, pass);
-                closeModal('auth-modal');
-            } catch (err) { alert("Sign In Error: " + err.message); }
+            await signInWithEmailAndPassword(auth, document.getElementById('login-email').value, document.getElementById('login-pass').value);
+            closeModal('auth-modal');
         });
 
-        window.toggleAiChat = () => {
-            const modal = document.getElementById('ai-chat-modal');
-            modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
-        };
-
+        // AI Support Bot with Full Product Analysis
+        window.toggleAiChat = () => { const m = document.getElementById('ai-chat-modal'); m.style.display = m.style.display === 'flex' ? 'none' : 'flex'; };
         window.sendAiMessage = () => {
             const input = document.getElementById('ai-input');
             const text = input.value.trim();
             if(!text) return;
-
             const chatBody = document.getElementById('ai-chat-body');
             chatBody.innerHTML += `<div class="ai-msg user">${text}</div>`;
             input.value = "";
             chatBody.scrollTop = chatBody.scrollHeight;
 
             setTimeout(() => {
-                let reply = "আমাদের অফিশিয়াল নগদ নম্বর: <b>01818558919</b>। যেকোনো অর্ডারের ডেলিভারি সর্বোচ্চ ২ দিনের (2 Days) মধ্যে দেওয়া হয়।";
+                let reply = "আমাদের অফিশিয়াল নগদ নম্বর: <b>01818558919</b>। সমস্ত অর্ডারের ডেলিভারি সর্বোচ্চ ২ দিনের (2 Days) মধ্যে দেওয়া হয়।";
                 const lower = text.toLowerCase();
-
-                if(lower.includes('hello') || lower.includes('hi')) {
-                    reply = "Hello! Welcome to EASYMART BD. Orders are delivered within 2 days. Send money to Nagad: 01818558919.";
-                } else if(lower.includes('number') || lower.includes('nagad')) {
-                    reply = "Nagad Personal Number: <b>01818558919</b>";
-                } else if(lower.includes('delivery') || lower.includes('time')) {
-                    reply = "All subscriptions and products are delivered within 2 DAYS after confirmation!";
+                
+                if(lower.includes('product') || lower.includes('list') || lower.includes('প্রোডাক্ট')) {
+                    let prodNames = window.allProductsList.map(p => `${p.title_bn} (৳${p.price})`).join(', ');
+                    reply = `আমাদের বর্তমানে এই প্রোডাক্টগুলো রয়েছে: ${prodNames || 'কোনো প্রোডাক্ট নেই'}. ডেলিভারি সময়: Within 2 Days!`;
+                } else if(lower.includes('nagad') || lower.includes('payment')) {
+                    reply = "Nagad Personal Number: <b>01818558919</b>. টাকা পাঠিয়ে TrxID দিয়ে অর্ডার কনফার্ম করুন।";
                 }
-
                 chatBody.innerHTML += `<div class="ai-msg bot">${reply}</div>`;
                 chatBody.scrollTop = chatBody.scrollHeight;
             }, 600);
@@ -871,89 +697,28 @@
     </script>
 
     <script>
-        let currentLang = 'BN';
-        const dict = {
-            BN: {
-                available_products: "উপলব্ধ প্রোডাক্টসমূহ",
-                nav_home: "হোম",
-                nav_search: "সার্চ",
-                nav_cart: "কার্ট",
-                signin: "Sign In",
-                signup: "Sign Up",
-                checkout_title: "অর্ডার চেকআউট",
-                your_name: "আপনার নাম",
-                phone_number: "মোবাইল নম্বর",
-                submit_order: "অর্ডার সাবমিট করুন",
-                wallet_title: "Easymart BD ওয়ালেট",
-                add_money: "+ টাকা এড করুন",
-                save_changes: "সেভ করুন",
-                signout: "সাইন আউট",
-                change_photo: "ছবি পরিবর্তন",
-                tab_categories: "ক্যাটেগরি",
-                tab_menu: "মেনু",
-                cat_all: "সকল ক্যাটেগরি"
-            },
-            EN: {
-                available_products: "Available Products",
-                nav_home: "Home",
-                nav_search: "Search",
-                nav_cart: "Cart",
-                signin: "Sign In",
-                signup: "Sign Up",
-                checkout_title: "Order Checkout",
-                your_name: "Your Name",
-                phone_number: "Phone Number",
-                submit_order: "Submit Order",
-                wallet_title: "Easymart BD Wallet",
-                add_money: "+ Add Money",
-                save_changes: "Save Changes",
-                signout: "Sign Out",
-                change_photo: "Change Photo",
-                tab_categories: "Categories",
-                tab_menu: "Menu",
-                cat_all: "All Categories"
-            }
-        };
-
-        function toggleLanguage() {
-            currentLang = currentLang === 'BN' ? 'EN' : 'BN';
-            document.querySelectorAll('[data-key]').forEach(el => {
-                const key = el.getAttribute('data-key');
-                if (dict[currentLang][key]) {
-                    el.innerText = dict[currentLang][key];
-                }
-            });
-        }
-
         function toggleDrawer() {
             const drawer = document.getElementById('drawer');
             const overlay = document.getElementById('drawer-overlay');
             drawer.classList.toggle('open');
             overlay.style.display = drawer.classList.contains('open') ? 'block' : 'none';
         }
-
         function switchDrawerTab(tab) {
             document.getElementById('drawer-cat-content').style.display = tab === 'cat' ? 'block' : 'none';
             document.getElementById('drawer-menu-content').style.display = tab === 'menu' ? 'block' : 'none';
             document.getElementById('drawer-tab-cat').classList.toggle('active', tab === 'cat');
             document.getElementById('drawer-tab-menu').classList.toggle('active', tab === 'menu');
         }
-
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-
         function switchAuthTab(tab) {
             document.getElementById('form-login').style.display = tab === 'login' ? 'block' : 'none';
             document.getElementById('form-signup').style.display = tab === 'signup' ? 'block' : 'none';
             document.getElementById('tab-login').classList.toggle('active', tab === 'login');
             document.getElementById('tab-signup').classList.toggle('active', tab === 'signup');
         }
-
         function focusSearch() { document.getElementById('search-input').focus(); }
-        function setActiveNavItem(el) {
-            document.querySelectorAll('.bottom-nav .nav-item').forEach(item => item.classList.remove('active'));
-            el.classList.add('active');
-        }
+        function setActiveNavItem(el) { document.querySelectorAll('.bottom-nav .nav-item').forEach(i => i.classList.remove('active')); el.classList.add('active'); }
     </script>
 </body>
-                                                                                                                               </html>
+</html>
