@@ -609,7 +609,6 @@
             renderProducts(window.allProductsList.filter(p => (p.title_bn || '').toLowerCase().includes(query)));
         };
 
-        // Variant Support & 4-Digit Tracking ID Handlers
         window.buyProduct = (productId, customTitle, customPrice) => {
             if (!currentUser) { alert("লগইন করুন!"); openModal('auth-modal'); return; }
             
@@ -666,7 +665,6 @@
                 await setDoc(doc(db, "users", currentUser.uid), { wallet: window.userWalletBalance }, { merge: true });
             }
 
-            // Generate 4-Digit Random Tracking ID (e.g. #7482)
             const trackingId = "#" + Math.floor(1000 + Math.random() * 9000);
             const variantSelect = document.getElementById('checkout-variant-select');
             const selectedVariantText = (document.getElementById('variant-selection-group').style.display === 'block') ? ` (${variantSelect.options[variantSelect.selectedIndex].text})` : "";
@@ -706,24 +704,40 @@
         });
 
         window.toggleAiChat = () => { const m = document.getElementById('ai-chat-modal'); m.style.display = m.style.display === 'flex' ? 'none' : 'flex'; };
+        
+        // UPGRADED AI CHATBOT INTELLIGENCE ENGINE
         window.sendAiMessage = () => {
             const input = document.getElementById('ai-input');
-            const text = input.value.trim();
+            const text = input.value.trim().toLowerCase();
             if(!text) return;
             const chatBody = document.getElementById('ai-chat-body');
-            chatBody.innerHTML += `<div class="ai-msg user">${text}</div>`;
+            chatBody.innerHTML += `<div class="ai-msg user">${input.value}</div>`;
             input.value = "";
             chatBody.scrollTop = chatBody.scrollHeight;
 
             setTimeout(() => {
-                let reply = "আমাদের অফিশিয়াল নগদ নম্বর: <b>01818558919</b>। অর্ডারের পর ট্র্যাকিং আইডি দেওয়া হয়।";
-                if(text.toLowerCase().includes('product')) {
+                let reply = "দুঃখিত, আমি আপনার বিষয়টি বুঝতে পারিনি। আপনি আমাদের প্রোডাক্ট, পেমেন্ট বা ওয়ালেট সম্পর্কে জিজ্ঞেস করতে পারেন।";
+                
+                if (text.includes('product') || text.includes('প্রোডাক্ট') || text.includes('item') || text.includes('ki ki ace')) {
                     let prodNames = window.allProductsList.map(p => p.title_bn).join(', ');
-                    reply = `আমাদের প্রোডাক্টসমূহ: ${prodNames || 'কোনো প্রোডাক্ট নেই'}.`;
+                    reply = prodNames ? `আমাদের বর্তমানে এই প্রোডাক্টসমূহ উপলব্ধ রয়েছে: <b>${prodNames}</b>।` : "বর্তমানে কোনো প্রোডাক্ট স্টক নেই।";
+                } 
+                else if (text.includes('payment') || text.includes('nagad') || text.includes('taka') || text.includes('bkash') || text.includes('পেমেন্ট') || text.includes('নগদ')) {
+                    reply = "আমাদের অফিশিয়াল নগদ পার্সোনাল নম্বর: <b>01818558919</b>। পেমেন্ট করার পর TrxID দিয়ে অর্ডার কনফার্ম করতে পারবেন।";
+                } 
+                else if (text.includes('wallet') || text.includes('balance') || text.includes('ওয়ালেট') || text.includes('ব্যালেন্স')) {
+                    reply = currentUser ? `আপনার বর্তমান ওয়ালেট ব্যালেন্স: <b>৳${window.userWalletBalance.toFixed(2)}</b>।` : "ওয়ালেট দেখতে অনুগ্রহ করে আগে সাইন ইন (Sign In) করুন।";
+                } 
+                else if (text.includes('order') || text.includes('tracking') || text.includes('অর্ডার') || text.includes('ট্র্যাকিং')) {
+                    reply = "অর্ডার করার পর আপনাকে একটি ৪-সংখ্যার ট্র্যাকিং আইডি (যেমন: #7482) দেওয়া হবে যা দিয়ে আপনার অর্ডার ট্র্যাক করতে পারবেন।";
+                } 
+                else if (text.includes('hi') || text.includes('hello') || text.includes('سلام') || text.includes('সালাম') || text.includes('হ্যাল্লো')) {
+                    reply = "হ্যালো! ইজির্মাট বিডি-তে আপনাকে স্বাগতম। আজ আপনাকে কীভাবে সাহায্য করতে পারি?";
                 }
+
                 chatBody.innerHTML += `<div class="ai-msg bot">${reply}</div>`;
                 chatBody.scrollTop = chatBody.scrollHeight;
-            }, 600);
+            }, 500);
         };
     </script>
 
