@@ -172,6 +172,7 @@
             width: 100%; padding: 11px 14px; background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--glass-border); border-radius: 12px; color: white; outline: none; font-size: 13px;
         }
+        .form-group select option { background: #0d1321; color: white; }
 
         .profile-header-card { display: flex; flex-direction: column; align-items: center; margin-bottom: 16px; }
         .profile-img-container { width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--primary); position: relative; overflow: hidden; margin-bottom: 8px; }
@@ -256,7 +257,7 @@
             <i class="fa-solid fa-xmark" style="cursor:pointer;" onclick="toggleAiChat()"></i>
         </div>
         <div class="ai-body" id="ai-chat-body">
-            <div class="ai-msg bot">হ্যালো! ইজির্মাট বিডি-তে স্বাগতম। 🎉 আমাদের স্টোরের যেকোনো প্রোডাক্ট, সাবস্ক্রিপশন, প্রাইস বা পেমেন্ট নিয়ে যেকোনো প্রশ্ন করুন! (Delivery takes within 2 Days).</div>
+            <div class="ai-msg bot">হ্যালো! ইজির্মাট বিডি-তে স্বাগতম। 🎉 যেকোনো প্রোডাক্ট, সাবস্ক্রিপশন বা পেমেন্ট নিয়ে প্রশ্ন করুন!</div>
         </div>
         <div class="ai-footer">
             <input type="text" id="ai-input" placeholder="প্রশ্ন করুন..." onkeypress="if(event.key==='Enter') sendAiMessage()">
@@ -315,7 +316,7 @@
         <div class="modal-box">
             <span class="close-btn" onclick="closeModal('topup-modal')">&times;</span>
             <h3 style="margin-bottom:12px; font-size:16px;">ওয়ালেটে টাকা এড করুন</h3>
-            <p style="font-size:12px; color:var(--text-muted); margin-bottom:12px;" id="topup-nagad-info">Nagad Personal: <b style="color:var(--primary);">01818558919</b></p>
+            <p style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">Nagad Personal: <b style="color:var(--primary);">01818558919</b></p>
             <form id="form-topup">
                 <div class="form-group"><label>Amount (BDT)</label><input type="number" id="topup-amount" min="10" required></div>
                 <div class="form-group"><label>Transaction ID (TrxID)</label><input type="text" id="topup-trx" required></div>
@@ -351,8 +352,11 @@
             <span class="close-btn" onclick="closeModal('checkout-modal')">&times;</span>
             <h3 style="margin-bottom:10px; font-size:16px;">অর্ডার চেকআউট</h3>
             <p id="checkout-prod-name" style="color:var(--primary); font-weight:bold; font-size:14px;"></p>
+            <div class="form-group" id="variant-selection-group" style="margin-top:10px; display:none;">
+                <label>ভ্যারিয়েন্ট সিলেক্ট করুন</label>
+                <select id="checkout-variant-select" class="form-group" onchange="updateVariantPrice()"></select>
+            </div>
             <p id="checkout-prod-price" style="margin-bottom:12px; font-weight:bold; font-size:14px;"></p>
-            <p style="font-size:11px; color:var(--primary); margin-bottom:10px;"><i class="fa-solid fa-clock"></i> Delivery Time: Within 2 Days</p>
 
             <form id="form-checkout">
                 <div class="form-group">
@@ -364,7 +368,7 @@
                 </div>
                 <div class="form-group"><label>আপনার নাম</label><input type="text" id="ord-name" required></div>
                 <div class="form-group"><label>মোবাইল নম্বর</label><input type="text" id="ord-phone" required></div>
-                <div class="form-group"><label>Subscription Email (সাবস্ক্রিপশনের ইমেইল)</label><input type="email" id="ord-sub-email" required></div>
+                <div class="form-group"><label>Subscription Email (ইমেইল)</label><input type="email" id="ord-sub-email" required></div>
                 <div class="form-group" id="trx-input-group"><label>Transaction ID (TrxID)</label><input type="text" id="ord-trx" required></div>
                 <button type="submit" class="btn-glass-action" style="margin-top:10px;">অর্ডার সাবমিট করুন</button>
             </form>
@@ -394,16 +398,12 @@
         window.userWalletBalance = 0;
         window.cartItems = [];
         window.allProductsList = [];
-        window.storeSettings = {};
+        window.selectedProductForCheckout = null;
 
-        // Fetch Store Settings
         onSnapshot(doc(db, "settings", "storeInfo"), (docSnap) => {
-            if(docSnap.exists()) {
-                window.storeSettings = docSnap.data();
-                if(window.storeSettings.storeName) {
-                    document.getElementById('store-brand-name').innerText = window.storeSettings.storeName;
-                    document.getElementById('store-title-tag').innerText = window.storeSettings.storeName + " - Digital Store";
-                }
+            if(docSnap.exists() && docSnap.data().storeName) {
+                document.getElementById('store-brand-name').innerText = docSnap.data().storeName;
+                document.getElementById('store-title-tag').innerText = docSnap.data().storeName + " - Digital Store";
             }
         });
 
@@ -423,8 +423,7 @@
                 document.getElementById('profile-preview-img').src = photoURL;
                 document.getElementById('ord-sub-email').value = user.email || '';
 
-                const userDocRef = doc(db, "users", user.uid);
-                const userDoc = await getDoc(userDocRef);
+                const userDoc = await getDoc(doc(db, "users", user.uid));
                 if (userDoc.exists()) {
                     window.userWalletBalance = userDoc.data().wallet || 0;
                     document.getElementById('user-wallet-balance').innerText = "৳" + window.userWalletBalance.toFixed(2);
@@ -445,10 +444,8 @@
         document.getElementById('form-profile-update').addEventListener('submit', async (e) => {
             e.preventDefault();
             if(!currentUser) return;
-            const newName = document.getElementById('prof-name').value;
-            const newPhone = document.getElementById('prof-phone').value;
-            await updateProfile(currentUser, { displayName: newName });
-            await setDoc(doc(db, "users", currentUser.uid), { name: newName, phone: newPhone }, { merge: true });
+            await updateProfile(currentUser, { displayName: document.getElementById('prof-name').value });
+            await setDoc(doc(db, "users", currentUser.uid), { name: document.getElementById('prof-name').value, phone: document.getElementById('prof-phone').value }, { merge: true });
             alert("Profile updated!");
             closeModal('profile-modal');
         });
@@ -459,12 +456,10 @@
             const reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = async () => {
-                const base64Img = reader.result;
-                await updateProfile(currentUser, { photoURL: base64Img });
-                await setDoc(doc(db, "users", currentUser.uid), { photoURL: base64Img }, { merge: true });
-                document.getElementById('profile-preview-img').src = base64Img;
-                document.getElementById('header-user-btn').innerHTML = `<img src="${base64Img}" class="user-avatar-img">`;
-                alert("Profile picture updated!");
+                await updateProfile(currentUser, { photoURL: reader.result });
+                await setDoc(doc(db, "users", currentUser.uid), { photoURL: reader.result }, { merge: true });
+                document.getElementById('profile-preview-img').src = reader.result;
+                document.getElementById('header-user-btn').innerHTML = `<img src="${reader.result}" class="user-avatar-img">`;
             };
         });
 
@@ -485,10 +480,12 @@
             e.target.reset();
         });
 
-        window.addToCart = (title, price) => {
-            window.cartItems.push({ title, price: parseFloat(price) });
+        window.addToCart = (productId) => {
+            const p = window.allProductsList.find(item => item.id === productId);
+            if(!p) return;
+            window.cartItems.push({ title: p.title_bn, price: p.price || 0 });
             updateCartUI();
-            alert(`"${title}" added to cart!`);
+            alert(`"${p.title_bn}" added to cart!`);
         };
 
         function updateCartUI() {
@@ -515,10 +512,9 @@
         window.checkoutFromCart = () => {
             if(window.cartItems.length === 0) { alert("Cart empty!"); return; }
             closeModal('cart-modal');
-            buyProduct("Cart Items (" + window.cartItems.length + ")", window.cartItems.reduce((sum, item) => sum + item.price, 0));
+            buyProduct(null, "Cart Items (" + window.cartItems.length + ")", window.cartItems.reduce((sum, item) => sum + item.price, 0));
         };
 
-        // Render Categories dynamically in Chips and Drawer
         onSnapshot(collection(db, "categories"), (snap) => {
             const chipsContainer = document.getElementById('dynamic-chips-container');
             const drawerContainer = document.getElementById('dynamic-drawer-categories');
@@ -563,16 +559,17 @@
             }
             products.forEach(p => {
                 const imgTag = p.image ? `<img src="${p.image}" class="product-img">` : `<div class="product-img" style="display:flex; align-items:center; justify-content:center;"><i class="fa-solid fa-image" style="color:var(--text-muted)"></i></div>`;
+                const displayPrice = p.variants ? "Variants" : `৳${p.price || 0}`;
                 container.innerHTML += `
                     <div class="product-card" onclick="openProductDetail('${p.id}')">
                         <div>
                             ${imgTag}
                             <div class="product-title">${p.title_bn || ''}</div>
-                            <div class="product-price">৳${p.price || 0}</div>
+                            <div class="product-price">${displayPrice}</div>
                         </div>
                         <div style="display:flex; flex-direction:column; gap:6px;" onclick="event.stopPropagation();">
-                            <button class="btn-glass-action" onclick="buyProduct('${p.title_bn}', '${p.price}')"><i class="fa-solid fa-bolt"></i> Buy Now</button>
-                            <button class="btn-glass-action btn-glass-secondary" onclick="addToCart('${p.title_bn}', '${p.price}')"><i class="fa-solid fa-cart-plus"></i> Add to Cart</button>
+                            <button class="btn-glass-action" onclick="buyProduct('${p.id}')"><i class="fa-solid fa-bolt"></i> Buy Now</button>
+                            <button class="btn-glass-action btn-glass-secondary" onclick="addToCart('${p.id}')"><i class="fa-solid fa-cart-plus"></i> Add to Cart</button>
                         </div>
                     </div>`;
             });
@@ -583,16 +580,17 @@
             if(!product) return;
             const content = document.getElementById('detail-modal-content');
             const imgHtml = product.image ? `<img src="${product.image}" style="width:100%; height:180px; border-radius:14px; object-fit:cover; margin-bottom:12px;">` : '';
+            const priceText = product.variants ? "Variants Available" : `৳${product.price}`;
             content.innerHTML = `
                 ${imgHtml}
                 <h3 style="font-size:18px; font-weight:bold; margin-bottom:6px;">${product.title_bn}</h3>
-                <div style="color:var(--primary); font-size:18px; font-weight:800; margin-bottom:12px;">৳${product.price}</div>
+                <div style="color:var(--primary); font-size:18px; font-weight:800; margin-bottom:12px;">${priceText}</div>
                 <div style="background:rgba(255,255,255,0.04); padding:12px; border-radius:12px; font-size:13px; line-height:1.5; margin-bottom:16px;">
-                    <b>বিবরণ:</b><br>${product.description || 'এই প্রোডাক্টের বিবরণ দেওয়া হয়নি। ডেলিভারি সময়: সর্বোচ্চ ২ দিন (2 Days).'}
+                    <b>বিবরণ:</b><br>${product.description || 'বিবরণ দেওয়া হয়নি।'}
                 </div>
                 <div style="display:flex; gap:10px;">
-                    <button class="btn-glass-action" onclick="closeModal('product-detail-modal'); buyProduct('${product.title_bn}', '${product.price}')">Buy Now</button>
-                    <button class="btn-glass-action btn-glass-secondary" onclick="closeModal('product-detail-modal'); addToCart('${product.title_bn}', '${product.price}')">Add to Cart</button>
+                    <button class="btn-glass-action" onclick="closeModal('product-detail-modal'); buyProduct('${product.id}')">Buy Now</button>
+                    <button class="btn-glass-action btn-glass-secondary" onclick="closeModal('product-detail-modal'); addToCart('${product.id}')">Add to Cart</button>
                 </div>`;
             openModal('product-detail-modal');
         };
@@ -611,11 +609,43 @@
             renderProducts(window.allProductsList.filter(p => (p.title_bn || '').toLowerCase().includes(query)));
         };
 
-        window.buyProduct = (title, price) => {
+        // Variant Support & 4-Digit Tracking ID Handlers
+        window.buyProduct = (productId, customTitle, customPrice) => {
             if (!currentUser) { alert("লগইন করুন!"); openModal('auth-modal'); return; }
-            document.getElementById('checkout-prod-name').innerText = title;
-            document.getElementById('checkout-prod-price').innerText = "Price: ৳" + price;
+            
+            const variantGroup = document.getElementById('variant-selection-group');
+            const variantSelect = document.getElementById('checkout-variant-select');
+            variantSelect.innerHTML = "";
+
+            if(productId) {
+                const product = window.allProductsList.find(p => p.id === productId);
+                window.selectedProductForCheckout = product;
+                document.getElementById('checkout-prod-name').innerText = product.title_bn;
+
+                if(product.variants && product.variants.includes(':')) {
+                    variantGroup.style.display = 'block';
+                    const parts = product.variants.split('|');
+                    parts.forEach(part => {
+                        const [vName, vPrice] = part.split(':');
+                        variantSelect.innerHTML += `<option value="${vPrice.trim()}">${vName.trim()} - ৳${vPrice.trim()}</option>`;
+                    });
+                    document.getElementById('checkout-prod-price').innerText = "Price: ৳" + variantSelect.value;
+                } else {
+                    variantGroup.style.display = 'none';
+                    document.getElementById('checkout-prod-price').innerText = "Price: ৳" + product.price;
+                }
+            } else {
+                variantGroup.style.display = 'none';
+                document.getElementById('checkout-prod-name').innerText = customTitle;
+                document.getElementById('checkout-prod-price').innerText = "Price: ৳" + customPrice;
+                window.selectedProductForCheckout = { title_bn: customTitle, price: customPrice };
+            }
             openModal('checkout-modal');
+        };
+
+        window.updateVariantPrice = () => {
+            const val = document.getElementById('checkout-variant-select').value;
+            document.getElementById('checkout-prod-price').innerText = "Price: ৳" + val;
         };
 
         window.toggleCheckoutTrx = () => {
@@ -636,20 +666,26 @@
                 await setDoc(doc(db, "users", currentUser.uid), { wallet: window.userWalletBalance }, { merge: true });
             }
 
+            // Generate 4-Digit Random Tracking ID (e.g. #7482)
+            const trackingId = "#" + Math.floor(1000 + Math.random() * 9000);
+            const variantSelect = document.getElementById('checkout-variant-select');
+            const selectedVariantText = (document.getElementById('variant-selection-group').style.display === 'block') ? ` (${variantSelect.options[variantSelect.selectedIndex].text})` : "";
+
             await addDoc(collection(db, "orders"), {
+                orderId: trackingId,
                 customerName: document.getElementById('ord-name').value,
                 phone: document.getElementById('ord-phone').value,
                 subscriptionEmail: document.getElementById('ord-sub-email').value,
                 paymentMethod: payMethod,
                 trxId: payMethod === 'Wallet' ? 'Wallet' : document.getElementById('ord-trx').value,
-                product: document.getElementById('checkout-prod-name').innerText,
+                product: document.getElementById('checkout-prod-name').innerText + selectedVariantText,
                 total: price,
                 userId: currentUser.uid,
                 status: "Pending",
                 createdAt: new Date().toISOString()
             });
 
-            alert("অর্ডার সফল! ডেলিভারি সময়: সর্বোচ্চ ২ দিন (2 Days)।");
+            alert(`অর্ডার সফল! আপনার ট্র্যাকিং আইডি: ${trackingId}`);
             window.cartItems = [];
             updateCartUI();
             closeModal('checkout-modal');
@@ -669,7 +705,6 @@
             closeModal('auth-modal');
         });
 
-        // AI Support Bot with Full Product Analysis
         window.toggleAiChat = () => { const m = document.getElementById('ai-chat-modal'); m.style.display = m.style.display === 'flex' ? 'none' : 'flex'; };
         window.sendAiMessage = () => {
             const input = document.getElementById('ai-input');
@@ -681,14 +716,10 @@
             chatBody.scrollTop = chatBody.scrollHeight;
 
             setTimeout(() => {
-                let reply = "আমাদের অফিশিয়াল নগদ নম্বর: <b>01818558919</b>। সমস্ত অর্ডারের ডেলিভারি সর্বোচ্চ ২ দিনের (2 Days) মধ্যে দেওয়া হয়।";
-                const lower = text.toLowerCase();
-                
-                if(lower.includes('product') || lower.includes('list') || lower.includes('প্রোডাক্ট')) {
-                    let prodNames = window.allProductsList.map(p => `${p.title_bn} (৳${p.price})`).join(', ');
-                    reply = `আমাদের বর্তমানে এই প্রোডাক্টগুলো রয়েছে: ${prodNames || 'কোনো প্রোডাক্ট নেই'}. ডেলিভারি সময়: Within 2 Days!`;
-                } else if(lower.includes('nagad') || lower.includes('payment')) {
-                    reply = "Nagad Personal Number: <b>01818558919</b>. টাকা পাঠিয়ে TrxID দিয়ে অর্ডার কনফার্ম করুন।";
+                let reply = "আমাদের অফিশিয়াল নগদ নম্বর: <b>01818558919</b>। অর্ডারের পর ট্র্যাকিং আইডি দেওয়া হয়।";
+                if(text.toLowerCase().includes('product')) {
+                    let prodNames = window.allProductsList.map(p => p.title_bn).join(', ');
+                    reply = `আমাদের প্রোডাক্টসমূহ: ${prodNames || 'কোনো প্রোডাক্ট নেই'}.`;
                 }
                 chatBody.innerHTML += `<div class="ai-msg bot">${reply}</div>`;
                 chatBody.scrollTop = chatBody.scrollHeight;
@@ -721,4 +752,4 @@
         function setActiveNavItem(el) { document.querySelectorAll('.bottom-nav .nav-item').forEach(i => i.classList.remove('active')); el.classList.add('active'); }
     </script>
 </body>
-</html>
+  </html>
