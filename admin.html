@@ -264,6 +264,13 @@
                     </div>
                 </div>
                 <div class="form-group"><label>পণ্যের বিবরণ</label><textarea id="edit-prod-desc" rows="3"></textarea></div>
+                
+                <div class="form-group">
+                    <label>নতুন ছবি পরিবর্তন করুন (ঐচ্ছিক)</label>
+                    <input type="file" id="edit-prod-image-file" accept="image/*" onchange="previewImage(this, 'edit-prod-img-preview')">
+                    <img id="edit-prod-img-preview" class="img-preview">
+                </div>
+
                 <button type="submit" class="submit-btn">আপডেট করুন</button>
             </form>
         </div>
@@ -440,6 +447,16 @@
             const editSelect = document.getElementById('edit-prod-category');
             editSelect.value = prod.category;
 
+            // প্রিভিউতে আগের ছবি সেট করা
+            const preview = document.getElementById('edit-prod-img-preview');
+            if (prod.image) {
+                preview.src = prod.image;
+                preview.style.display = 'block';
+            } else {
+                preview.style.display = 'none';
+            }
+            document.getElementById('edit-prod-image-file').value = '';
+
             document.getElementById('edit-product-modal').style.display = 'flex';
         };
 
@@ -451,14 +468,22 @@
             e.preventDefault();
             const id = document.getElementById('edit-prod-id').value;
             const variantsInput = document.getElementById('edit-prod-variants').value.trim();
-
-            await updateDoc(doc(db, "products", id), {
+            
+            const file = document.getElementById('edit-prod-image-file').files[0];
+            let updatedData = {
                 title_bn: document.getElementById('edit-prod-title').value,
                 category: document.getElementById('edit-prod-category').value,
                 description: document.getElementById('edit-prod-desc').value,
                 variants: variantsInput.includes(':') ? variantsInput : "",
                 price: variantsInput.includes(':') ? 0 : parseFloat(variantsInput || 0)
-            });
+            };
+
+            // যদি নতুন ছবি সিলেক্ট করা হয়ে থাকে, তবেই ইমেজ আপডেট হবে
+            if(file) {
+                updatedData.image = await fileToBase64(file);
+            }
+
+            await updateDoc(doc(db, "products", id), updatedData);
 
             alert("প্রোডাক্ট সফলভাবে আপডেট হয়েছে!");
             closeEditModal();
