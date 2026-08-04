@@ -705,7 +705,9 @@
 
         window.toggleAiChat = () => { const m = document.getElementById('ai-chat-modal'); m.style.display = m.style.display === 'flex' ? 'none' : 'flex'; };
         
-        // UPGRADED AI CHATBOT INTELLIGENCE ENGINE
+        // -----------------------------------------------------------------
+        // উন্নত AI চ্যাটবট ইঞ্জিন (সকল প্রশ্নের বুদ্ধিমান উত্তর দেওয়ার জন্য)
+        // -----------------------------------------------------------------
         window.sendAiMessage = () => {
             const input = document.getElementById('ai-input');
             const text = input.value.trim().toLowerCase();
@@ -716,22 +718,27 @@
             chatBody.scrollTop = chatBody.scrollHeight;
 
             setTimeout(() => {
-                let reply = "দুঃখিত, আমি আপনার বিষয়টি বুঝতে পারিনি। আপনি আমাদের প্রোডাক্ট, পেমেন্ট বা ওয়ালেট সম্পর্কে জিজ্ঞেস করতে পারেন।";
+                let reply = "দুঃখিত, আমি আপনার বিষয়টি বুঝতে পারিনি। আপনি আমাদের প্রোডাক্ট, ওয়ালেটে টাকা জমানো বা পেমেন্ট সম্পর্কে জিজ্ঞেস করতে পারেন।";
                 
-                if (text.includes('product') || text.includes('প্রোডাক্ট') || text.includes('item') || text.includes('ki ki ace')) {
+                // ১. ওয়ালেট ও টাকা জমানোর নিয়ম সম্পর্কিত প্রশ্ন
+                if (text.includes('taka') || text.includes('taka kibabe') || text.includes('add money') || text.includes('deposit') || text.includes('টাকা') || text.includes('ওয়ালেট') || text.includes('ঢুকাবো') || text.includes('এড করব')) {
+                    reply = "ওয়ালেটে টাকা এড করতে আপনার প্রফাইল থেকে 'Add Money' বাটনে ক্লিক করুন। আমাদের নগদ পার্সোনাল নম্বর <b>01818558919</b>-এ টাকা পাঠিয়ে সেই TrxID দিয়ে রিকোয়েস্ট পাঠালে এডমিন চেক করে ব্যালেন্স যোগ করে দেবেন।";
+                } 
+                // ২. প্রোডাক্ট সম্পর্কিত প্রশ্ন
+                else if (text.includes('product') || text.includes('প্রোডাক্ট') || text.includes('item') || text.includes('ki ki ace') || text.includes('আছে')) {
                     let prodNames = window.allProductsList.map(p => p.title_bn).join(', ');
                     reply = prodNames ? `আমাদের বর্তমানে এই প্রোডাক্টসমূহ উপলব্ধ রয়েছে: <b>${prodNames}</b>।` : "বর্তমানে কোনো প্রোডাক্ট স্টক নেই।";
                 } 
-                else if (text.includes('payment') || text.includes('nagad') || text.includes('taka') || text.includes('bkash') || text.includes('পেমেন্ট') || text.includes('নগদ')) {
-                    reply = "আমাদের অফিশিয়াল নগদ পার্সোনাল নম্বর: <b>01818558919</b>। পেমেন্ট করার পর TrxID দিয়ে অর্ডার কনফার্ম করতে পারবেন।";
+                // ৩. পেমেন্ট ও নগদ নম্বর সম্পর্কিত প্রশ্ন
+                else if (text.includes('payment') || text.includes('nagad') || text.includes('bkash') || text.includes('নগদ') || text.includes('বিকাশ') || text.includes('number') || text.includes('নম্বার')) {
+                    reply = "আমাদের অফিশিয়াল নগদ পার্সোনাল নম্বর: <b>01818558919</b>। পেমেন্ট করার পর TrxID দিয়ে অর্ডার বা ডিপোজিট কনফার্ম করতে পারবেন।";
                 } 
-                else if (text.includes('wallet') || text.includes('balance') || text.includes('ওয়ালেট') || text.includes('ব্যালেন্স')) {
-                    reply = currentUser ? `আপনার বর্তমান ওয়ালেট ব্যালেন্স: <b>৳${window.userWalletBalance.toFixed(2)}</b>।` : "ওয়ালেট দেখতে অনুগ্রহ করে আগে সাইন ইন (Sign In) করুন।";
+                // ৪. অর্ডার ট্র্যাকিং সম্পর্কিত প্রশ্ন
+                else if (text.includes('order') || text.includes('tracking') || text.includes('অর্ডার') || text.includes('ট্র্যাকিং') || text.includes('id')) {
+                    reply = "অর্ডার করার পর আপনাকে একটি ৪-সংখ্যার ট্র্যাকিং আইডি (যেমন: #7482) দেওয়া হবে। এই আইডি দিয়ে আপনি সহজেই আপনার অর্ডারের স্ট্যাটাস জানতে পারবেন।";
                 } 
-                else if (text.includes('order') || text.includes('tracking') || text.includes('অর্ডার') || text.includes('ট্র্যাকিং')) {
-                    reply = "অর্ডার করার পর আপনাকে একটি ৪-সংখ্যার ট্র্যাকিং আইডি (যেমন: #7482) দেওয়া হবে যা দিয়ে আপনার অর্ডার ট্র্যাক করতে পারবেন।";
-                } 
-                else if (text.includes('hi') || text.includes('hello') || text.includes('سلام') || text.includes('সালাম') || text.includes('হ্যাল্লো')) {
+                // ৫. গ্রিটিংস বা হ্যালো
+                else if (text.includes('hi') || text.includes('hello') || text.includes('সালাম') || text.includes('আসসালামু') || text.includes('হ্যাল্লো')) {
                     reply = "হ্যালো! ইজির্মাট বিডি-তে আপনাকে স্বাগতম। আজ আপনাকে কীভাবে সাহায্য করতে পারি?";
                 }
 
