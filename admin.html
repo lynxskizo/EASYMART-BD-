@@ -14,6 +14,7 @@
             --bg-dark: #080c14;
             --glass-card: rgba(255, 255, 255, 0.05);
             --glass-border: rgba(255, 255, 255, 0.12);
+            --glass-modal: rgba(13, 19, 33, 0.95);
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --danger: #ef4444;
@@ -83,6 +84,7 @@
         .btn-success { background: var(--primary); color: white; }
         .btn-danger { background: var(--danger); color: white; }
         .btn-warning { background: var(--warning); color: white; }
+        .btn-info { background: #3b82f6; color: white; }
 
         .table-wrapper { overflow-x: auto; }
         .data-table { width: 100%; border-collapse: collapse; margin-top: 10px; min-width: 550px; }
@@ -92,6 +94,18 @@
         .banner-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-top: 16px; }
         .banner-card { background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); border-radius: 12px; padding: 10px; }
         .banner-img { width: 100%; height: 100px; object-fit: cover; border-radius: 8px; margin-bottom: 8px; }
+
+        /* Modal for Edit */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(15px);
+            display: none; justify-content: center; align-items: center; z-index: 10000;
+        }
+        .modal-box {
+            background: var(--glass-modal); border: 1px solid var(--glass-border);
+            padding: 24px; border-radius: 20px; width: 90%; max-width: 450px; position: relative; max-height: 90vh; overflow-y: auto;
+        }
+        .close-btn { position: absolute; top: 14px; right: 18px; font-size: 20px; cursor: pointer; color: var(--text-muted); }
     </style>
 </head>
 <body>
@@ -232,6 +246,29 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="edit-product-modal">
+        <div class="modal-box">
+            <span class="close-btn" onclick="closeEditModal()">&times;</span>
+            <h3 style="margin-bottom: 14px; font-size: 16px;">প্রোডাক্ট এডিট করুন</h3>
+            <form id="edit-product-form">
+                <input type="hidden" id="edit-prod-id">
+                <div class="form-group"><label>পণ্যের নাম</label><input type="text" id="edit-prod-title" required></div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>ভ্যারিয়েন্ট বা মূল্য</label>
+                        <input type="text" id="edit-prod-variants" placeholder="e.g. 1 Month:150|3 Months:400">
+                    </div>
+                    <div class="form-group">
+                        <label>ক্যাটাগরি</label>
+                        <select id="edit-prod-category" class="custom-select" required></select>
+                    </div>
+                </div>
+                <div class="form-group"><label>পণ্যের বিবরণ</label><textarea id="edit-prod-desc" rows="3"></textarea></div>
+                <button type="submit" class="submit-btn">আপডেট করুন</button>
+            </form>
+        </div>
+    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -250,6 +287,9 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+
+        window.allAdminProducts = [];
+        window.allCategoriesList = [];
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -317,13 +357,20 @@
 
         onSnapshot(collection(db, "categories"), (snapshot) => {
             const selectEl = document.getElementById('prod-category');
+            const editSelectEl = document.getElementById('edit-prod-category');
             const catContainer = document.getElementById('category-list-container');
+            
             selectEl.innerHTML = '<option value="" disabled selected>ক্যাটাগরি সিলেক্ট করুন</option>';
+            editSelectEl.innerHTML = '';
             catContainer.innerHTML = "";
+            window.allCategoriesList = [];
+
             snapshot.forEach((docSnap) => {
                 const catName = docSnap.data().name;
                 const id = docSnap.id;
+                window.allCategoriesList.push(catName);
                 selectEl.innerHTML += `<option value="${catName}">${catName}</option>`;
+                editSelectEl.innerHTML += `<option value="${catName}">${catName}</option>`;
                 catContainer.innerHTML += `<div style="background:rgba(255,255,255,0.05); padding:6px 12px; border-radius:20px; font-size:12px; border:1px solid var(--glass-border); display:flex; gap:8px;">${catName} <i class="fa-solid fa-xmark" style="color:var(--danger); cursor:pointer;" onclick="deleteCategory('${id}')"></i></div>`;
             });
         });
@@ -337,14 +384,26 @@
         };
         window.deleteCategory = async (id) => { if(confirm("মুছে ফেলতে চান?")) await deleteDoc(doc(db, "categories", id)); };
 
-        // Product Form Handler (Variants Enabled)
+        // Product Form & Edit Handler
         onSnapshot(collection(db, "products"), (snapshot) => {
+            window.allAdminProducts = [];
             const tbody = document.getElementById('products-table-body');
             tbody.innerHTML = "";
             snapshot.forEach(docSnap => {
                 const p = { id: docSnap.id, ...docSnap.data() };
+                window.allAdminProducts.push(p);
                 const priceDisplay = p.variants ? "Variants" : `৳${p.price}`;
-                tbody.innerHTML += `<tr><td><img src="${p.image || ''}" class="prod-thumb"></td><td><b>${p.title_bn}</b></td><td>${p.category}</td><td>${priceDisplay}</td><td><button class="btn-sm btn-danger" onclick="deleteProduct('${p.id}')">Del</button></td></tr>`;
+                tbody.innerHTML += `
+                    <tr>
+                        <td><img src="${p.image || ''}" class="prod-thumb"></td>
+                        <td><b>${p.title_bn}</b></td>
+                        <td>${p.category}</td>
+                        <td>${priceDisplay}</td>
+                        <td style="display:flex; gap:4px;">
+                            <button class="btn-sm btn-info" onclick="openEditModal('${p.id}')">Edit</button>
+                            <button class="btn-sm btn-danger" onclick="deleteProduct('${p.id}')">Del</button>
+                        </td>
+                    </tr>`;
             });
         });
 
@@ -370,6 +429,41 @@
             document.getElementById('prod-img-preview').style.display = 'none';
         });
 
+        window.openEditModal = (id) => {
+            const prod = window.allAdminProducts.find(p => p.id === id);
+            if(!prod) return;
+            document.getElementById('edit-prod-id').value = prod.id;
+            document.getElementById('edit-prod-title').value = prod.title_bn || '';
+            document.getElementById('edit-prod-variants').value = prod.variants || prod.price || '';
+            document.getElementById('edit-prod-desc').value = prod.description || '';
+            
+            const editSelect = document.getElementById('edit-prod-category');
+            editSelect.value = prod.category;
+
+            document.getElementById('edit-product-modal').style.display = 'flex';
+        };
+
+        window.closeEditModal = () => {
+            document.getElementById('edit-product-modal').style.display = 'none';
+        };
+
+        document.getElementById('edit-product-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('edit-prod-id').value;
+            const variantsInput = document.getElementById('edit-prod-variants').value.trim();
+
+            await updateDoc(doc(db, "products", id), {
+                title_bn: document.getElementById('edit-prod-title').value,
+                category: document.getElementById('edit-prod-category').value,
+                description: document.getElementById('edit-prod-desc').value,
+                variants: variantsInput.includes(':') ? variantsInput : "",
+                price: variantsInput.includes(':') ? 0 : parseFloat(variantsInput || 0)
+            });
+
+            alert("প্রোডাক্ট সফলভাবে আপডেট হয়েছে!");
+            closeEditModal();
+        });
+
         window.deleteProduct = async (id) => { if(confirm("ডিলিট করতে চান?")) await deleteDoc(doc(db, "products", id)); };
 
         window.uploadBanner = async () => {
@@ -389,7 +483,6 @@
         });
         window.deleteBanner = async (id) => await deleteDoc(doc(db, "banners", id));
 
-        // Orders Management (Order ID Tracking Support)
         onSnapshot(collection(db, "orders"), (snapshot) => {
             document.getElementById('stat-total-orders').innerText = snapshot.size;
             const tbody = document.getElementById('orders-table-body');
