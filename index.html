@@ -46,10 +46,10 @@
         }
         .icon-btn:hover { background: rgba(255,255,255,0.2); border-color: var(--primary); box-shadow: 0 0 20px var(--primary-glow); transform: translateY(-2px); }
 
-        /* ইউজার প্রোফাইল পিকচার ফেটে যাওয়া রোধ করার পারফেক্ট ফিক্স */
-        .user-avatar-img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
-        .bottom-user-avatar { width: 22px; height: 22px; border-radius: 50%; object-fit: cover; border: 1.5px solid var(--primary); margin-bottom: 2px; }
-        .profile-img-preview { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+        /* প্রোফাইল পিকচার ফিক্সড স্টাইল */
+        .user-avatar-img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; }
+        .bottom-user-avatar { width: 22px; height: 22px; border-radius: 50%; object-fit: cover; border: 1.5px solid var(--primary); margin-bottom: 2px; display: block; }
+        .profile-img-preview { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; }
 
         .badge {
             position: absolute; top: -2px; right: -2px; background: var(--primary);
@@ -141,24 +141,26 @@
         .nav-item.active, .nav-item:hover { color: var(--primary); }
         .nav-item i { font-size: 18px; margin-bottom: 2px; }
 
+        /* উন্নত চ্যাটজিপিটি স্টাইল চ্যাটবট উইন্ডো */
         .ai-fab {
             position: fixed; bottom: 76px; right: 20px; background: var(--primary); color: #080c14;
             width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
             font-size: 22px; cursor: pointer; box-shadow: 0 6px 20px var(--primary-glow); z-index: 1001; border: 2px solid white;
         }
         .ai-modal {
-            position: fixed; bottom: 135px; right: 20px; width: 340px; max-width: 90vw; height: 420px;
-            background: #0d1321; border: 1px solid var(--glass-border); border-radius: 18px;
-            display: none; flex-direction: column; z-index: 1002; box-shadow: 0 10px 30px rgba(0,0,0,0.6); overflow: hidden;
+            position: fixed; bottom: 135px; right: 20px; width: 360px; max-width: 92vw; height: 480px;
+            background: rgba(13, 19, 33, 0.95); backdrop-filter: blur(25px); border: 1px solid var(--glass-border); border-radius: 20px;
+            display: none; flex-direction: column; z-index: 1002; box-shadow: 0 15px 35px rgba(0,0,0,0.7); overflow: hidden;
         }
-        .ai-header { background: rgba(255,255,255,0.05); padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--glass-border); font-size: 13px; font-weight: 700; }
-        .ai-body { flex: 1; padding: 12px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; font-size: 12px; }
-        .ai-msg { padding: 8px 12px; border-radius: 10px; max-width: 88%; line-height: 1.4; word-break: break-word; }
-        .ai-msg.bot { background: rgba(16, 185, 129, 0.15); color: #fff; align-self: flex-start; border: 1px solid var(--primary); }
-        .ai-msg.user { background: var(--primary); color: #080c14; align-self: flex-end; font-weight: 600; }
-        .ai-footer { padding: 10px; border-top: 1px solid var(--glass-border); display: flex; gap: 6px; background: rgba(255,255,255,0.02); }
-        .ai-footer input { flex: 1; background: rgba(255,255,255,0.06); border: 1px solid var(--glass-border); padding: 8px 12px; border-radius: 8px; color: white; outline: none; font-size: 12px; }
-        .ai-footer button { background: var(--primary); border: none; padding: 8px 12px; border-radius: 8px; color: #080c14; font-weight: bold; cursor: pointer; }
+        .ai-header { background: rgba(255,255,255,0.04); padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--glass-border); font-size: 14px; font-weight: 700; }
+        .ai-body { flex: 1; padding: 14px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; font-size: 13px; scroll-behavior: smooth; }
+        .ai-msg { padding: 10px 14px; border-radius: 14px; max-width: 85%; line-height: 1.5; word-break: break-word; }
+        .ai-msg.bot { background: rgba(16, 185, 129, 0.12); color: #fff; align-self: flex-start; border: 1px solid var(--primary); border-top-left-radius: 4px; }
+        .ai-msg.user { background: var(--primary); color: #080c14; align-self: flex-end; font-weight: 600; border-top-right-radius: 4px; }
+        .ai-typing { font-style: italic; color: var(--text-muted); font-size: 12px; display: none; padding: 6px 12px; }
+        .ai-footer { padding: 10px; border-top: 1px solid var(--glass-border); display: flex; gap: 8px; background: rgba(255,255,255,0.02); }
+        .ai-footer input { flex: 1; background: rgba(255,255,255,0.06); border: 1px solid var(--glass-border); padding: 10px 14px; border-radius: 12px; color: white; outline: none; font-size: 13px; }
+        .ai-footer button { background: var(--primary); border: none; padding: 10px 14px; border-radius: 12px; color: #080c14; font-weight: bold; cursor: pointer; }
 
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -171,24 +173,34 @@
         }
         .close-btn { position: absolute; top: 16px; right: 20px; font-size: 22px; cursor: pointer; color: var(--text-muted); }
 
-        /* গ্লাসি ট্রান্সপারেন্ট অর্ডার সাকসেস পপ-আপ ও কন্টাক্ট বাটন স্টাইল */
+        /* গ্লাসি ট্রান্সপারেন্ট অর্ডার সাকসেস পপ-আপ ও অর্ডার আইডি বক্স */
         .glass-popup-content {
-            background: rgba(13, 19, 33, 0.85); backdrop-filter: blur(25px);
+            background: rgba(13, 19, 33, 0.9); backdrop-filter: blur(25px);
             border: 1px solid var(--glass-border); padding: 30px 20px; border-radius: 24px;
             text-align: center; max-width: 400px; width: 90%; box-shadow: 0 20px 40px rgba(0,0,0,0.5);
         }
-        .glass-popup-content h3 { color: var(--primary); font-size: 19px; margin-bottom: 10px; font-weight: 800; }
-        .glass-popup-content p { color: var(--text-muted); font-size: 13px; margin-bottom: 20px; line-height: 1.4; }
+        .glass-popup-content h3 { color: var(--primary); font-size: 18px; margin-bottom: 8px; font-weight: 800; }
+        .glass-popup-content p { color: var(--text-muted); font-size: 12px; margin-bottom: 16px; line-height: 1.4; }
         
-        .contact-options-grid { display: flex; flex-direction: column; gap: 12px; }
+        .order-id-box {
+            background: rgba(255, 255, 255, 0.05); border: 1px dashed var(--primary);
+            padding: 12px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 18px;
+        }
+        .order-id-text { font-size: 18px; font-weight: 800; color: var(--primary); letter-spacing: 1.5px; }
+        .copy-btn {
+            background: var(--primary); border: none; color: #080c14; padding: 6px 12px;
+            border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 4px;
+        }
+        .copy-btn:hover { background: #059669; color: white; }
+
+        .contact-options-grid { display: flex; flex-direction: column; gap: 10px; }
         .contact-btn {
             display: flex; align-items: center; justify-content: center; gap: 10px;
-            padding: 14px; border-radius: 14px; font-weight: 700; text-decoration: none; color: white; font-size: 14px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            padding: 12px; border-radius: 14px; font-weight: 700; text-decoration: none; color: white; font-size: 13px;
         }
         .btn-whatsapp { background: var(--whatsapp); }
         .btn-telegram { background: var(--telegram); }
-        .contact-btn i { font-size: 18px; }
 
         .form-group { margin-bottom: 14px; }
         .form-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
@@ -276,14 +288,15 @@
     <div class="ai-fab" onclick="toggleAiChat()"><i class="fa-solid fa-robot"></i></div>
     <div class="ai-modal" id="ai-chat-modal">
         <div class="ai-header">
-            <span><i class="fa-solid fa-headset" style="color:var(--primary)"></i> EASYMART AI Support</span>
+            <span><i class="fa-solid fa-robot" style="color:var(--primary)"></i> EASYMART AI Assistant</span>
             <i class="fa-solid fa-xmark" style="cursor:pointer;" onclick="toggleAiChat()"></i>
         </div>
         <div class="ai-body" id="ai-chat-body">
-            <div class="ai-msg bot">হ্যালো! ইজির্মাট বিডি-তে স্বাগতম। 🎉 যেকোনো প্রোডাক্ট, সাবস্ক্রিপশন বা পেমেন্ট নিয়ে প্রশ্ন করুন!</div>
+            <div class="ai-msg bot">হ্যালো! আমি ইজির্মাট এআই অ্যাসিস্ট্যান্ট। কীভাবে আপনাকে সাহায্য করতে পারি বলুন?</div>
         </div>
+        <div class="ai-typing" id="ai-typing-indicator"><i class="fa-solid fa-circle-notch fa-spin"></i> এআই টাইপ করছে...</div>
         <div class="ai-footer">
-            <input type="text" id="ai-input" placeholder="প্রশ্ন করুন..." onkeypress="if(event.key==='Enter') sendAiMessage()">
+            <input type="text" id="ai-input" placeholder="এখানে কিছু লিখুন..." onkeypress="if(event.key==='Enter') sendAiMessage()">
             <button onclick="sendAiMessage()"><i class="fa-solid fa-paper-plane"></i></button>
         </div>
     </div>
@@ -392,7 +405,7 @@
                 <div class="form-group"><label>আপনার নাম</label><input type="text" id="ord-name" required></div>
                 <div class="form-group"><label>মোবাইল নম্বর</label><input type="text" id="ord-phone" required></div>
                 <div class="form-group"><label>Subscription Email (ইমেইল)</label><input type="email" id="ord-sub-email" required></div>
-                <div class="form-group" id="trx-input-group"><label>Transaction ID (TrxID)</label><input type="text" id="ord-trx" required></div>
+                <div class="form-group" id="trx-input-group"><label>Transaction ID (TrxID - কমপক্ষে ৮ বা তার বেশি অক্ষর/সংখ্যার নগদ টিআরএক্স)</label><input type="text" id="ord-trx" placeholder="যেমন: 9N7K2P8X"></div>
                 <button type="submit" class="btn-glass-action" style="margin-top:10px;">অর্ডার সাবমিট করুন</button>
             </form>
         </div>
@@ -401,7 +414,14 @@
     <div class="modal-overlay" id="order-success-modal">
         <div class="glass-popup-content">
             <h3>Congratulation your order is received</h3>
-            <p>To receive order choose an option below and send your details to us:</p>
+            <p>আপনার অর্ডারটি সফলভাবে কনফার্ম হয়েছে। নিচে আপনার ৫ সংখ্যার ইউনিক অর্ডার আইডি দেওয়া হলো:</p>
+            
+            <div class="order-id-box">
+                <span class="order-id-text" id="generated-order-id-display">ABC12</span>
+                <button class="copy-btn" onclick="copyGeneratedOrderId()"><i class="fa-solid fa-copy"></i> কপি করুন</button>
+            </div>
+
+            <p>অর্ডারটি দ্রুত রিসিভ করতে নিচের মাধ্যমে আমাদের সাথে যোগাযোগ করুন:</p>
             <div class="contact-options-grid">
                 <a href="https://wa.me/8801818558919" target="_blank" class="contact-btn btn-whatsapp">
                     <i class="fa-brands fa-whatsapp"></i> WhatsApp (01818558919)
@@ -410,14 +430,14 @@
                     <i class="fa-brands fa-telegram"></i> Telegram (@smallbusinessman26)
                 </a>
             </div>
-            <button class="btn-glass-action btn-danger" style="margin-top: 18px;" onclick="closeOrderSuccessModal()">বন্ধ করুন</button>
+            <button class="btn-glass-action btn-danger" style="margin-top: 16px;" onclick="closeOrderSuccessModal()">বন্ধ করুন</button>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, setDoc, getDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCnrZ8ZF8tGW2R5buFDsAeLHJlWHBwb9hw",
@@ -446,15 +466,17 @@
             }
         });
 
+        // ফিক্সড অনঅথ স্টেট চেঞ্জ (প্রোফাইল পিকচার রেন্ডারিং স্থায়ীভাবে ঠিক করা হয়েছে)
         onAuthStateChanged(auth, async (user) => {
             const headerBtn = document.getElementById('header-user-btn');
             const bottomBtn = document.getElementById('bottom-user-btn');
 
             if (user) {
                 currentUser = user;
-                const photoURL = user.photoURL || 'https://via.placeholder.com/150';
-                headerBtn.innerHTML = `<img src="${photoURL}" class="user-avatar-img">`;
-                bottomBtn.innerHTML = `<img src="${photoURL}" class="bottom-user-avatar"><span>Profile</span>`;
+                const photoURL = (user.photoURL && user.photoURL.trim() !== '') ? user.photoURL : 'https://via.placeholder.com/150';
+                
+                headerBtn.innerHTML = `<img src="${photoURL}" class="user-avatar-img" onerror="this.src='https://via.placeholder.com/150'">`;
+                bottomBtn.innerHTML = `<img src="${photoURL}" class="bottom-user-avatar" onerror="this.src='https://via.placeholder.com/150'"><span>Profile</span>`;
 
                 document.getElementById('profile-display-name').innerText = user.displayName || 'User Profile';
                 document.getElementById('profile-display-email').innerText = user.email;
@@ -489,17 +511,23 @@
             closeModal('profile-modal');
         });
 
-        // প্রোফাইল পিকচার আপলোডের সময় যাতে সাইজ ঠিক থাকে এবং না ফাটে
+        // প্রোফাইল পিকচার ফিক্স: বেসড অন বেস৬৪ বা লিংক আপলোড এবং ইনস্ট্যান্ট ইউআই আপডেট
         document.getElementById('image-upload-input').addEventListener('change', async (e) => {
             const file = e.target.files[0];
             if (!file || !currentUser) return;
             const reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = async () => {
-                await updateProfile(currentUser, { photoURL: reader.result });
-                await setDoc(doc(db, "users", currentUser.uid), { photoURL: reader.result }, { merge: true });
-                document.getElementById('profile-preview-img').src = reader.result;
-                document.getElementById('header-user-btn').innerHTML = `<img src="${reader.result}" class="user-avatar-img">`;
+                const base64Img = reader.result;
+                try {
+                    await updateProfile(currentUser, { photoURL: base64Img });
+                    await setDoc(doc(db, "users", currentUser.uid), { photoURL: base64Img }, { merge: true });
+                    document.getElementById('profile-preview-img').src = base64Img;
+                    document.getElementById('header-user-btn').innerHTML = `<img src="${base64Img}" class="user-avatar-img">`;
+                    alert("প্রোফাইল ছবি সফলভাবে আপডেট হয়েছে!");
+                } catch(err) {
+                    alert("ছবি আপলোড করতে সমস্যা হয়েছে: " + err.message);
+                }
             };
         });
 
@@ -692,30 +720,61 @@
             document.getElementById('trx-input-group').style.display = (method === 'Wallet') ? 'none' : 'block';
         };
 
+        // ৫ সংখ্যার ইউনিক অর্ডার আইডি জেনারেটর (সংখ্যা ও বড় হাতের লেটারের মিশ্রণ) এবং ডুপ্লিকেট ট্র্যাকিং আইডি চেক
+        function generateUniqueAlphaNumericId() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let result = '';
+            for (let i = 0; i < 5; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+
         document.getElementById('form-checkout').addEventListener('submit', async (e) => {
             e.preventDefault();
             const payMethod = document.getElementById('checkout-payment-method').value;
             const price = parseFloat(document.getElementById('checkout-prod-price').innerText.replace(/[^0-9.]/g, ''));
+            const trxInputVal = document.getElementById('ord-trx').value.trim();
             
+            // ওয়ালেট পেমেন্ট ব্যালেন্স চেক
             if (payMethod === 'Wallet' && window.userWalletBalance < price) {
                 alert("ওয়ালেটে পর্যাপ্ত ব্যালেন্স নেই!"); return;
             }
+
+            // নগদ পেমেন্ট হলে সঠিক ট্র্যাকিং আইডি যাচাই ও ডুপ্লিকেট চেকিং
+            if (payMethod === 'Nagad') {
+                if (!trxInputVal || trxInputVal.length < 5) {
+                    alert("দয়া করে সঠিক ও সম্পূর্ণ নগদ ট্রানজেকশন আইডি (TrxID) প্রদান করুন!");
+                    return;
+                }
+
+                // একই ট্র্যাকিং আইডি পূর্বে ব্যবহার করা হয়েছে কিনা ডাটাবেসে চেক করা
+                const q = query(collection(db, "orders"), where("trxId", "==", trxInputVal));
+                const querySnapshot = await getDocs(q);
+                if (!querySnapshot.empty) {
+                    alert("⚠️ এই নগদ ট্রানজেকশন আইডি (TrxID) ইতিপূর্বে ব্যবহার করা হয়েছে! একই TrxID বার বার ব্যবহার করা যাবে না।");
+                    return;
+                }
+            }
+
             if (payMethod === 'Wallet') {
                 window.userWalletBalance -= price;
                 await setDoc(doc(db, "users", currentUser.uid), { wallet: window.userWalletBalance }, { merge: true });
             }
 
-            const trackingId = "#" + Math.floor(1000 + Math.random() * 9000);
+            // ৫ সংখ্যার রেন্ডম ইউনিক অর্ডার আইডি তৈরি
+            const fiveDigitOrderId = generateUniqueAlphaNumericId();
             const variantSelect = document.getElementById('checkout-variant-select');
             const selectedVariantText = (document.getElementById('variant-selection-group').style.display === 'block') ? ` (${variantSelect.options[variantSelect.selectedIndex].text})` : "";
 
+            // ডাটাবেসে অর্ডার সাবমিট করা
             await addDoc(collection(db, "orders"), {
-                orderId: trackingId,
+                orderId: fiveDigitOrderId,
                 customerName: document.getElementById('ord-name').value,
                 phone: document.getElementById('ord-phone').value,
                 subscriptionEmail: document.getElementById('ord-sub-email').value,
                 paymentMethod: payMethod,
-                trxId: payMethod === 'Wallet' ? 'Wallet' : document.getElementById('ord-trx').value,
+                trxId: payMethod === 'Wallet' ? 'Wallet' : trxInputVal,
                 product: document.getElementById('checkout-prod-name').innerText + selectedVariantText,
                 total: price,
                 userId: currentUser.uid,
@@ -725,12 +784,22 @@
 
             closeModal('checkout-modal');
             
-            // পেমেন্ট সাবমিট হওয়ার পর গ্লাসি ট্রান্সপারেন্ট সাকসেস পপ-আপ ট্রিগার করা হবে
+            // সাকসেস পপআপে ৫ সংখ্যার আইডি শো করানো
+            document.getElementById('generated-order-id-display').innerText = fiveDigitOrderId;
             document.getElementById('order-success-modal').style.display = 'flex';
 
             window.cartItems = [];
             updateCartUI();
         });
+
+        window.copyGeneratedOrderId = () => {
+            const orderIdText = document.getElementById('generated-order-id-display').innerText;
+            navigator.clipboard.writeText(orderIdText).then(() => {
+                alert("অর্ডার আইডি সফলভাবে কপি হয়েছে: " + orderIdText);
+            }).catch(err => {
+                alert("কপি করতে সমস্যা হয়েছে!");
+            });
+        };
 
         window.closeOrderSuccessModal = () => {
             document.getElementById('order-success-modal').style.display = 'none';
@@ -750,6 +819,7 @@
             closeModal('auth-modal');
         });
 
+        // চ্যাটজিপিটি স্টাইল উন্নত এআই চ্যাটবট ইঞ্জিন ও টাইপিং অ্যানিমেশন
         window.toggleAiChat = () => { const m = document.getElementById('ai-chat-modal'); m.style.display = m.style.display === 'flex' ? 'none' : 'flex'; };
         
         window.sendAiMessage = () => {
@@ -757,30 +827,40 @@
             const text = input.value.trim().toLowerCase();
             if(!text) return;
             const chatBody = document.getElementById('ai-chat-body');
+            const typingInd = document.getElementById('ai-typing-indicator');
+
             chatBody.innerHTML += `<div class="ai-msg user">${input.value}</div>`;
             input.value = "";
             chatBody.scrollTop = chatBody.scrollHeight;
 
+            // চ্যাটজিপিটির মতো টাইপিং ইফেক্ট শো করা
+            typingInd.style.display = 'block';
+            chatBody.scrollTop = chatBody.scrollHeight;
+
             setTimeout(() => {
-                let reply = "দুঃখিত, আমি আপনার বিষয়টি বুঝতে পারিনি। আপনি আমাদের প্রোডাক্ট, ওয়ালেটে টাকা জমানো বা পেমেন্ট সম্পর্কে জিজ্ঞেস করতে পারেন।";
+                typingInd.style.display = 'none';
+                let reply = "দুঃখিত, আমি আপনার বিষয়টি পুরোপুরি বুঝতে পারিনি। আপনি আমাদের প্রোডাক্টের বিবরণ, নগদ পেমেন্ট, ওয়ালেট রিচার্জ বা ৫ সংখ্যার অর্ডার আইডি সম্পর্কে যেকোনো প্রশ্ন করতে পারেন।";
                 
-                if (text.includes('taka') || text.includes('add money') || text.includes('deposit') || text.includes('টাকা') || text.includes('ওয়ালেট')) {
-                    reply = "ওয়ালেটে টাকা এড করতে আপনার প্রফাইল থেকে 'Add Money' বাটনে ক্লিক করুন। আমাদের নগদ পার্সোনাল নম্বর <b>01818558919</b>-এ টাকা পাঠিয়ে সেই TrxID দিয়ে রিকোয়েস্ট পাঠাবেন।";
+                if (text.includes('order') || text.includes('অর্ডার') || text.includes('id') || text.includes('আইডি')) {
+                    reply = "সঠিক নগদ TrxID দিয়ে অর্ডার করার সাথে সাথেই ৫ সংখ্যার একটি ইউনিক অর্ডার আইডি (যেমন: A7X92) জেনারেট হয়। আপনি চাইলে তা এক ক্লিকেই কপি করে রাখতে পারবেন।";
                 } 
-                else if (text.includes('product') || text.includes('প্রোডাক্ট') || text.includes('item') || text.includes('আছে')) {
+                else if (text.includes('taka') || text.includes('taka kibabe') || text.includes('deposit') || text.includes('টাকা') || text.includes('ওয়ালেট')) {
+                    reply = "ওয়ালেটে টাকা যোগ করতে আপনার প্রফাইল থেকে 'Add Money' অপশনে যান। আমাদের নগদ পার্সোনাল নম্বর <b>01818558919</b>-এ টাকা পাঠিয়ে TrxID সাবমিট করলেই এডমিন ব্যালেন্স যুক্ত করে দেবেন।";
+                } 
+                else if (text.includes('product') || text.includes('প্রোডাক্ট') || text.includes('item') || text.includes('কি কি আছে')) {
                     let prodNames = window.allProductsList.map(p => p.title_bn).join(', ');
-                    reply = prodNames ? `আমাদের বর্তমানে এই প্রোডাক্টসমূহ উপলব্ধ রয়েছে: <b>${prodNames}</b>।` : "বর্তমানে কোনো প্রোডাক্ট স্টক নেই।";
+                    reply = prodNames ? `আমাদের স্টোরে বর্তমানে এই প্রোডাক্টসমূহ পাওয়া যাচ্ছে: <b>${prodNames}</b>।` : "বর্তমানে কোনো প্রোডাক্ট স্টক নেই।";
                 } 
-                else if (text.includes('payment') || text.includes('nagad') || text.includes('নগদ') || text.includes('নম্বার')) {
-                    reply = "আমাদের অফিশিয়াল নগদ পার্সোনাল নম্বর: <b>01818558919</b>। পেমেন্ট করার পর ট্রানজেকশন আইডি দিয়ে অর্ডার কনফার্ম করতে পারবেন।";
+                else if (text.includes('payment') || text.includes('nagad') || text.includes('নগদ') || text.includes('নম্বর')) {
+                    reply = "আমাদের অফিশিয়াল নগদ পার্সোনাল নম্বর হলো: <b>01818558919</b>।";
                 } 
-                else if (text.includes('hi') || text.includes('hello') || text.includes('সালাম')) {
-                    reply = "হ্যালো! ইজির্মাট বিডি-তে আপনাকে স্বাগতম। আজ আপনাকে কীভাবে সাহায্য করতে পারি?";
+                else if (text.includes('hi') || text.includes('hello') || text.includes('সালাম') || text.includes('হ্যালো')) {
+                    reply = "হ্যালো! ইজির্মাট বিডি এআই অ্যাসিস্ট্যান্টের সাথে কথা বলার জন্য আপনাকে ধন্যবাদ। আজ আপনাকে কীভাবে সহায়তা করতে পারি বলুন?";
                 }
 
                 chatBody.innerHTML += `<div class="ai-msg bot">${reply}</div>`;
                 chatBody.scrollTop = chatBody.scrollHeight;
-            }, 500);
+            }, 800);
         };
     </script>
 
