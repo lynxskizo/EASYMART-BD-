@@ -16,6 +16,8 @@
             --glass-modal: rgba(13, 19, 33, 0.95);
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
+            --whatsapp: #25d366;
+            --telegram: #0088cc;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Hind Siliguri', 'Plus Jakarta Sans', sans-serif; transition: all 0.25s ease; }
@@ -44,7 +46,11 @@
         }
         .icon-btn:hover { background: rgba(255,255,255,0.2); border-color: var(--primary); box-shadow: 0 0 20px var(--primary-glow); transform: translateY(-2px); }
 
+        /* ইউজার প্রোফাইল পিকচার ফেটে যাওয়া রোধ করার পারফেক্ট ফিক্স */
         .user-avatar-img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+        .bottom-user-avatar { width: 22px; height: 22px; border-radius: 50%; object-fit: cover; border: 1.5px solid var(--primary); margin-bottom: 2px; }
+        .profile-img-preview { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+
         .badge {
             position: absolute; top: -2px; right: -2px; background: var(--primary);
             color: white; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 10px;
@@ -134,7 +140,6 @@
         .nav-item { color: var(--text-muted); text-align: center; font-size: 11px; text-decoration: none; cursor: pointer; background: none; border: none; display: flex; flex-direction: column; align-items: center; }
         .nav-item.active, .nav-item:hover { color: var(--primary); }
         .nav-item i { font-size: 18px; margin-bottom: 2px; }
-        .bottom-user-avatar { width: 22px; height: 22px; border-radius: 50%; object-fit: cover; border: 1.5px solid var(--primary); margin-bottom: 2px; }
 
         .ai-fab {
             position: fixed; bottom: 76px; right: 20px; background: var(--primary); color: #080c14;
@@ -166,6 +171,25 @@
         }
         .close-btn { position: absolute; top: 16px; right: 20px; font-size: 22px; cursor: pointer; color: var(--text-muted); }
 
+        /* গ্লাসি ট্রান্সপারেন্ট অর্ডার সাকসেস পপ-আপ ও কন্টাক্ট বাটন স্টাইল */
+        .glass-popup-content {
+            background: rgba(13, 19, 33, 0.85); backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border); padding: 30px 20px; border-radius: 24px;
+            text-align: center; max-width: 400px; width: 90%; box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+        .glass-popup-content h3 { color: var(--primary); font-size: 19px; margin-bottom: 10px; font-weight: 800; }
+        .glass-popup-content p { color: var(--text-muted); font-size: 13px; margin-bottom: 20px; line-height: 1.4; }
+        
+        .contact-options-grid { display: flex; flex-direction: column; gap: 12px; }
+        .contact-btn {
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            padding: 14px; border-radius: 14px; font-weight: 700; text-decoration: none; color: white; font-size: 14px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .btn-whatsapp { background: var(--whatsapp); }
+        .btn-telegram { background: var(--telegram); }
+        .contact-btn i { font-size: 18px; }
+
         .form-group { margin-bottom: 14px; }
         .form-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
         .form-group input, .form-group select, .form-group textarea {
@@ -176,7 +200,6 @@
 
         .profile-header-card { display: flex; flex-direction: column; align-items: center; margin-bottom: 16px; }
         .profile-img-container { width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--primary); position: relative; overflow: hidden; margin-bottom: 8px; }
-        .profile-img-preview { width: 100%; height: 100%; object-fit: cover; }
         .upload-img-btn { position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(0,0,0,0.7); color: white; font-size: 10px; text-align: center; padding: 4px 0; cursor: pointer; }
 
         .tab-toggle { display: flex; margin-bottom: 18px; background: rgba(255,255,255,0.05); border-radius: 12px; padding: 4px; }
@@ -375,6 +398,22 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="order-success-modal">
+        <div class="glass-popup-content">
+            <h3>Congratulation your order is received</h3>
+            <p>To receive order choose an option below and send your details to us:</p>
+            <div class="contact-options-grid">
+                <a href="https://wa.me/8801818558919" target="_blank" class="contact-btn btn-whatsapp">
+                    <i class="fa-brands fa-whatsapp"></i> WhatsApp (01818558919)
+                </a>
+                <a href="https://t.me/smallbusinessman26" target="_blank" class="contact-btn btn-telegram">
+                    <i class="fa-brands fa-telegram"></i> Telegram (@smallbusinessman26)
+                </a>
+            </div>
+            <button class="btn-glass-action btn-danger" style="margin-top: 18px;" onclick="closeOrderSuccessModal()">বন্ধ করুন</button>
+        </div>
+    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -450,6 +489,7 @@
             closeModal('profile-modal');
         });
 
+        // প্রোফাইল পিকচার আপলোডের সময় যাতে সাইজ ঠিক থাকে এবং না ফাটে
         document.getElementById('image-upload-input').addEventListener('change', async (e) => {
             const file = e.target.files[0];
             if (!file || !currentUser) return;
@@ -683,11 +723,18 @@
                 createdAt: new Date().toISOString()
             });
 
-            alert(`অর্ডার সফল! আপনার ট্র্যাকিং আইডি: ${trackingId}`);
+            closeModal('checkout-modal');
+            
+            // পেমেন্ট সাবমিট হওয়ার পর গ্লাসি ট্রান্সপারেন্ট সাকসেস পপ-আপ ট্রিগার করা হবে
+            document.getElementById('order-success-modal').style.display = 'flex';
+
             window.cartItems = [];
             updateCartUI();
-            closeModal('checkout-modal');
         });
+
+        window.closeOrderSuccessModal = () => {
+            document.getElementById('order-success-modal').style.display = 'none';
+        };
 
         document.getElementById('form-signup').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -705,9 +752,6 @@
 
         window.toggleAiChat = () => { const m = document.getElementById('ai-chat-modal'); m.style.display = m.style.display === 'flex' ? 'none' : 'flex'; };
         
-        // -----------------------------------------------------------------
-        // উন্নত AI চ্যাটবট ইঞ্জিন (সকল প্রশ্নের বুদ্ধিমান উত্তর দেওয়ার জন্য)
-        // -----------------------------------------------------------------
         window.sendAiMessage = () => {
             const input = document.getElementById('ai-input');
             const text = input.value.trim().toLowerCase();
@@ -720,25 +764,17 @@
             setTimeout(() => {
                 let reply = "দুঃখিত, আমি আপনার বিষয়টি বুঝতে পারিনি। আপনি আমাদের প্রোডাক্ট, ওয়ালেটে টাকা জমানো বা পেমেন্ট সম্পর্কে জিজ্ঞেস করতে পারেন।";
                 
-                // ১. ওয়ালেট ও টাকা জমানোর নিয়ম সম্পর্কিত প্রশ্ন
-                if (text.includes('taka') || text.includes('taka kibabe') || text.includes('add money') || text.includes('deposit') || text.includes('টাকা') || text.includes('ওয়ালেট') || text.includes('ঢুকাবো') || text.includes('এড করব')) {
-                    reply = "ওয়ালেটে টাকা এড করতে আপনার প্রফাইল থেকে 'Add Money' বাটনে ক্লিক করুন। আমাদের নগদ পার্সোনাল নম্বর <b>01818558919</b>-এ টাকা পাঠিয়ে সেই TrxID দিয়ে রিকোয়েস্ট পাঠালে এডমিন চেক করে ব্যালেন্স যোগ করে দেবেন।";
+                if (text.includes('taka') || text.includes('add money') || text.includes('deposit') || text.includes('টাকা') || text.includes('ওয়ালেট')) {
+                    reply = "ওয়ালেটে টাকা এড করতে আপনার প্রফাইল থেকে 'Add Money' বাটনে ক্লিক করুন। আমাদের নগদ পার্সোনাল নম্বর <b>01818558919</b>-এ টাকা পাঠিয়ে সেই TrxID দিয়ে রিকোয়েস্ট পাঠাবেন।";
                 } 
-                // ২. প্রোডাক্ট সম্পর্কিত প্রশ্ন
-                else if (text.includes('product') || text.includes('প্রোডাক্ট') || text.includes('item') || text.includes('ki ki ace') || text.includes('আছে')) {
+                else if (text.includes('product') || text.includes('প্রোডাক্ট') || text.includes('item') || text.includes('আছে')) {
                     let prodNames = window.allProductsList.map(p => p.title_bn).join(', ');
                     reply = prodNames ? `আমাদের বর্তমানে এই প্রোডাক্টসমূহ উপলব্ধ রয়েছে: <b>${prodNames}</b>।` : "বর্তমানে কোনো প্রোডাক্ট স্টক নেই।";
                 } 
-                // ৩. পেমেন্ট ও নগদ নম্বর সম্পর্কিত প্রশ্ন
-                else if (text.includes('payment') || text.includes('nagad') || text.includes('bkash') || text.includes('নগদ') || text.includes('বিকাশ') || text.includes('number') || text.includes('নম্বার')) {
-                    reply = "আমাদের অফিশিয়াল নগদ পার্সোনাল নম্বর: <b>01818558919</b>। পেমেন্ট করার পর TrxID দিয়ে অর্ডার বা ডিপোজিট কনফার্ম করতে পারবেন।";
+                else if (text.includes('payment') || text.includes('nagad') || text.includes('নগদ') || text.includes('নম্বার')) {
+                    reply = "আমাদের অফিশিয়াল নগদ পার্সোনাল নম্বর: <b>01818558919</b>। পেমেন্ট করার পর ট্রানজেকশন আইডি দিয়ে অর্ডার কনফার্ম করতে পারবেন।";
                 } 
-                // ৪. অর্ডার ট্র্যাকিং সম্পর্কিত প্রশ্ন
-                else if (text.includes('order') || text.includes('tracking') || text.includes('অর্ডার') || text.includes('ট্র্যাকিং') || text.includes('id')) {
-                    reply = "অর্ডার করার পর আপনাকে একটি ৪-সংখ্যার ট্র্যাকিং আইডি (যেমন: #7482) দেওয়া হবে। এই আইডি দিয়ে আপনি সহজেই আপনার অর্ডারের স্ট্যাটাস জানতে পারবেন।";
-                } 
-                // ৫. গ্রিটিংস বা হ্যালো
-                else if (text.includes('hi') || text.includes('hello') || text.includes('সালাম') || text.includes('আসসালামু') || text.includes('হ্যাল্লো')) {
+                else if (text.includes('hi') || text.includes('hello') || text.includes('সালাম')) {
                     reply = "হ্যালো! ইজির্মাট বিডি-তে আপনাকে স্বাগতম। আজ আপনাকে কীভাবে সাহায্য করতে পারি?";
                 }
 
