@@ -34,7 +34,8 @@
         body.theme-classic .bottom-nav, 
         body.theme-classic .ai-modal,
         body.theme-classic .modal-box,
-        body.theme-classic .glass-popup-content {
+        body.theme-classic .glass-popup-content,
+        body.theme-classic .round-menu-overlay {
             box-shadow: 0 4px 15px rgba(0,0,0,0.08);
             backdrop-filter: none !important;
         }
@@ -140,21 +141,41 @@
         .btn-glass-action:hover { background: #059669; }
         .btn-glass-secondary { background: rgba(255,255,255,0.08); border: 1px solid var(--glass-border); color: var(--text-main); box-shadow: none; }
         .btn-glass-secondary:hover { background: rgba(255,255,255,0.18); border-color: var(--primary); }
+        .btn-google { background: #ea4335 !important; color: white !important; margin-bottom: 12px; }
+        .btn-google:hover { background: #d33828 !important; }
         .btn-danger { background: #ef4444 !important; }
 
-        .drawer-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(10px); display: none; z-index: 999; }
-        .drawer {
-            position: fixed; top: 0; left: -300px; width: 280px; height: 100%;
-            background: var(--glass-modal); backdrop-filter: blur(35px); -webkit-backdrop-filter: blur(35px);
-            border-right: 1px solid var(--glass-border); z-index: 1000;
-            padding: 20px; transition: left 0.35s ease; display: flex; flex-direction: column; overflow-y: auto;
+        /* বৃত্তাকার লুপ এনিমেশন মেনু (Round Circle Expand Animation) */
+        .round-menu-container {
+            position: fixed; top: 12px; left: 16px; z-index: 1005; pointer-events: none;
         }
-        .drawer.open { left: 0; }
-        .drawer-tabs { display: flex; border-bottom: 1px solid var(--glass-border); margin-bottom: 16px; }
-        .drawer-tab { flex: 1; padding: 10px; background: none; border: none; color: var(--text-muted); font-weight: 700; cursor: pointer; text-align: center; }
-        .drawer-tab.active { color: var(--primary); border-bottom: 2px solid var(--primary); }
-        .drawer-menu-item { display: flex; align-items: center; gap: 12px; padding: 12px; color: var(--text-main); text-decoration: none; font-size: 14px; font-weight: 600; border-radius: 12px; margin-bottom: 4px; cursor: pointer; }
-        .drawer-menu-item:hover, .drawer-menu-item.active { background: var(--glass-card); color: var(--primary); }
+        .round-menu-circle {
+            position: absolute; top: 0; left: 0; width: 40px; height: 40px;
+            background: var(--glass-modal); backdrop-filter: blur(35px); -webkit-backdrop-filter: blur(35px);
+            border: 1px solid var(--glass-border); border-radius: 50%;
+            transform: scale(0); transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.3s ease;
+            opacity: 0; z-index: 1004; pointer-events: auto; overflow: hidden;
+            display: flex; flex-direction: column; padding: 60px 20px 20px 20px; box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+        }
+        .round-menu-container.open .round-menu-circle {
+            transform: scale(45); opacity: 1; pointer-events: auto;
+        }
+        @media(min-width: 768px) {
+            .round-menu-container.open .round-menu-circle { transform: scale(30); }
+        }
+        .round-menu-content {
+            position: fixed; top: 0; left: 0; width: 300px; max-width: 90vw; height: 100vh;
+            z-index: 1006; padding: 30px 20px; display: flex; flex-direction: column; gap: 10px;
+            opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; pointer-events: none;
+        }
+        .round-menu-container.open .round-menu-content {
+            opacity: 1; visibility: visible; pointer-events: auto; transition-delay: 0.15s;
+        }
+        .round-menu-close {
+            position: absolute; top: 20px; right: 20px; font-size: 22px; cursor: pointer; color: var(--text-main); background: none; border: none;
+        }
+        .drawer-menu-item { display: flex; align-items: center; gap: 12px; padding: 12px; color: var(--text-main); text-decoration: none; font-size: 14px; font-weight: 600; border-radius: 12px; margin-bottom: 4px; cursor: pointer; background: rgba(255,255,255,0.03); }
+        .drawer-menu-item:hover, .drawer-menu-item.active { background: var(--glass-card); color: var(--primary); border: 1px solid var(--glass-border); }
 
         .wallet-card {
             background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(59, 130, 246, 0.2));
@@ -270,7 +291,7 @@
 
     <header>
         <div class="nav-container">
-            <button class="icon-btn" onclick="toggleDrawer()"><i class="fa-solid fa-bars"></i></button>
+            <button class="icon-btn" onclick="toggleRoundMenu()"><i class="fa-solid fa-bars"></i></button>
             <a href="#" class="logo"><div class="logo-icon"><i class="fa-solid fa-bolt"></i></div> <span id="store-brand-name">EASYMART</span> <span style="color:var(--primary)">BD</span></a>
             <div style="display:flex; gap:8px;">
                 <button class="icon-btn" onclick="openModal('notification-modal')" id="header-notif-btn" title="Notifications">
@@ -286,23 +307,21 @@
         </div>
     </header>
 
-    <div class="drawer-overlay" id="drawer-overlay" onclick="toggleDrawer()"></div>
-    <div class="drawer" id="drawer">
-        <div class="drawer-tabs">
-            <button class="drawer-tab active" id="drawer-tab-cat" onclick="switchDrawerTab('cat')"><span data-i18n="cat">ক্যাটাগরি</span></button>
-            <button class="drawer-tab" id="drawer-tab-menu" onclick="switchDrawerTab('menu')"><span data-i18n="menu">মেনু</span></button>
-        </div>
-        
-        <div id="drawer-cat-content">
-            <div class="drawer-menu-item active" onclick="filterCategory('All', this)"><i class="fa-solid fa-border-all"></i> <span data-i18n="all_cat">সকল ক্যাটেগরি</span></div>
-            <div id="dynamic-drawer-categories"></div>
-        </div>
-
-        <div id="drawer-menu-content" style="display:none;">
-            <a href="#" class="drawer-menu-item" onclick="toggleDrawer();"><i class="fa-solid fa-house"></i> <span data-i18n="home">হোম</span></a>
-            <a href="#" class="drawer-menu-item" onclick="toggleDrawer(); openModal('cart-modal');"><i class="fa-solid fa-bag-shopping"></i> <span data-i18n="cart">কার্ট</span></a>
-            <a href="#" class="drawer-menu-item" onclick="toggleDrawer(); openModal('my-orders-modal');"><i class="fa-solid fa-box-archive"></i> <span data-i18n="my_orders_menu">আমার অর্ডারসমূহ</span></a>
-            <a href="#" class="drawer-menu-item" onclick="toggleDrawer(); handleAccountButtonClick();"><i class="fa-solid fa-wallet"></i> <span data-i18n="wallet">ওয়ালেট</span></a>
+    <div class="round-menu-container" id="round-menu-wrapper">
+        <div class="round-menu-circle"></div>
+        <div class="round-menu-content">
+            <button class="round-menu-close" onclick="toggleRoundMenu()"><i class="fa-solid fa-xmark"></i></button>
+            <h3 style="color:var(--primary); font-size:16px; margin-bottom:10px;"><i class="fa-solid fa-bars-staggered"></i> Navigation Menu</h3>
+            <a href="#" class="drawer-menu-item" onclick="toggleRoundMenu();"><i class="fa-solid fa-house"></i> <span data-i18n="home">হোম</span></a>
+            <a href="#" class="drawer-menu-item" onclick="toggleRoundMenu(); openModal('cart-modal');"><i class="fa-solid fa-bag-shopping"></i> <span data-i18n="cart">কার্ট</span></a>
+            <a href="#" class="drawer-menu-item" onclick="toggleRoundMenu(); openModal('my-orders-modal');"><i class="fa-solid fa-box-archive"></i> <span data-i18n="my_orders_menu">আমার অর্ডারসমূহ</span></a>
+            <a href="#" class="drawer-menu-item" onclick="toggleRoundMenu(); handleAccountButtonClick();"><i class="fa-solid fa-wallet"></i> <span data-i18n="wallet">ওয়ালেট</span></a>
+            
+            <div style="margin-top:15px; border-top: 1px solid var(--glass-border); padding-top:15px;">
+                <div style="font-size:12px; color:var(--text-muted); margin-bottom:8px;" data-i18n="cat">ক্যাটাগরি</div>
+                <div class="drawer-menu-item" onclick="filterCategory('All', this); toggleRoundMenu();"><i class="fa-solid fa-border-all"></i> <span data-i18n="all_cat">সকল ক্যাটেগরি</span></div>
+                <div id="dynamic-round-categories" style="max-height: 200px; overflow-y: auto;"></div>
+            </div>
         </div>
     </div>
 
@@ -364,16 +383,32 @@
                 <button class="tab-btn active" id="tab-login" onclick="switchAuthTab('login')">Sign In</button>
                 <button class="tab-btn" id="tab-signup" onclick="switchAuthTab('signup')">Sign Up</button>
             </div>
+            
+            <button type="button" class="btn-glass-action btn-google" onclick="loginWithGoogle()"><i class="fa-brands fa-google"></i> Continue with Google</button>
+            <div style="text-align:center; font-size:11px; color:var(--text-muted); margin-bottom:12px;">OR EMAIL</div>
+
             <form id="form-login">
                 <div class="form-group"><label>Email</label><input type="email" id="login-email" required></div>
                 <div class="form-group"><label>Password</label><input type="password" id="login-pass" required></div>
-                <button type="submit" class="btn-glass-action" style="margin-top:10px;">Sign In</button>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; font-size:12px;">
+                    <label style="display:flex; align-items:center; gap:5px; cursor:pointer;"><input type="checkbox" id="remember-me-chk"> Save me</label>
+                    <span style="color:var(--primary); cursor:pointer;" onclick="switchAuthTab('forgot')">Forgot Password?</span>
+                </div>
+                <button type="submit" class="btn-glass-action">Sign In</button>
             </form>
+
             <form id="form-signup" style="display:none;">
                 <div class="form-group"><label>Full Name</label><input type="text" id="signup-name" required></div>
                 <div class="form-group"><label>Email</label><input type="email" id="signup-email" required></div>
                 <div class="form-group"><label>Password</label><input type="password" id="signup-pass" required></div>
                 <button type="submit" class="btn-glass-action" style="margin-top:10px;">Create Account</button>
+            </form>
+
+            <form id="form-forgot" style="display:none;">
+                <p style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">Enter your email address to receive password reset instructions.</p>
+                <div class="form-group"><label>Email</label><input type="email" id="forgot-email" required></div>
+                <button type="submit" class="btn-glass-action" style="margin-top:10px;">Send Reset Link</button>
+                <p style="text-align:center; font-size:12px; margin-top:10px; color:var(--primary); cursor:pointer;" onclick="switchAuthTab('login')">Back to Sign In</p>
             </form>
         </div>
     </div>
@@ -398,11 +433,31 @@
             
             <button class="btn-glass-action btn-glass-secondary" onclick="openModal('my-orders-modal'); closeModal('profile-modal');" style="margin-bottom: 12px;"><i class="fa-solid fa-box-archive"></i> <span data-i18n="my_orders">আমার অর্ডারসমূহ (Order History)</span></button>
 
-            <form id="form-profile-update">
-                <div class="form-group"><label data-i18n="full_name">Full Name</label><input type="text" id="prof-name" required></div>
-                <div class="form-group"><label data-i18n="phone_num">Phone Number</label><input type="text" id="prof-phone" placeholder="017xxxxxxxx"></div>
-                <button type="submit" class="btn-glass-action" style="margin-top:10px;" data-i18n="save_changes">Save Changes</button>
-            </form>
+            <div style="background:rgba(255,255,255,0.03); border:1px solid var(--glass-border); border-radius:16px; padding:12px; margin-bottom:12px;">
+                <h4 style="font-size:13px; color:var(--primary); margin-bottom:10px;"><i class="fa-solid fa-lock"></i> Private Details & Security</h4>
+                <form id="form-profile-update">
+                    <div class="form-group"><label data-i18n="full_name">Full Name</label><input type="text" id="prof-name" required></div>
+                    <div class="form-group"><label data-i18n="phone_num">Phone Number</label><input type="text" id="prof-phone" placeholder="017xxxxxxxx"></div>
+                    <button type="submit" class="btn-glass-action" style="margin-top:6px; font-size:12px;" data-i18n="save_changes">Save Changes</button>
+                </form>
+
+                <hr style="border:0; border-top:1px solid var(--glass-border); margin:12px 0;">
+
+                <form id="form-change-email">
+                    <div class="form-group"><label>New Email Address</label><input type="email" id="new-email-input" required></div>
+                    <div class="form-group"><label>Current Password (Required)</label><input type="password" id="email-change-password" required></div>
+                    <button type="submit" class="btn-glass-action btn-glass-secondary" style="font-size:12px;">Update Email</button>
+                </form>
+
+                <hr style="border:0; border-top:1px solid var(--glass-border); margin:12px 0;">
+
+                <form id="form-change-password">
+                    <div class="form-group"><label>Old Password</label><input type="password" id="old-pass-input" required></div>
+                    <div class="form-group"><label>New Password</label><input type="password" id="new-pass-input" required></div>
+                    <button type="submit" class="btn-glass-action btn-glass-secondary" style="font-size:12px;">Reset Password</button>
+                </form>
+            </div>
+
             <button class="btn-glass-action btn-danger" onclick="logoutUser()" style="margin-top:12px;"><i class="fa-solid fa-right-from-bracket"></i> <span data-i18n="sign_out">Sign Out</span></button>
         </div>
     </div>
@@ -515,7 +570,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, sendPasswordResetEmail, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut, updateProfile, updateEmail, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, doc, setDoc, getDoc, getDocs, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -531,6 +586,7 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+        const googleProvider = new GoogleAuthProvider();
 
         let currentUser = null;
         window.userWalletBalance = 0;
@@ -648,7 +704,6 @@
             window.currentLang = window.currentLang === 'bn' ? 'en' : 'bn';
             document.getElementById('lang-btn-text').innerText = window.currentLang === 'bn' ? 'English' : 'বাংলা';
             
-            // Apply translations to data-i18n elements
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
                 if(translations[window.currentLang][key]) {
@@ -656,7 +711,6 @@
                 }
             });
 
-            // Apply placeholder translations
             document.querySelectorAll('[data-i18n-ph]').forEach(el => {
                 const key = el.getAttribute('data-i18n-ph');
                 if(translations[window.currentLang][key]) {
@@ -680,6 +734,16 @@
             if(docSnap.exists() && docSnap.data().storeName) {
                 document.getElementById('store-brand-name').innerText = docSnap.data().storeName;
                 document.getElementById('store-title-tag').innerText = docSnap.data().storeName + " - Digital Store";
+            }
+        });
+
+        // Check Local Storage for Remember Me credentials prefill
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedEmail = localStorage.getItem('easymart_remember_email');
+            if(savedEmail) {
+                document.getElementById('login-email').value = savedEmail;
+                const chk = document.getElementById('remember-me-chk');
+                if(chk) chk.checked = true;
             }
         });
 
@@ -714,16 +778,16 @@
                     document.getElementById('prof-phone').value = userDocSnap.data().phone || '';
                     document.getElementById('ord-phone').value = userDocSnap.data().phone || '';
                     document.getElementById('ord-name').value = user.displayName || '';
+                } else {
+                    await setDoc(userDocRef, { email: user.email, name: user.displayName || 'User', wallet: 0 }, { merge: true });
                 }
 
-                // লাইভ নোটিফিকেশন লিসেনার ফর কারেন্ট ইউজার
                 onSnapshot(query(collection(db, "notifications"), where("userId", "==", user.uid)), (snap) => {
                     window.userNotifications = [];
                     snap.forEach(d => window.userNotifications.push(d.data()));
                     renderNotificationsUI();
                 });
 
-                // লাইভ অর্ডার হিস্ট্রি লিসেনার ফর কারেন্ট ইউজার
                 onSnapshot(query(collection(db, "orders"), where("userId", "==", user.uid)), (snap) => {
                     window.userOrdersHistory = [];
                     snap.forEach(d => window.userOrdersHistory.push(d.data()));
@@ -738,6 +802,67 @@
                 window.userOrdersHistory = [];
                 renderNotificationsUI();
                 renderMyOrdersUI();
+            }
+        });
+
+        // Google Sign In
+        window.loginWithGoogle = async () => {
+            try {
+                await signInWithPopup(auth, googleProvider);
+                closeModal('auth-modal');
+                alert("Successfully logged in with Google!");
+            } catch(err) {
+                alert("Google login failed: " + err.message);
+            }
+        };
+
+        // Forgot Password Handler
+        document.getElementById('form-forgot').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('forgot-email').value;
+            try {
+                await sendPasswordResetEmail(auth, email);
+                alert("Password reset email sent! Check your inbox.");
+                switchAuthTab('login');
+            } catch(err) {
+                alert("Error: " + err.message);
+            }
+        });
+
+        // Change Email Address Handler
+        document.getElementById('form-change-email').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if(!currentUser) return;
+            const newEmail = document.getElementById('new-email-input').value;
+            const password = document.getElementById('email-change-password').value;
+
+            try {
+                const credential = EmailAuthProvider.credential(currentUser.email, password);
+                await reauthenticateWithCredential(currentUser, credential);
+                await updateEmail(currentUser, newEmail);
+                await setDoc(doc(db, "users", currentUser.uid), { email: newEmail }, { merge: true });
+                alert("Email address updated successfully!");
+                e.target.reset();
+            } catch(err) {
+                alert("Failed to update email (Check your old password): " + err.message);
+            }
+        });
+
+        // Reset Password Handler (Requires Old Password)
+        document.getElementById('form-change-password').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if(!currentUser) return;
+            const oldPass = document.getElementById('old-pass-input').value;
+            const newPass = document.getElementById('new-pass-input').value;
+
+            try {
+                const credential = EmailAuthProvider.credential(currentUser.email, oldPass);
+                await reauthenticateWithCredential(currentUser, credential);
+                await updatePassword(currentUser, newPass);
+                alert("Password updated successfully!");
+                e.target.reset();
+            } catch(err) {
+                alert("Failed to update password (Check your old password): " + err.message);
             }
         });
 
@@ -798,7 +923,6 @@
             await updateProfile(currentUser, { displayName: document.getElementById('prof-name').value });
             await setDoc(doc(db, "users", currentUser.uid), { name: document.getElementById('prof-name').value, phone: document.getElementById('prof-phone').value }, { merge: true });
             alert("Profile updated!");
-            closeModal('profile-modal');
         });
 
         document.getElementById('image-upload-input').addEventListener('change', async (e) => {
@@ -880,14 +1004,14 @@
 
         onSnapshot(collection(db, "categories"), (snap) => {
             const chipsContainer = document.getElementById('dynamic-chips-container');
-            const drawerContainer = document.getElementById('dynamic-drawer-categories');
+            const drawerContainer = document.getElementById('dynamic-round-categories');
             chipsContainer.innerHTML = `<div class="chip active" onclick="filterCategory('All', this)">All</div>`;
             drawerContainer.innerHTML = "";
 
             snap.forEach(d => {
                 const cat = d.data().name;
                 chipsContainer.innerHTML += `<div class="chip" onclick="filterCategory('${cat}', this)">${cat}</div>`;
-                drawerContainer.innerHTML += `<div class="drawer-menu-item" onclick="filterCategory('${cat}', this)"><i class="fa-solid fa-tag"></i> ${cat}</div>`;
+                drawerContainer.innerHTML += `<div class="drawer-menu-item" onclick="filterCategory('${cat}', this); toggleRoundMenu();"><i class="fa-solid fa-tag"></i> ${cat}</div>`;
             });
         });
 
@@ -970,7 +1094,6 @@
             if(el) el.classList.add('active');
             if (cat === 'All') renderProducts(window.allProductsList);
             else renderProducts(window.allProductsList.filter(p => p.category === cat));
-            if(document.getElementById('drawer').classList.contains('open')) toggleDrawer();
         };
 
         window.handleSearch = () => {
@@ -1065,7 +1188,6 @@
             const selectedVariantText = (document.getElementById('variant-selection-group').style.display === 'block') ? ` (${variantSelect.options[variantSelect.selectedIndex].text})` : "";
             const prodNameText = document.getElementById('checkout-prod-name').innerText + selectedVariantText;
 
-            // অর্ডার সেভ করা
             await addDoc(collection(db, "orders"), {
                 orderId: fiveDigitOrderId,
                 customerName: document.getElementById('ord-name').value,
@@ -1080,7 +1202,6 @@
                 createdAt: new Date().toISOString()
             });
 
-            // নোটিফিকেশন জেনারেট করা ইউজারের জন্য
             await addDoc(collection(db, "notifications"), {
                 userId: currentUser.uid,
                 title: window.currentLang === 'bn' ? "অর্ডার সফল হয়েছে!" : "Order Placed Successfully!",
@@ -1119,11 +1240,20 @@
 
         document.getElementById('form-login').addEventListener('submit', async (e) => {
             e.preventDefault();
-            await signInWithEmailAndPassword(auth, document.getElementById('login-email').value, document.getElementById('login-pass').value);
+            const emailVal = document.getElementById('login-email').value;
+            const passVal = document.getElementById('login-pass').value;
+            const rememberChk = document.getElementById('remember-me-chk');
+
+            if(rememberChk && rememberChk.checked) {
+                localStorage.setItem('easymart_remember_email', emailVal);
+            } else {
+                localStorage.removeItem('easymart_remember_email');
+            }
+
+            await signInWithEmailAndPassword(auth, emailVal, passVal);
             closeModal('auth-modal');
         });
 
-        // সম্পূর্ণ লাইভ এবং ডাইনামিক এআই চ্যাটবট লজিক (যেকোনো প্রশ্নের রিয়ালিস্টিক উত্তর দিতে সক্ষম)
         window.toggleAiChat = () => { const m = document.getElementById('ai-chat-modal'); m.style.display = m.style.display === 'flex' ? 'none' : 'flex'; };
         
         window.sendAiMessage = () => {
@@ -1148,33 +1278,10 @@
                     : `I understand you are asking about "${rawText}". You can easily purchase products, pay via Nagad, or recharge your wallet in our digital store. Feel free to contact our support on WhatsApp or Telegram!`;
                 
                 if (text.includes('thanks') || text.includes('thank') || text.includes('ধন্যবাদ') || text.includes('ok') || text.includes('থ্যাংকস')) {
-                    reply = window.currentLang === 'bn' 
-                        ? "ইউ আর মোস্ট ওয়েলকাম! ইজির্মাট বিডি-এর সাথে থাকার জন্য ধন্যবাদ। আপনার অনলাইন শপিং অভিজ্ঞতা আনন্দদায়ক হোক।" 
-                        : "You're most welcome! Thank you for staying with Easymart BD.";
+                    reply = window.currentLang === 'bn' ? "ইউ আর মোস্ট ওয়েলকাম! ইজির্মাট বিডি-এর সাথে থাকার জন্য ধন্যবাদ।" : "You're most welcome! Thank you for staying with Easymart BD.";
                 }
                 else if (text.includes('hi') || text.includes('hello') || text.includes('সালাম') || text.includes('হ্যালো')) {
-                    reply = window.currentLang === 'bn' 
-                        ? "হ্যালো! ইজির্মাট বিডি এআই অ্যাসিস্ট্যান্ট বলছি। আজ আপনাকে কীভাবে সাহায্য করতে পারি বলুন?" 
-                        : "Hello! Easymart BD AI Assistant here. How can I help you today?";
-                }
-                else if (text.includes('order') || text.includes('অর্ডার') || text.includes('id') || text.includes('আইডি')) {
-                    reply = window.currentLang === 'bn' 
-                        ? "সঠিক নগদ TrxID দিয়ে অর্ডার কনফার্ম করার পর ৫ সংখ্যার ইউনিক অর্ডার আইডি দেওয়া হয়। আপনি আপনার প্রোফাইলের 'আমার অর্ডারসমূহ' অপশন থেকেও সকল অর্ডারের বর্তমান স্ট্যাটাস দেখতে পারবেন।" 
-                        : "After confirming your order with a valid TrxID, a 5-digit unique order ID is generated. You can also view all your order statuses under 'My Orders'.";
-                } 
-                else if (text.includes('taka') || text.includes('deposit') || text.includes('টাকা') || text.includes('ওয়ালেট')) {
-                    reply = window.currentLang === 'bn' 
-                        ? "ওয়ালেটে টাকা এড করতে প্রফাইল থেকে '+ Add Money' অপশনে যান। আমাদের নগদ পার্সোনাল নম্বর <b>01818558919</b>-এ টাকা পাঠিয়ে TrxID সাবমিট করলেই ব্যালেন্স আপডেট হয়ে যাবে।" 
-                        : "To add money to your wallet, go to Profile -> Add Money. Send funds to Nagad personal 01818558919 and submit your TrxID.";
-                } 
-                else if (text.includes('product') || text.includes('প্রোডাক্ট') || text.includes('কি কি আছে')) {
-                    let prodNames = window.allProductsList.map(p => window.currentLang === 'en' && p.title_en ? p.title_en : p.title_bn).join(', ');
-                    reply = prodNames ? (window.currentLang === 'bn' ? `আমাদের স্টোরে বর্তমানে এই প্রোডাক্টসমূহ পাওয়া যাচ্ছে: <b>${prodNames}</b>।` : `Available products in store: <b>${prodNames}</b>.`) : "বর্তমানে কোনো প্রোডাক্ট স্টক নেই।";
-                } 
-                else if (text.includes('nagad') || text.includes('নগদ') || text.includes('নম্বর') || text.includes('trx')) {
-                    reply = window.currentLang === 'bn' 
-                        ? "আমাদের অফিশিয়াল নগদ পার্সোনাল নম্বর: <b>01818558919</b>। নগদ ট্রানজেকশন আইডি (TrxID) ১০ অক্ষরের হয়ে থাকে।" 
-                        : "Our official Nagad personal number: <b>01818558919</b>. TrxID is usually 10 characters.";
+                    reply = window.currentLang === 'bn' ? "হ্যালো! ইজির্মাট বিডি এআই অ্যাসিস্ট্যান্ট বলছি। আজ আপনাকে কীভাবে সাহায্য করতে পারি বলুন?" : "Hello! Easymart BD AI Assistant here. How can I help you today?";
                 }
 
                 chatBody.innerHTML += `<div class="ai-msg bot">${reply}</div>`;
@@ -1184,23 +1291,16 @@
     </script>
 
     <script>
-        function toggleDrawer() {
-            const drawer = document.getElementById('drawer');
-            const overlay = document.getElementById('drawer-overlay');
-            drawer.classList.toggle('open');
-            overlay.style.display = drawer.classList.contains('open') ? 'block' : 'none';
-        }
-        function switchDrawerTab(tab) {
-            document.getElementById('drawer-cat-content').style.display = tab === 'cat' ? 'block' : 'none';
-            document.getElementById('drawer-menu-content').style.display = tab === 'menu' ? 'block' : 'none';
-            document.getElementById('drawer-tab-cat').classList.toggle('active', tab === 'cat');
-            document.getElementById('drawer-tab-menu').classList.toggle('active', tab === 'menu');
+        function toggleRoundMenu() {
+            const wrapper = document.getElementById('round-menu-wrapper');
+            wrapper.classList.toggle('open');
         }
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
         function switchAuthTab(tab) {
             document.getElementById('form-login').style.display = tab === 'login' ? 'block' : 'none';
             document.getElementById('form-signup').style.display = tab === 'signup' ? 'block' : 'none';
+            document.getElementById('form-forgot').style.display = tab === 'forgot' ? 'block' : 'none';
             document.getElementById('tab-login').classList.toggle('active', tab === 'login');
             document.getElementById('tab-signup').classList.toggle('active', tab === 'signup');
         }
