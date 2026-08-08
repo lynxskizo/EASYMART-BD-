@@ -1002,37 +1002,16 @@
             buyProduct(null, "Cart Items (" + window.cartItems.length + ")", window.cartItems.reduce((sum, item) => sum + item.price, 0));
         };
 
-                    if (payMethod === 'Nagad') {
-                if (!trxInputVal || trxInputVal.length < 8) {
-                    alert("দয়া করে সঠিক নগদ ট্রানজেকশন আইডি (TrxID) প্রদান করুন!");
-                    return;
-                }
+        onSnapshot(collection(db, "categories"), (snap) => {
+            const chipsContainer = document.getElementById('dynamic-chips-container');
+            const drawerContainer = document.getElementById('dynamic-round-categories');
+            chipsContainer.innerHTML = `<div class="chip active" onclick="filterCategory('All', this)">All</div>`;
+            drawerContainer.innerHTML = "";
 
-                // Clean and normalize the TrxID to prevent false duplicate flags
-                const cleanTrxId = trxInputVal.trim().toUpperCase();
-
-                const q = query(collection(db, "orders"), where("trxId", "==", cleanTrxId));
-                const querySnapshot = await getDocs(q);
-                
-                // Optional: Check if the existing order was cancelled or failed, 
-                // otherwise block exact duplicates. For safety, we check if any document exists:
-                if (!querySnapshot.empty) {
-                    // Check if the previous order was actually completed or just pending/cancelled
-                    let isDuplicateBlock = true;
-                    querySnapshot.forEach(docSnap => {
-                        const orderData = docSnap.data();
-                        // If you want to allow reusing a TrxID if the previous order was cancelled:
-                        if (orderData.status === 'Cancelled') {
-                            isDuplicateBlock = false;
-                        }
-                    });
-
-                    if (isDuplicateBlock) {
-                        alert("⚠️ এই নগদ ট্রানজেকশন আইডি (TrxID) ইতিপূর্বে ব্যবহার করা হয়েছে!");
-                        return;
-                    }
-                }
-            }
+            snap.forEach(d => {
+                const cat = d.data().name;
+                chipsContainer.innerHTML += `<div class="chip" onclick="filterCategory('${cat}', this)">${cat}</div>`;
+                drawerContainer.innerHTML += `<div class="drawer-menu-item" onclick="filterCategory('${cat}', this); toggleRoundMenu();"><i class="fa-solid fa-tag"></i> ${cat}</div>`;
             });
         });
 
@@ -1329,4 +1308,4 @@
         function setActiveNavItem(el) { document.querySelectorAll('.bottom-nav .nav-item').forEach(i => i.classList.remove('active')); el.classList.add('active'); }
     </script>
 </body>
-</html>
+                                                                                                                                                                   </html>
