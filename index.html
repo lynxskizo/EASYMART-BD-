@@ -575,7 +575,7 @@
             authDomain: "easy-mart-bd-16b7b.firebaseapp.com",
             databaseURL: "https://easy-mart-bd-16b7b-default-rtdb.firebaseio.com",
             projectId: "easy-mart-bd-16b7b",
-            storageBucket: "easy-mart-bd-16b7b.firebasestorage.app",
+            storageBucket: "easy-mart-bd-16b7b.appspot.com",
             messagingSenderId: "421957488158",
             appId: "1:421957488158:web:7d20d1f557ac6b06c9280f"
         };
@@ -935,82 +935,15 @@
             };
         });
 
-        document.getElementById('form-checkout').addEventListener('submit', async (e) => {
+        document.getElementById('form-topup').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const payMethod = document.getElementById('checkout-payment-method').value;
-            const price = parseFloat(document.getElementById('checkout-prod-price').innerText.replace(/[^0-9.]/g, ''));
-            const trxInputVal = document.getElementById('ord-trx').value.trim().toUpperCase();
+            if(!currentUser) return;
             
-            if (payMethod === 'Wallet' && window.userWalletBalance < price) {
-                alert("ওয়ালেটে পর্যাপ্ত ব্যালেন্স নেই!"); return;
+            const trxIdVal = document.getElementById('topup-trx').value.trim().toUpperCase();
+            if(trxIdVal.length < 8) {
+                alert("দয়া করে সঠিক নগদ TrxID প্রদান করুন!");
+                return;
             }
-
-            if (payMethod === 'Nagad') {
-                if (!trxInputVal || trxInputVal.length < 8) {
-                    alert("❌ Notice: This TrxID is wrong! দয়া করে সঠিক TrxID দিন।");
-                    return;
-                }
-
-                // ফায়ারবেজ থেকে চেক করা হচ্ছে TrxID ইতিমধ্যে ব্যবহার করা হয়েছে কি না
-                try {
-                    const q = query(collection(db, "orders"), where("trxId", "==", trxInputVal));
-                    const querySnapshot = await getDocs(q);
-                    
-                    let isUsed = false;
-                    querySnapshot.forEach(docSnap => {
-                        const orderData = docSnap.data();
-                        if (orderData.status !== 'Cancelled') {
-                            isUsed = true;
-                        }
-                    });
-
-                    if (isUsed) {
-                        alert("⚠️ Notice: This TrxID is 'used'! এই ট্রানজেকশন আইডি ইতিপূর্বে ব্যবহার করা হয়েছে। অন্য একটি TrxID দিন।");
-                        return;
-                    }
-                } catch(err) {
-                    console.error("TrxID check error: ", err);
-                }
-            }
-
-            if (payMethod === 'Wallet') {
-                window.userWalletBalance -= price;
-                await setDoc(doc(db, "users", currentUser.uid), { wallet: window.userWalletBalance }, { merge: true });
-            }
-
-            const fiveDigitOrderId = generateUniqueAlphaNumericId();
-            const variantSelect = document.getElementById('checkout-variant-select');
-            const selectedVariantText = (document.getElementById('variant-selection-group').style.display === 'block') ? ` (${variantSelect.options[variantSelect.selectedIndex].text})` : "";
-            const prodNameText = document.getElementById('checkout-prod-name').innerText + selectedVariantText;
-
-            await addDoc(collection(db, "orders"), {
-                orderId: fiveDigitOrderId,
-                customerName: document.getElementById('ord-name').value,
-                phone: document.getElementById('ord-phone').value,
-                subscriptionEmail: document.getElementById('ord-sub-email').value,
-                paymentMethod: payMethod,
-                trxId: payMethod === 'Wallet' ? 'Wallet' : trxInputVal,
-                product: prodNameText,
-                total: price,
-                userId: currentUser.uid,
-                status: "Pending",
-                createdAt: new Date().toISOString()
-            });
-
-            await addDoc(collection(db, "notifications"), {
-                userId: currentUser.uid,
-                title: window.currentLang === 'bn' ? "অর্ডার সফল হয়েছে!" : "Order Placed Successfully!",
-                message: window.currentLang === 'bn' ? `আপনার অর্ডার (${fiveDigitOrderId}) সফলভাবে প্লেস হয়েছে। স্ট্যাটাস পেন্ডিং আছে।` : `Your order (${fiveDigitOrderId}) has been placed. Status is Pending.`,
-                createdAt: new Date().toISOString()
-            });
-
-            closeModal('checkout-modal');
-            document.getElementById('generated-order-id-display').innerText = fiveDigitOrderId;
-            document.getElementById('order-success-modal').style.display = 'flex';
-
-            window.cartItems = [];
-            updateCartUI();
-        });
             
             await addDoc(collection(db, "topups"), {
                 userId: currentUser.uid,
@@ -1230,24 +1163,24 @@
                     return;
                 }
 
-                // ডুপ্লিকেট চেকিং
-                const q = query(collection(db, "orders"), where("trxId", "==", trxInputVal));
-                const querySnapshot = await getDocs(q);
-                
-                let isUsed = false;
-                querySnapshot.forEach(docSnap => {
-                    const orderData = docSnap.data();
-                    if (orderData.status !== 'Cancelled') {
-                        isUsed = true;
-                    }
-                });
+                try {
+                    const q = query(collection(db, "orders"), where("trxId", "==", trxInputVal));
+                    const querySnapshot = await getDocs(q);
+                    
+                    let isUsed = false;
+                    querySnapshot.forEach(docSnap => {
+                        const orderData = docSnap.data();
+                        if (orderData.status !== 'Cancelled') {
+                            isUsed = true;
+                        }
+                    });
 
-                if (isUsed) {
-                    alert("⚠️ Notice: This TrxID is 'used'! এই ট্রানজেকশন আইডি ইতিপূর্বে ব্যবহার করা হয়েছে।");
-                    return;
-                } else {
-                    // সফল হলে কনফার্মেশন নোটিশ বা লজিক
-                    console.log("TrxID is right.");
+                    if (isUsed) {
+                        alert("⚠️ Notice: This TrxID is 'used'! এই ট্রানজেকশন আইডি ইতিপূর্বে ব্যবহার করা হয়েছে। অন্য একটি TrxID দিন।");
+                        return;
+                    }
+                } catch(err) {
+                    console.error("TrxID check error: ", err);
                 }
             }
 
@@ -1348,7 +1281,6 @@
                 typingInd.style.display = 'none';
                 let reply = "";
 
-                // রিয়েল শপ নলেজ ও ডাইনামিক ফিল্টারিং
                 if (text.includes('balance') || text.includes('topup') || text.includes('add money') || text.includes('টাকা') || text.includes('ব্যালেন্স') || text.includes('এড')) {
                     reply = window.currentLang === 'bn' 
                         ? "ওয়ালেটে টাকা এড করতে প্রোফাইল থেকে '+ Add Money' বাটনে ক্লিক করুন। নগদ পার্সোনাল (01818558919) নম্বরে টাকা পাঠিয়ে সঠিক ট্রানজেকশন আইডি (TrxID) দিয়ে রিকোয়েস্ট সাবমিট করলে অ্যাডমিন তা যাচাই করে ব্যালেন্স যোগ করে দেবেন।"
@@ -1406,7 +1338,6 @@
                            </div>`;
                 }
                 else {
-                    // দোকান বা সাধারণ বিষয়ে ব্রাউজার সার্চ/এনালাইসিস সিমুলেশন বা স্মার্ট ফলব্যাক
                     try {
                         let matchedProd = window.allProductsList.find(p => text.includes((p.title_bn || '').toLowerCase()) || text.includes((p.title_en || '').toLowerCase()));
                         if(matchedProd) {
@@ -1415,7 +1346,6 @@
                                 ? `এই প্রোডাক্টটি সম্পর্কে আমাদের স্টোরে তথ্য রয়েছে: <b>${pName}</b> - মূল্য ৳${matchedProd.price || 0}. আপনি সরাসরি 'Buy Now' ক্লিক করে কিনতে পারেন।`
                                 : `We have info on this product: <b>${pName}</b> - Price ৳${matchedProd.price || 0}. You can buy it directly.`;
                         } else {
-                            // রিয়েল চ্যাটবট ফলব্যাক উইথ অ্যাডমিন কন্ট্যাক্ট
                             reply = window.currentLang === 'bn' 
                                 ? `আপনার প্রশ্নটি এনালাইসিস করা হলো। আমাদের শপের প্রোডাক্ট, পেমেন্ট বা ওয়ালেট সংক্রান্ত যেকোনো সহায়তার জন্য সরাসরি নিচে যোগাযোগ করতে পারেন:<br><br>
                                    <div style="display:flex; gap:10px; margin-top:8px;">
