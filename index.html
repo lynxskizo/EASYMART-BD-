@@ -145,7 +145,6 @@
         .btn-google:hover { background: #d33828 !important; }
         .btn-danger { background: #ef4444 !important; }
 
-        /* বৃত্তাকার লুপ এনিমেশন মেনু (Round Circle Expand Animation) */
         .round-menu-container {
             position: fixed; top: 12px; left: 16px; z-index: 1005; pointer-events: none;
         }
@@ -194,7 +193,6 @@
         .nav-item.active, .nav-item:hover { color: var(--primary); }
         .nav-item i { font-size: 18px; margin-bottom: 2px; }
 
-        /* এআই চ্যাটবট উইন্ডো */
         .ai-fab {
             position: fixed; bottom: 76px; right: 20px; background: var(--primary); color: #080c14;
             width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
@@ -216,7 +214,6 @@
         .ai-footer input { flex: 1; background: rgba(255,255,255,0.06); border: 1px solid var(--glass-border); padding: 10px 14px; border-radius: 12px; color: var(--text-main); outline: none; font-size: 13px; }
         .ai-footer button { background: var(--primary); border: none; padding: 10px 14px; border-radius: 12px; color: white; font-weight: bold; cursor: pointer; }
 
-        /* গ্লাসি ব্লারি মডাল ওভারলে ও বক্স */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
@@ -596,7 +593,6 @@
         window.userNotifications = [];
         window.userOrdersHistory = [];
 
-        // ডিকশনারি ফর ট্রান্সলেটর
         const translations = {
             bn: {
                 store_title: "EASYMART BD - Digital Store & Wallet",
@@ -943,7 +939,6 @@
             e.preventDefault();
             if(!currentUser) return;
             
-            // Clean and normalize TrxID
             const trxIdVal = document.getElementById('topup-trx').value.trim().toUpperCase();
             if(trxIdVal.length < 8) {
                 alert("দয়া করে সঠিক নগদ TrxID প্রদান করুন!");
@@ -1156,8 +1151,6 @@
             e.preventDefault();
             const payMethod = document.getElementById('checkout-payment-method').value;
             const price = parseFloat(document.getElementById('checkout-prod-price').innerText.replace(/[^0-9.]/g, ''));
-            
-            // Normalize and clean TrxID (trimmed and uppercase to avoid mismatch errors)
             const trxInputVal = document.getElementById('ord-trx').value.trim().toUpperCase();
             
             if (payMethod === 'Wallet' && window.userWalletBalance < price) {
@@ -1166,26 +1159,28 @@
 
             if (payMethod === 'Nagad') {
                 if (!trxInputVal || trxInputVal.length < 8) {
-                    alert("দয়া করে সঠিক নগদ ট্রানজেকশন আইডি (TrxID) প্রদান করুন!");
+                    alert("❌ Notice: This TrxID is wrong! দয়া করে সঠিক TrxID দিন।");
                     return;
                 }
 
+                // ডুপ্লিকেট চেকিং
                 const q = query(collection(db, "orders"), where("trxId", "==", trxInputVal));
                 const querySnapshot = await getDocs(q);
                 
-                if (!querySnapshot.empty) {
-                    let isDuplicateBlock = true;
-                    querySnapshot.forEach(docSnap => {
-                        const orderData = docSnap.data();
-                        if (orderData.status === 'Cancelled') {
-                            isDuplicateBlock = false;
-                        }
-                    });
-
-                    if (isDuplicateBlock) {
-                        alert("⚠️ এই নগদ ট্রানজেকশন আইডি (TrxID) ইতিপূর্বে ব্যবহার করা হয়েছে!");
-                        return;
+                let isUsed = false;
+                querySnapshot.forEach(docSnap => {
+                    const orderData = docSnap.data();
+                    if (orderData.status !== 'Cancelled') {
+                        isUsed = true;
                     }
+                });
+
+                if (isUsed) {
+                    alert("⚠️ Notice: This TrxID is 'used'! এই ট্রানজেকশন আইডি ইতিপূর্বে ব্যবহার করা হয়েছে।");
+                    return;
+                } else {
+                    // সফল হলে কনফার্মেশন নোটিশ বা লজিক
+                    console.log("TrxID is right.");
                 }
             }
 
@@ -1267,7 +1262,7 @@
 
         window.toggleAiChat = () => { const m = document.getElementById('ai-chat-modal'); m.style.display = m.style.display === 'flex' ? 'none' : 'flex'; };
         
-        window.sendAiMessage = () => {
+        window.sendAiMessage = async () => {
             const input = document.getElementById('ai-input');
             const rawText = input.value.trim();
             const text = rawText.toLowerCase();
@@ -1282,10 +1277,11 @@
             typingInd.style.display = 'block';
             chatBody.scrollTop = chatBody.scrollHeight;
 
-            setTimeout(() => {
+            setTimeout(async () => {
                 typingInd.style.display = 'none';
                 let reply = "";
 
+                // রিয়েল শপ নলেজ ও ডাইনামিক ফিল্টারিং
                 if (text.includes('balance') || text.includes('topup') || text.includes('add money') || text.includes('টাকা') || text.includes('ব্যালেন্স') || text.includes('এড')) {
                     reply = window.currentLang === 'bn' 
                         ? "ওয়ালেটে টাকা এড করতে প্রোফাইল থেকে '+ Add Money' বাটনে ক্লিক করুন। নগদ পার্সোনাল (01818558919) নম্বরে টাকা পাঠিয়ে সঠিক ট্রানজেকশন আইডি (TrxID) দিয়ে রিকোয়েস্ট সাবমিট করলে অ্যাডমিন তা যাচাই করে ব্যালেন্স যোগ করে দেবেন।"
@@ -1343,17 +1339,31 @@
                            </div>`;
                 }
                 else {
-                    reply = window.currentLang === 'bn' 
-                        ? `আপনার প্রশ্নটি বুঝতে পেরেছি। পেমেন্ট, অর্ডার, ওয়ালেট বা প্রোডাক্ট সংক্রান্ত যেকোনো সহায়তার জন্য আপনি সরাসরি আমাদের এডমিনের সাথে যোগাযোগ করতে পারেন:<br><br>
-                           <div style="display:flex; gap:10px; margin-top:8px;">
-                              <a href="https://wa.me/8801818558919" target="_blank" class="contact-btn btn-whatsapp" style="padding:6px 12px; font-size:11px; text-decoration:none; border-radius:8px; color:white;"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
-                              <a href="https://t.me/smallbusinessman26" target="_blank" class="contact-btn btn-telegram" style="padding:6px 12px; font-size:11px; text-decoration:none; border-radius:8px; color:white;"><i class="fa-brands fa-telegram"></i> Telegram</a>
-                           </div>`
-                        : `I understand your query. For any assistance regarding payments, orders, wallet or products, you can directly contact our admin:<br><br>
-                           <div style="display:flex; gap:10px; margin-top:8px;">
-                              <a href="https://wa.me/8801818558919" target="_blank" class="contact-btn btn-whatsapp" style="padding:6px 12px; font-size:11px; text-decoration:none; border-radius:8px; color:white;"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
-                              <a href="https://t.me/smallbusinessman26" target="_blank" class="contact-btn btn-telegram" style="padding:6px 12px; font-size:11px; text-decoration:none; border-radius:8px; color:white;"><i class="fa-brands fa-telegram"></i> Telegram</a>
-                           </div>`;
+                    // দোকান বা সাধারণ বিষয়ে ব্রাউজার সার্চ/এনালাইসিস সিমুলেশন বা স্মার্ট ফলব্যাক
+                    try {
+                        let matchedProd = window.allProductsList.find(p => text.includes((p.title_bn || '').toLowerCase()) || text.includes((p.title_en || '').toLowerCase()));
+                        if(matchedProd) {
+                            let pName = window.currentLang === 'en' && matchedProd.title_en ? matchedProd.title_en : matchedProd.title_bn;
+                            reply = window.currentLang === 'bn'
+                                ? `এই প্রোডাক্টটি সম্পর্কে আমাদের স্টোরে তথ্য রয়েছে: <b>${pName}</b> - মূল্য ৳${matchedProd.price || 0}. আপনি সরাসরি 'Buy Now' ক্লিক করে কিনতে পারেন।`
+                                : `We have info on this product: <b>${pName}</b> - Price ৳${matchedProd.price || 0}. You can buy it directly.`;
+                        } else {
+                            // রিয়েল চ্যাটবট ফলব্যাক উইথ অ্যাডমিন কন্ট্যাক্ট
+                            reply = window.currentLang === 'bn' 
+                                ? `আপনার প্রশ্নটি এনালাইসিস করা হলো। আমাদের শপের প্রোডাক্ট, পেমেন্ট বা ওয়ালেট সংক্রান্ত যেকোনো সহায়তার জন্য সরাসরি নিচে যোগাযোগ করতে পারেন:<br><br>
+                                   <div style="display:flex; gap:10px; margin-top:8px;">
+                                      <a href="https://wa.me/8801818558919" target="_blank" class="contact-btn btn-whatsapp" style="padding:6px 12px; font-size:11px; text-decoration:none; border-radius:8px; color:white;"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+                                      <a href="https://t.me/smallbusinessman26" target="_blank" class="contact-btn btn-telegram" style="padding:6px 12px; font-size:11px; text-decoration:none; border-radius:8px; color:white;"><i class="fa-brands fa-telegram"></i> Telegram</a>
+                                   </div>`
+                                : `Query analyzed. For any shop, payment, or wallet assistance, please contact our support directly:<br><br>
+                                   <div style="display:flex; gap:10px; margin-top:8px;">
+                                      <a href="https://wa.me/8801818558919" target="_blank" class="contact-btn btn-whatsapp" style="padding:6px 12px; font-size:11px; text-decoration:none; border-radius:8px; color:white;"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+                                      <a href="https://t.me/smallbusinessman26" target="_blank" class="contact-btn btn-telegram" style="padding:6px 12px; font-size:11px; text-decoration:none; border-radius:8px; color:white;"><i class="fa-brands fa-telegram"></i> Telegram</a>
+                                   </div>`;
+                        }
+                    } catch(e) {
+                        reply = window.currentLang === 'bn' ? "দুঃখিত, এই মুহূর্তে উত্তর দিতে পারছি না।" : "Sorry, unable to process at the moment.";
+                    }
                 }
 
                 chatBody.innerHTML += `<div class="ai-msg bot">${reply}</div>`;
