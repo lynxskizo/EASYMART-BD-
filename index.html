@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="store-title-tag">EASYMART BD - Digital Store & Wallet</title>
+    <title id="store-title-tag">EASYMART BD - Digital Store</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -137,6 +137,7 @@
             width: 100%; padding: 10px; background: var(--primary); color: white;
             border: none; border-radius: 14px; font-weight: 700; cursor: pointer; font-size: 13px;
             box-shadow: 0 4px 15px var(--primary-glow); display: flex; align-items: center; justify-content: center; gap: 6px;
+            text-decoration: none;
         }
         .btn-glass-action:hover { background: #059669; }
         .btn-glass-secondary { background: rgba(255,255,255,0.08); border: 1px solid var(--glass-border); color: var(--text-main); box-shadow: none; }
@@ -175,13 +176,6 @@
         }
         .drawer-menu-item { display: flex; align-items: center; gap: 12px; padding: 12px; color: var(--text-main); text-decoration: none; font-size: 14px; font-weight: 600; border-radius: 12px; margin-bottom: 4px; cursor: pointer; background: rgba(255,255,255,0.03); }
         .drawer-menu-item:hover, .drawer-menu-item.active { background: var(--glass-card); color: var(--primary); border: 1px solid var(--glass-border); }
-
-        .wallet-card {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(59, 130, 246, 0.2));
-            border: 1px solid var(--primary); border-radius: 18px; padding: 16px; margin-bottom: 16px; text-align: center;
-            backdrop-filter: blur(10px);
-        }
-        .wallet-balance { font-size: 22px; font-weight: 800; color: var(--primary); margin: 6px 0; }
 
         .bottom-nav {
             position: fixed; bottom: 0; left: 0; width: 100%;
@@ -227,33 +221,16 @@
         }
         .close-btn { position: absolute; top: 16px; right: 20px; font-size: 22px; cursor: pointer; color: var(--text-muted); }
 
-        .glass-popup-content {
-            background: var(--glass-modal); backdrop-filter: blur(35px); -webkit-backdrop-filter: blur(35px);
-            border: 1px solid var(--glass-border); padding: 26px 20px; border-radius: 26px;
-            text-align: center; max-width: 410px; width: 90%; box-shadow: 0 25px 50px rgba(0,0,0,0.6); color: var(--text-main);
-        }
-        .glass-popup-content h3 { color: var(--primary); font-size: 17px; margin-bottom: 8px; font-weight: 800; }
-        .glass-popup-content p { color: var(--text-muted); font-size: 12px; margin-bottom: 14px; line-height: 1.4; }
-        
-        .order-id-box {
-            background: rgba(255, 255, 255, 0.05); border: 1px dashed var(--primary);
-            padding: 12px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between;
-            margin-bottom: 16px;
-        }
-        .order-id-text { font-size: 18px; font-weight: 800; color: var(--primary); letter-spacing: 1.5px; }
-        .copy-btn {
-            background: var(--primary); border: none; color: white; padding: 6px 12px;
-            border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 4px;
-        }
-        .copy-btn:hover { background: #059669; }
-
-        .contact-options-grid { display: flex; flex-direction: column; gap: 10px; }
+        .contact-options-grid { display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }
         .contact-btn {
             display: flex; align-items: center; justify-content: center; gap: 10px;
-            padding: 11px; border-radius: 14px; font-weight: 700; text-decoration: none; color: white; font-size: 13px;
+            padding: 12px 16px; border-radius: 14px; font-weight: 700; text-decoration: none; color: white; font-size: 13.5px;
+            transition: all 0.2s ease;
         }
-        .btn-whatsapp { background: var(--whatsapp); }
-        .btn-telegram { background: var(--telegram); }
+        .btn-whatsapp { background: var(--whatsapp); box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3); }
+        .btn-whatsapp:hover { background: #20bd5a; transform: translateY(-2px); }
+        .btn-telegram { background: var(--telegram); box-shadow: 0 4px 15px rgba(0, 136, 204, 0.3); }
+        .btn-telegram:hover { background: #0077b3; transform: translateY(-2px); }
 
         .form-group { margin-bottom: 14px; }
         .form-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
@@ -281,6 +258,16 @@
             background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);
             padding: 12px; border-radius: 14px; margin-bottom: 10px; font-size: 13px;
             display: flex; justify-content: space-between; align-items: center;
+        }
+        .dm-notice-box {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px dashed var(--primary);
+            border-radius: 14px;
+            padding: 12px;
+            margin: 12px 0;
+            text-align: center;
+            font-size: 12.5px;
+            color: var(--text-main);
         }
     </style>
 </head>
@@ -312,7 +299,8 @@
             <a href="#" class="drawer-menu-item" onclick="toggleRoundMenu();"><i class="fa-solid fa-house"></i> <span data-i18n="home">হোম</span></a>
             <a href="#" class="drawer-menu-item" onclick="toggleRoundMenu(); openModal('cart-modal');"><i class="fa-solid fa-bag-shopping"></i> <span data-i18n="cart">কার্ট</span></a>
             <a href="#" class="drawer-menu-item" onclick="toggleRoundMenu(); openModal('my-orders-modal');"><i class="fa-solid fa-box-archive"></i> <span data-i18n="my_orders_menu">আমার অর্ডারসমূহ</span></a>
-            <a href="#" class="drawer-menu-item" onclick="toggleRoundMenu(); handleAccountButtonClick();"><i class="fa-solid fa-wallet"></i> <span data-i18n="wallet">ওয়ালেট</span></a>
+            <a href="https://wa.me/8801552463349" target="_blank" class="drawer-menu-item" onclick="toggleRoundMenu();"><i class="fa-brands fa-whatsapp" style="color:var(--whatsapp)"></i> <span>WhatsApp Direct DM</span></a>
+            <a href="https://t.me/smallbusinessman26" target="_blank" class="drawer-menu-item" onclick="toggleRoundMenu();"><i class="fa-brands fa-telegram" style="color:var(--telegram)"></i> <span>Telegram Direct DM</span></a>
             
             <div style="margin-top:15px; border-top: 1px solid var(--glass-border); padding-top:15px;">
                 <div style="font-size:12px; color:var(--text-muted); margin-bottom:8px;" data-i18n="cat">ক্যাটাগরি</div>
@@ -360,13 +348,13 @@
     <div class="ai-fab" onclick="toggleAiChat()"><i class="fa-solid fa-robot"></i></div>
     <div class="ai-modal" id="ai-chat-modal">
         <div class="ai-header">
-            <span><i class="fa-solid fa-robot" style="color:var(--primary)"></i> EASYMART Assistant</span>
+            <span><i class="fa-solid fa-robot" style="color:var(--primary)"></i> EASYMART Smart Bot</span>
             <i class="fa-solid fa-xmark" style="cursor:pointer;" onclick="toggleAiChat()"></i>
         </div>
         <div class="ai-body" id="ai-chat-body">
-            <div class="ai-msg bot" id="ai-welcome-msg">হ্যালো! আমি ইজির্মাট এআই সাপোর্ট। পেমেন্ট, অর্ডার আইডি বা প্রোডাক্ট সংক্রান্ত যেকোনো সহায়তায় আমি প্রস্তুত। বলুন কীভাবে সাহায্য করব?</div>
+            <div class="ai-msg bot" id="ai-welcome-msg">হ্যালো! আমি ইজির্মাট স্মার্ট বট। ডিজিটাল প্রোডাক্ট, দাম বা সরাসরি অর্ডার করার যেকোনো সহায়তায় সাহায্য করতে পারি। আপনার প্রশ্নটি লিখুন!</div>
         </div>
-        <div class="ai-typing" id="ai-typing-indicator"><i class="fa-solid fa-circle-notch fa-spin"></i> <span data-i18n="ai_typing">এআই টাইপ করছে...</span></div>
+        <div class="ai-typing" id="ai-typing-indicator"><i class="fa-solid fa-circle-notch fa-spin"></i> <span data-i18n="ai_typing">স্মার্ট বট উত্তর তৈরি করছে...</span></div>
         <div class="ai-footer">
             <input type="text" id="ai-input" data-i18n-ph="ai_ph" placeholder="আপনার প্রশ্ন এখানে লিখুন..." onkeypress="if(event.key==='Enter') sendAiMessage()">
             <button onclick="sendAiMessage()"><i class="fa-solid fa-paper-plane"></i></button>
@@ -422,16 +410,11 @@
                 <h4 id="profile-display-name" style="font-size:15.5px;">User Name</h4>
                 <p id="profile-display-email" style="font-size:11.5px; color:var(--text-muted);"></p>
             </div>
-            <div class="wallet-card">
-                <div style="font-size:11.5px; color:var(--text-muted);" data-i18n="wallet_title">Easymart BD Wallet</div>
-                <div class="wallet-balance" id="user-wallet-balance">৳0.00</div>
-                <button class="btn-glass-action" onclick="openModal('topup-modal')" style="font-size:11px; padding:6px 12px; width:auto; margin:0 auto;"><span data-i18n="add_money">+ Add Money</span></button>
-            </div>
             
             <button class="btn-glass-action btn-glass-secondary" onclick="openModal('my-orders-modal'); closeModal('profile-modal');" style="margin-bottom: 12px;"><i class="fa-solid fa-box-archive"></i> <span data-i18n="my_orders">আমার অর্ডারসমূহ (Order History)</span></button>
 
             <div style="background:rgba(255,255,255,0.03); border:1px solid var(--glass-border); border-radius:16px; padding:12px; margin-bottom:12px;">
-                <h4 style="font-size:13px; color:var(--primary); margin-bottom:10px;"><i class="fa-solid fa-lock"></i> Private Details & Security</h4>
+                <h4 style="font-size:13px; color:var(--primary); margin-bottom:10px;"><i class="fa-solid fa-lock"></i> Account & Profile Settings</h4>
                 <form id="form-profile-update">
                     <div class="form-group"><label data-i18n="full_name">Full Name</label><input type="text" id="prof-name" required></div>
                     <div class="form-group"><label data-i18n="phone_num">Phone Number</label><input type="text" id="prof-phone" placeholder="017xxxxxxxx"></div>
@@ -479,19 +462,6 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="topup-modal">
-        <div class="modal-box">
-            <span class="close-btn" onclick="closeModal('topup-modal')">&times;</span>
-            <h3 style="margin-bottom:12px; font-size:15.5px;" data-i18n="topup_heading">ওয়ালেটে টাকা এড করুন</h3>
-            <p style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">Nagad Personal: <b style="color:var(--primary);">01818558919</b></p>
-            <form id="form-topup">
-                <div class="form-group"><label data-i18n="amount_bdt">Amount (BDT)</label><input type="number" id="topup-amount" min="10" required></div>
-                <div class="form-group"><label data-i18n="trx_label">Transaction ID (TrxID - ১০ অক্ষরের সঠিক নগদ ট্রানজেকশন আইডি)</label><input type="text" id="topup-trx" placeholder="যেমন: 8N7K2P8X1A" required></div>
-                <button type="submit" class="btn-glass-action" style="margin-top:10px;" data-i18n="req_deposit">Request Deposit</button>
-            </form>
-        </div>
-    </div>
-
     <div class="modal-overlay" id="product-detail-modal">
         <div class="modal-box" style="max-width: 460px;">
             <span class="close-btn" onclick="closeModal('product-detail-modal')">&times;</span>
@@ -510,65 +480,46 @@
                 <span>Total:</span>
                 <span id="cart-total-price" style="color:var(--primary);">৳0</span>
             </div>
-            <button class="btn-glass-action" onclick="checkoutFromCart()" data-i18n="checkout_btn">চেকআউট করুন</button>
+            <button class="btn-glass-action" onclick="checkoutFromCart()" data-i18n="checkout_btn">সরাসরি অর্ডার মেসেজ পাঠান</button>
         </div>
     </div>
 
     <div class="modal-overlay" id="checkout-modal">
         <div class="modal-box">
             <span class="close-btn" onclick="closeModal('checkout-modal')">&times;</span>
-            <h3 style="margin-bottom:10px; font-size:15.5px;" data-i18n="checkout_title">অর্ডার চেকআউট</h3>
-            <p id="checkout-prod-name" style="color:var(--primary); font-weight:bold; font-size:13.5px;"></p>
+            <h3 style="margin-bottom:10px; font-size:16px; color:var(--primary);" data-i18n="dm_checkout_title"><i class="fa-solid fa-paper-plane"></i> সরাসরি মেসেজ পাঠিয়ে অর্ডার করুন</h3>
+            <p id="checkout-prod-name" style="color:var(--text-main); font-weight:bold; font-size:14px; margin-top:8px;"></p>
+            
             <div class="form-group" id="variant-selection-group" style="margin-top:10px; display:none;">
                 <label data-i18n="select_variant">ভ্যারিয়েন্ট সিলেক্ট করুন</label>
                 <select id="checkout-variant-select" class="form-group" onchange="updateVariantPrice()"></select>
             </div>
-            <p id="checkout-prod-price" style="margin-bottom:12px; font-weight:bold; font-size:13.5px;"></p>
+            <p id="checkout-prod-price" style="margin-bottom:12px; font-weight:bold; font-size:15px; color:var(--primary);"></p>
 
-            <form id="form-checkout">
-                <div class="form-group">
-                    <label data-i18n="pay_method">Payment Method</label>
-                    <select id="checkout-payment-method" onchange="toggleCheckoutTrx()">
-                        <option value="Nagad">Nagad Direct</option>
-                        <option value="Wallet">Easymart Wallet Balance</option>
-                    </select>
-                </div>
-                <div class="form-group"><label data-i18n="your_name">আপনার নাম</label><input type="text" id="ord-name" required></div>
-                <div class="form-group"><label data-i18n="mobile_num">মোবাইল নম্বর</label><input type="text" id="ord-phone" required></div>
-                <div class="form-group"><label data-i18n="sub_email">Subscription Email (ইমেইল)</label><input type="email" id="ord-sub-email" required></div>
-                <div class="form-group" id="trx-input-group"><label data-i18n="trx_id_req">Transaction ID (নগদের সঠিক ১০ অক্ষরের TrxID)</label><input type="text" id="ord-trx" placeholder="যেমন: 8N7K2P8X1A"></div>
-                <button type="submit" class="btn-glass-action" style="margin-top:10px;" data-i18n="submit_order">অর্ডার সাবমিট করুন</button>
-            </form>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="order-success-modal">
-        <div class="glass-popup-content">
-            <h3 data-i18n="succ_title">Congratulation your order is received</h3>
-            <p data-i18n="succ_desc">আপনার অর্ডারটি সফলভাবে কনফার্ম হয়েছে। নিচে আপনার ৫ সংখ্যার ইউনিক অর্ডার আইডি দেওয়া হলো:</p>
-            
-            <div class="order-id-box">
-                <span class="order-id-text" id="generated-order-id-display">ABC12</span>
-                <button class="copy-btn" onclick="copyGeneratedOrderId()"><i class="fa-solid fa-copy"></i> <span data-i18n="copy">কপি করুন</span></button>
+            <div class="dm-notice-box">
+                <i class="fa-solid fa-shield-halved" style="color:var(--primary); margin-right:4px;"></i>
+                এগুলো সম্পূর্ণ ডিজিটাল প্রোডাক্ট। নিচে দেওয়া WhatsApp বা Telegram বাটনে ক্লিক করে সরাসরি এডমিনকে ডাইরেক্ট মেসেজ করুন।
             </div>
 
-            <p data-i18n="succ_contact">দ্রুত সার্ভিস পেতে নিচের মাধ্যমে আমাদের সাথে যোগাযোগ করুন:</p>
             <div class="contact-options-grid">
-                <a href="https://wa.me/8801818558919" target="_blank" class="contact-btn btn-whatsapp">
-                    <i class="fa-brands fa-whatsapp"></i> WhatsApp (01818558919)
+                <a href="#" id="direct-whatsapp-btn" target="_blank" class="contact-btn btn-whatsapp" onclick="logDirectOrder('WhatsApp')">
+                    <i class="fa-brands fa-whatsapp" style="font-size:20px;"></i> Direct Message via WhatsApp
                 </a>
-                <a href="https://t.me/smallbusinessman26" target="_blank" class="contact-btn btn-telegram">
-                    <i class="fa-brands fa-telegram"></i> Telegram (@smallbusinessman26)
+                <a href="#" id="direct-telegram-btn" target="_blank" class="contact-btn btn-telegram" onclick="logDirectOrder('Telegram')">
+                    <i class="fa-brands fa-telegram" style="font-size:20px;"></i> Direct Message via Telegram
                 </a>
             </div>
-            <button class="btn-glass-action btn-danger" style="margin-top: 14px;" onclick="closeOrderSuccessModal()" data-i18n="close">বন্ধ করুন</button>
+
+            <div style="margin-top:16px; font-size:11.5px; color:var(--text-muted); text-align:center;">
+                WhatsApp: <b>01552463349</b> | Telegram: <b>@smallbusinessman26</b>
+            </div>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, sendPasswordResetEmail, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut, updateProfile, updateEmail, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, doc, setDoc, getDoc, getDocs, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, sendPasswordResetEmail, onAuthStateChanged, signOut, updateProfile, updateEmail, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, setDoc, getDoc, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCnrZ8ZF8tGW2R5buFDsAeLHJlWHBwb9hw",
@@ -586,31 +537,31 @@
         const googleProvider = new GoogleAuthProvider();
 
         let currentUser = null;
-        window.userWalletBalance = 0;
         window.cartItems = [];
         window.allProductsList = [];
         window.currentLang = 'bn';
         window.userNotifications = [];
         window.userOrdersHistory = [];
+        window.selectedProductForCheckout = null;
+
+        const ADMIN_PHONE = "01552463349";
+        const ADMIN_TELEGRAM = "smallbusinessman26";
 
         const translations = {
             bn: {
-                store_title: "EASYMART BD - Digital Store & Wallet",
+                store_title: "EASYMART BD - Digital Store",
                 cat: "ক্যাটাগরি",
                 menu: "মেনু",
                 all_cat: "সকল ক্যাটেগরি",
                 home: "হোম",
                 cart: "কার্ট",
                 my_orders_menu: "আমার অর্ডারসমূহ",
-                wallet: "ওয়ালেট",
                 search: "সার্চ",
                 search_ph: "প্রোডাক্ট সার্চ করুন...",
                 prod_heading: "উপলব্ধ প্রোডাক্টসমূহ",
-                ai_typing: "এআই টাইপ করছে...",
+                ai_typing: "স্মার্ট বট উত্তর তৈরি করছে...",
                 ai_ph: "আপনার প্রশ্ন এখানে লিখুন...",
                 change: "Change",
-                wallet_title: "Easymart BD Wallet",
-                add_money: "+ Add Money",
                 my_orders: "আমার অর্ডারসমূহ (Order History)",
                 full_name: "Full Name",
                 phone_num: "Phone Number",
@@ -620,47 +571,30 @@
                 no_notif: "কোনো নতুন নোটিফিকেশন নেই।",
                 order_history_title: "আপনার অর্ডারসমূহ",
                 no_orders: "আপনি এখনো কোনো অর্ডার করেননি।",
-                topup_heading: "ওয়ালেটে টাকা এড করুন",
-                amount_bdt: "Amount (BDT)",
-                trx_label: "Transaction ID (TrxID - ১০ অক্ষরের সঠিক নগদ ট্রানজেকশন আইডি)",
-                req_deposit: "Request Deposit",
                 cart_title: "আপনার কার্ট",
                 cart_empty: "কার্ট খালি রয়েছে",
-                checkout_btn: "চেকআউট করুন",
-                checkout_title: "অর্ডার চেকআউট",
+                checkout_btn: "সরাসরি অর্ডার মেসেজ পাঠান",
+                dm_checkout_title: "সরাসরি মেসেজ পাঠিয়ে অর্ডার করুন",
                 select_variant: "ভ্যারিয়েন্ট সিলেক্ট করুন",
-                pay_method: "Payment Method",
-                your_name: "আপনার নাম",
-                mobile_num: "মোবাইল নম্বর",
-                sub_email: "Subscription Email (ইমেইল)",
-                trx_id_req: "Transaction ID (নগদের সঠিক ১০ অক্ষরের TrxID)",
-                submit_order: "অর্ডার সাবমিট করুন",
-                succ_title: "Congratulation your order is received",
-                succ_desc: "আপনার অর্ডারটি সফলভাবে কনফার্ম হয়েছে। নিচে আপনার ৫ সংখ্যার ইউনিক অর্ডার আইডি দেওয়া হলো:",
-                copy: "কপি করুন",
-                succ_contact: "দ্রুত সার্ভিস পেতে নিচের মাধ্যমে আমাদের সাথে যোগাযোগ করুন:",
                 close: "বন্ধ করুন",
                 buy_now: "এখনই কিনুন",
                 add_cart: "কার্টে যোগ করুন",
-                ai_welcome: "হ্যালো! আমি ইজির্মাট এআই সাপোর্ট। পেমেন্ট, অর্ডার আইডি বা প্রোডাক্ট সংক্রান্ত যেকোনো সহায়তায় আমি প্রস্তুত। বলুন কীভাবে সাহায্য করব?"
+                ai_welcome: "হ্যালো! আমি ইজির্মাট স্মার্ট বট। ডিজিটাল প্রোডাক্ট, দাম বা সরাসরি অর্ডার করার যেকোনো সহায়তায় সাহায্য করতে পারি। আপনার প্রশ্নটি লিখুন!"
             },
             en: {
-                store_title: "EASYMART BD - Digital Store & Wallet",
+                store_title: "EASYMART BD - Digital Store",
                 cat: "Categories",
                 menu: "Menu",
                 all_cat: "All Categories",
                 home: "Home",
                 cart: "Cart",
                 my_orders_menu: "My Orders",
-                wallet: "Wallet",
                 search: "Search",
                 search_ph: "Search products...",
                 prod_heading: "Available Products",
-                ai_typing: "AI is typing...",
+                ai_typing: "Smart bot is thinking...",
                 ai_ph: "Type your question here...",
                 change: "Change",
-                wallet_title: "Easymart BD Wallet",
-                add_money: "+ Add Money",
                 my_orders: "My Orders (History)",
                 full_name: "Full Name",
                 phone_num: "Phone Number",
@@ -670,29 +604,15 @@
                 no_notif: "No new notifications.",
                 order_history_title: "Your Orders",
                 no_orders: "You haven't placed any orders yet.",
-                topup_heading: "Add Money to Wallet",
-                amount_bdt: "Amount (BDT)",
-                trx_label: "Transaction ID (10 digit Nagad TrxID)",
-                req_deposit: "Request Deposit",
                 cart_title: "Your Cart",
                 cart_empty: "Cart is empty",
-                checkout_btn: "Proceed to Checkout",
-                checkout_title: "Order Checkout",
+                checkout_btn: "Send Direct Order DM",
+                dm_checkout_title: "Direct DM Purchase",
                 select_variant: "Select Variant",
-                pay_method: "Payment Method",
-                your_name: "Your Name",
-                mobile_num: "Mobile Number",
-                sub_email: "Subscription Email",
-                trx_id_req: "Transaction ID (Nagad TrxID)",
-                submit_order: "Submit Order",
-                succ_title: "Congratulations, your order is received",
-                succ_desc: "Your order has been confirmed successfully. Your 5-digit unique order ID is:",
-                copy: "Copy",
-                succ_contact: "For fast service, contact us via:",
                 close: "Close",
                 buy_now: "Buy Now",
                 add_cart: "Add to Cart",
-                ai_welcome: "Hello! I am Easymart AI Support. Ready to help you with payments, order IDs, or products. How can I assist you?"
+                ai_welcome: "Hello! I am Easymart Smart Bot. I can assist you with digital products, pricing, or placing direct DM orders. Ask me anything!"
             }
         };
 
@@ -765,16 +685,11 @@
                 document.getElementById('profile-display-email').innerText = user.email;
                 document.getElementById('prof-name').value = user.displayName || '';
                 document.getElementById('profile-preview-img').src = photoURL;
-                document.getElementById('ord-sub-email').value = user.email || '';
 
                 if (userDocSnap.exists()) {
-                    window.userWalletBalance = userDocSnap.data().wallet || 0;
-                    document.getElementById('user-wallet-balance').innerText = "৳" + window.userWalletBalance.toFixed(2);
                     document.getElementById('prof-phone').value = userDocSnap.data().phone || '';
-                    document.getElementById('ord-phone').value = userDocSnap.data().phone || '';
-                    document.getElementById('ord-name').value = user.displayName || '';
                 } else {
-                    await setDoc(userDocRef, { email: user.email, name: user.displayName || 'User', wallet: 0 }, { merge: true });
+                    await setDoc(userDocRef, { email: user.email, name: user.displayName || 'User' }, { merge: true });
                 }
 
                 onSnapshot(query(collection(db, "notifications"), where("userId", "==", user.uid)), (snap) => {
@@ -804,7 +719,6 @@
             try {
                 await signInWithPopup(auth, googleProvider);
                 closeModal('auth-modal');
-                alert("Successfully logged in with Google!");
             } catch(err) {
                 alert("Google login failed: " + err.message);
             }
@@ -836,7 +750,7 @@
                 alert("Email address updated successfully!");
                 e.target.reset();
             } catch(err) {
-                alert("Failed to update email (Check your old password): " + err.message);
+                alert("Failed to update email: " + err.message);
             }
         });
 
@@ -853,7 +767,7 @@
                 alert("Password updated successfully!");
                 e.target.reset();
             } catch(err) {
-                alert("Failed to update password (Check your old password): " + err.message);
+                alert("Failed to update password: " + err.message);
             }
         });
 
@@ -871,7 +785,7 @@
             window.userNotifications.forEach(n => {
                 listEl.innerHTML += `
                     <div class="notification-card">
-                        <div style="font-weight:700; color:var(--primary); font-size:13.5px;"><i class="fa-solid fa-circle-check"></i> ${n.title || 'Order Update'}</div>
+                        <div style="font-weight:700; color:var(--primary); font-size:13.5px;"><i class="fa-solid fa-circle-check"></i> ${n.title || 'Notification'}</div>
                         <div>${n.message}</div>
                         <div style="font-size:10.5px; color:var(--text-muted); text-align:right;">${new Date(n.createdAt).toLocaleTimeString()}</div>
                     </div>`;
@@ -888,18 +802,15 @@
             }
 
             window.userOrdersHistory.forEach(ord => {
-                let statusColor = '#f59e0b';
-                if(ord.status === 'Completed' || ord.status === 'Delivered') statusColor = '#10b981';
-                else if(ord.status === 'Cancelled') statusColor = '#ef4444';
-
+                let statusColor = '#10b981';
                 listEl.innerHTML += `
                     <div class="order-history-item">
                         <div>
                             <div style="font-weight:bold; font-size:13.5px;">${ord.product}</div>
-                            <div style="font-size:12px; color:var(--text-muted);">ID: <b>${ord.orderId}</b> | ৳${ord.total}</div>
+                            <div style="font-size:12px; color:var(--text-muted);">Via: <b>${ord.channel || 'DM'}</b> | ৳${ord.total}</div>
                         </div>
                         <div>
-                            <span style="background:${statusColor}; color:white; font-size:11px; font-weight:700; padding:4px 8px; border-radius:8px;">${ord.status || 'Pending'}</span>
+                            <span style="background:${statusColor}; color:white; font-size:11px; font-weight:700; padding:4px 8px; border-radius:8px;">DM Inquiry</span>
                         </div>
                     </div>`;
             });
@@ -935,30 +846,6 @@
             };
         });
 
-        document.getElementById('form-topup').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            if(!currentUser) return;
-            
-            const trxIdVal = document.getElementById('topup-trx').value.trim().toUpperCase();
-            if(trxIdVal.length < 8) {
-                alert("দয়া করে সঠিক নগদ TrxID প্রদান করুন!");
-                return;
-            }
-            
-            await addDoc(collection(db, "topups"), {
-                userId: currentUser.uid,
-                userEmail: currentUser.email,
-                amount: parseFloat(document.getElementById('topup-amount').value),
-                method: "Nagad",
-                trxId: trxIdVal,
-                status: "Pending",
-                createdAt: new Date().toISOString()
-            });
-            alert("Top-up request submitted!");
-            closeModal('topup-modal');
-            e.target.reset();
-        });
-
         window.addToCart = (productId) => {
             const p = window.allProductsList.find(item => item.id === productId);
             if(!p) return;
@@ -989,10 +876,15 @@
         }
 
         window.removeFromCart = (index) => { window.cartItems.splice(index, 1); updateCartUI(); };
+        
         window.checkoutFromCart = () => {
-            if(window.cartItems.length === 0) { alert("Cart empty!"); return; }
+            if(window.cartItems.length === 0) { alert("Cart is empty!"); return; }
             closeModal('cart-modal');
-            buyProduct(null, "Cart Items (" + window.cartItems.length + ")", window.cartItems.reduce((sum, item) => sum + item.price, 0));
+            const total = window.cartItems.reduce((sum, item) => sum + item.price, 0);
+            const cartItemsListStr = window.cartItems.map((item, i) => `${i+1}. ${item.title} (৳${item.price})`).join('\n');
+            
+            const pTitle = `Cart Items (${window.cartItems.length} products):\n${cartItemsListStr}`;
+            openDMCheckoutModal("Shopping Cart Order", total, pTitle);
         };
 
         onSnapshot(collection(db, "categories"), (snap) => {
@@ -1039,9 +931,9 @@
             }
             products.forEach(p => {
                 const imgTag = p.image ? `<img src="${p.image}" class="product-img">` : `<div class="product-img" style="display:flex; align-items:center; justify-content:center;"><i class="fa-solid fa-image" style="color:var(--text-muted)"></i></div>`;
-                const displayPrice = p.variants ? "Variants" : `৳${p.price || 0}`;
+                const displayPrice = p.variants ? "Variants Available" : `৳${p.price || 0}`;
                 const titleText = window.currentLang === 'en' && p.title_en ? p.title_en : (p.title_bn || '');
-                const btnBuyText = window.currentLang === 'bn' ? 'এখনই কিনুন' : 'Buy Now';
+                const btnBuyText = window.currentLang === 'bn' ? 'এখনই কিনুন (Direct DM)' : 'Buy Now (Direct DM)';
                 const btnCartText = window.currentLang === 'bn' ? 'কার্টে যোগ করুন' : 'Add to Cart';
 
                 container.innerHTML += `
@@ -1052,7 +944,7 @@
                             <div class="product-price">${displayPrice}</div>
                         </div>
                         <div style="display:flex; flex-direction:column; gap:6px;" onclick="event.stopPropagation();">
-                            <button class="btn-glass-action" onclick="buyProduct('${p.id}')"><i class="fa-solid fa-bolt"></i> ${btnBuyText}</button>
+                            <button class="btn-glass-action" onclick="buyProduct('${p.id}')"><i class="fa-solid fa-paper-plane"></i> ${btnBuyText}</button>
                             <button class="btn-glass-action btn-glass-secondary" onclick="addToCart('${p.id}')"><i class="fa-solid fa-cart-plus"></i> ${btnCartText}</button>
                         </div>
                     </div>`;
@@ -1076,7 +968,7 @@
                     <b>Description:</b><br>${descText}
                 </div>
                 <div style="display:flex; gap:10px;">
-                    <button class="btn-glass-action" onclick="closeModal('product-detail-modal'); buyProduct('${product.id}')">Buy Now</button>
+                    <button class="btn-glass-action" onclick="closeModal('product-detail-modal'); buyProduct('${product.id}')">Direct Buy (DM)</button>
                     <button class="btn-glass-action btn-glass-secondary" onclick="closeModal('product-detail-modal'); addToCart('${product.id}')">Add to Cart</button>
                 </div>`;
             openModal('product-detail-modal');
@@ -1095,17 +987,14 @@
             renderProducts(window.allProductsList.filter(p => (p.title_bn || '').toLowerCase().includes(query) || (p.title_en || '').toLowerCase().includes(query)));
         };
 
-        window.buyProduct = (productId, customTitle, customPrice) => {
-            if (!currentUser) { alert("লগইন করুন!"); openModal('auth-modal'); return; }
-            
-            const variantGroup = document.getElementById('variant-selection-group');
-            const variantSelect = document.getElementById('checkout-variant-select');
-            variantSelect.innerHTML = "";
-
+        window.buyProduct = (productId) => {
             if(productId) {
                 const product = window.allProductsList.find(p => p.id === productId);
-                window.selectedProductForCheckout = product;
-                document.getElementById('checkout-prod-name').innerText = window.currentLang === 'en' && product.title_en ? product.title_en : product.title_bn;
+                const title = window.currentLang === 'en' && product.title_en ? product.title_en : product.title_bn;
+                
+                const variantGroup = document.getElementById('variant-selection-group');
+                const variantSelect = document.getElementById('checkout-variant-select');
+                variantSelect.innerHTML = "";
 
                 if(product.variants && product.variants.includes(':')) {
                     variantGroup.style.display = 'block';
@@ -1114,159 +1003,82 @@
                         const [vName, vPrice] = part.split(':');
                         variantSelect.innerHTML += `<option value="${vPrice.trim()}">${vName.trim()} - ৳${vPrice.trim()}</option>`;
                     });
-                    document.getElementById('checkout-prod-price').innerText = "Price: ৳" + variantSelect.value;
+                    const initialPrice = parseFloat(variantSelect.value);
+                    openDMCheckoutModal(title, initialPrice, title);
                 } else {
                     variantGroup.style.display = 'none';
-                    document.getElementById('checkout-prod-price').innerText = "Price: ৳" + product.price;
+                    openDMCheckoutModal(title, product.price || 0, title);
                 }
-            } else {
-                variantGroup.style.display = 'none';
-                document.getElementById('checkout-prod-name').innerText = customTitle;
-                document.getElementById('checkout-prod-price').innerText = "Price: ৳" + customPrice;
-                window.selectedProductForCheckout = { title_bn: customTitle, price: customPrice };
             }
-            openModal('checkout-modal');
         };
 
         window.updateVariantPrice = () => {
             const val = document.getElementById('checkout-variant-select').value;
+            const selectEl = document.getElementById('checkout-variant-select');
+            const selectedText = selectEl.options[selectEl.selectedIndex].text;
+            const baseTitle = document.getElementById('checkout-prod-name').innerText.split('(')[0].trim();
+            const fullTitle = `${baseTitle} (${selectedText})`;
+            
             document.getElementById('checkout-prod-price').innerText = "Price: ৳" + val;
+            updateDMButtons(fullTitle, val);
         };
 
-        window.toggleCheckoutTrx = () => {
-            const method = document.getElementById('checkout-payment-method').value;
-            document.getElementById('trx-input-group').style.display = (method === 'Wallet') ? 'none' : 'block';
-        };
-
-        function generateUniqueAlphaNumericId() {
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-            let result = '';
-            for (let i = 0; i < 5; i++) {
-                result += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            return result;
+        function openDMCheckoutModal(title, price, fullDescription) {
+            document.getElementById('checkout-prod-name').innerText = title;
+            document.getElementById('checkout-prod-price').innerText = "Price: ৳" + price;
+            
+            updateDMButtons(fullDescription || title, price);
+            openModal('checkout-modal');
         }
 
-        document.getElementById('form-checkout').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const payMethod = document.getElementById('checkout-payment-method').value;
-            const price = parseFloat(document.getElementById('checkout-prod-price').innerText.replace(/[^0-9.]/g, ''));
-            const trxInputVal = document.getElementById('ord-trx').value.trim().toUpperCase();
+        function updateDMButtons(productInfo, price) {
+            const userEmail = currentUser ? currentUser.email : "Not signed in";
+            const userName = currentUser ? (currentUser.displayName || "Customer") : "Customer";
             
-            if (payMethod === 'Wallet' && window.userWalletBalance < price) {
-                alert("ওয়ালেটে পর্যাপ্ত ব্যালেন্স নেই!"); return;
-            }
-
-            if (payMethod === 'Nagad') {
-                if (!trxInputVal || trxInputVal.length < 8) {
-                    alert("❌ Notice: This TrxID is wrong! দয়া করে সঠিক TrxID দিন।");
-                    return;
-                }
-
-                try {
-                    const q = query(collection(db, "orders"), where("trxId", "==", trxInputVal));
-                    const querySnapshot = await getDocs(q);
-                    
-                    let isUsed = false;
-                    querySnapshot.forEach(docSnap => {
-                        const orderData = docSnap.data();
-                        if (orderData.status !== 'Cancelled') {
-                            isUsed = true;
-                        }
-                    });
-
-                    if (isUsed) {
-                        alert("⚠️ Notice: This TrxID is 'used'! এই ট্রানজেকশন আইডি ইতিপূর্বে ব্যবহার করা হয়েছে। অন্য একটি TrxID দিন।");
-                        return;
-                    }
-                } catch(err) {
-                    console.error("TrxID check error: ", err);
-                }
-            }
-
-            if (payMethod === 'Wallet') {
-                window.userWalletBalance -= price;
-                await setDoc(doc(db, "users", currentUser.uid), { wallet: window.userWalletBalance }, { merge: true });
-            }
-
-            const fiveDigitOrderId = generateUniqueAlphaNumericId();
-            const variantSelect = document.getElementById('checkout-variant-select');
-            const selectedVariantText = (document.getElementById('variant-selection-group').style.display === 'block') ? ` (${variantSelect.options[variantSelect.selectedIndex].text})` : "";
-            const prodNameText = document.getElementById('checkout-prod-name').innerText + selectedVariantText;
-
-            await addDoc(collection(db, "orders"), {
-                orderId: fiveDigitOrderId,
-                customerName: document.getElementById('ord-name').value,
-                phone: document.getElementById('ord-phone').value,
-                subscriptionEmail: document.getElementById('ord-sub-email').value,
-                paymentMethod: payMethod,
-                trxId: payMethod === 'Wallet' ? 'Wallet' : trxInputVal,
-                product: prodNameText,
+            const messageText = `Hello EASYMART BD! 👋\nI want to buy digital product:\n📌 Product: ${productInfo}\n💰 Price: ৳${price}\n👤 Customer Name: ${userName}\n📧 Email: ${userEmail}\n\nPlease help me complete this purchase!`;
+            
+            const encodedMsg = encodeURIComponent(messageText);
+            
+            const waBtn = document.getElementById('direct-whatsapp-btn');
+            const tgBtn = document.getElementById('direct-telegram-btn');
+            
+            waBtn.href = `https://wa.me/8801552463349?text=${encodedMsg}`;
+            tgBtn.href = `https://t.me/smallbusinessman26`;
+            
+            window.lastPendingOrderData = {
+                product: productInfo,
                 total: price,
-                userId: currentUser.uid,
-                status: "Pending",
-                createdAt: new Date().toISOString()
-            });
+                userName: userName,
+                userEmail: userEmail
+            };
+        }
 
-            await addDoc(collection(db, "notifications"), {
-                userId: currentUser.uid,
-                title: window.currentLang === 'bn' ? "অর্ডার সফল হয়েছে!" : "Order Placed Successfully!",
-                message: window.currentLang === 'bn' ? `আপনার অর্ডার (${fiveDigitOrderId}) সফলভাবে প্লেস হয়েছে। স্ট্যাটাস পেন্ডিং আছে।` : `Your order (${fiveDigitOrderId}) has been placed. Status is Pending.`,
-                createdAt: new Date().toISOString()
-            });
-
-            closeModal('checkout-modal');
-            document.getElementById('generated-order-id-display').innerText = fiveDigitOrderId;
-            document.getElementById('order-success-modal').style.display = 'flex';
-
-            window.cartItems = [];
-            updateCartUI();
-        });
-
-        window.copyGeneratedOrderId = () => {
-            const orderIdText = document.getElementById('generated-order-id-display').innerText;
-            navigator.clipboard.writeText(orderIdText).then(() => {
-                alert("অর্ডার আইডি সফলভাবে কপি হয়েছে: " + orderIdText);
-            }).catch(() => {
-                alert("কপি করতে সমস্যা হয়েছে!");
-            });
-        };
-
-        window.closeOrderSuccessModal = () => {
-            document.getElementById('order-success-modal').style.display = 'none';
-        };
-
-        document.getElementById('form-signup').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const res = await createUserWithEmailAndPassword(auth, document.getElementById('signup-email').value, document.getElementById('signup-pass').value);
-            await updateProfile(res.user, { displayName: document.getElementById('signup-name').value });
-            await setDoc(doc(db, "users", res.user.uid), { email: res.user.email, name: document.getElementById('signup-name').value, wallet: 0 });
-            closeModal('auth-modal');
-        });
-
-        document.getElementById('form-login').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const emailVal = document.getElementById('login-email').value;
-            const passVal = document.getElementById('login-pass').value;
-            const rememberChk = document.getElementById('remember-me-chk');
-
-            if(rememberChk && rememberChk.checked) {
-                localStorage.setItem('easymart_remember_email', emailVal);
-            } else {
-                localStorage.removeItem('easymart_remember_email');
+        window.logDirectOrder = async (channel) => {
+            if(currentUser && window.lastPendingOrderData) {
+                try {
+                    await addDoc(collection(db, "orders"), {
+                        customerName: window.lastPendingOrderData.userName,
+                        userEmail: window.lastPendingOrderData.userEmail,
+                        product: window.lastPendingOrderData.product,
+                        total: window.lastPendingOrderData.total,
+                        userId: currentUser.uid,
+                        channel: channel,
+                        status: "DM Inquiry",
+                        createdAt: new Date().toISOString()
+                    });
+                } catch(e) { console.error(e); }
             }
-
-            await signInWithEmailAndPassword(auth, emailVal, passVal);
-            closeModal('auth-modal');
-        });
+        };
 
         window.toggleAiChat = () => { const m = document.getElementById('ai-chat-modal'); m.style.display = m.style.display === 'flex' ? 'none' : 'flex'; };
         
+        /* High Intelligent Smart AI Chat Bot Logic */
         window.sendAiMessage = async () => {
             const input = document.getElementById('ai-input');
             const rawText = input.value.trim();
             const text = rawText.toLowerCase();
             if(!text) return;
+            
             const chatBody = document.getElementById('ai-chat-body');
             const typingInd = document.getElementById('ai-typing-indicator');
 
@@ -1281,91 +1093,77 @@
                 typingInd.style.display = 'none';
                 let reply = "";
 
-                if (text.includes('balance') || text.includes('topup') || text.includes('add money') || text.includes('টাকা') || text.includes('ব্যালেন্স') || text.includes('এড')) {
-                    reply = window.currentLang === 'bn' 
-                        ? "ওয়ালেটে টাকা এড করতে প্রোফাইল থেকে '+ Add Money' বাটনে ক্লিক করুন। নগদ পার্সোনাল (01818558919) নম্বরে টাকা পাঠিয়ে সঠিক ট্রানজেকশন আইডি (TrxID) দিয়ে রিকোয়েস্ট সাবমিট করলে অ্যাডমিন তা যাচাই করে ব্যালেন্স যোগ করে দেবেন।"
-                        : "To add balance, go to your Profile and click '+ Add Money'. Send funds to our Nagad personal number (01818558919) and submit the correct Transaction ID (TrxID).";
+                // Greeting & Welcome
+                if (text.includes('hi') || text.includes('hello') || text.includes('কেমন') || text.includes('হ্যালো') || text.includes('হাই') || text.includes('slam') || text.includes('salam') || text.includes('সালাম')) {
+                    reply = window.currentLang === 'bn'
+                        ? "ওয়ালাইকুম আসসালাম! ইজির্মাট বিডি ডিজিটাল স্টোরে আপনাকে স্বাগতম। বলুন কীভাবে সাহায্য করতে পারি? যেকোনো প্রোডাক্টের তথ্য বা কিনতে সরাসরি প্রশ্ন করুন।"
+                        : "Hello! Welcome to EASYMART BD Digital Store. How can I help you today? Feel free to ask about products or making purchases!";
                 } 
-                else if (text.includes('wallet') || text.includes('ওয়ালেট')) {
+                // Payment Method / How to pay
+                else if (text.includes('payment') || text.includes('pay') || text.includes('পেমেন্ট') || text.includes('টাকা') || text.includes('নগদ') || text.includes('বিকাশ') || text.includes('bkash') || text.includes('nagad') || text.includes('কিভাবে দিব')) {
+                    reply = window.currentLang === 'bn' 
+                        ? `আমাদের ডিজিটাল প্রোডাক্ট কেনার জন্য সরাসরি এডমিনকে মেসেজ দিন। আপনার পছন্দের প্রোডাক্ট সিলেক্ট করে 'Buy Now' বাটনে ক্লিক করলে WhatsApp অথবা Telegram এ সরাসরি কথা বলে পেমেন্ট (bKash/Nagad) সম্পন্ন করতে পারবেন।<br><br>
+                           📱 WhatsApp: <b>01552463349</b><br>
+                           ✈️ Telegram: <b>@smallbusinessman26</b>`
+                        : `To pay for digital products, simply message our admin directly! Click 'Buy Now' on your desired product to open WhatsApp or Telegram DM to complete payment via bKash/Nagad.<br><br>
+                           📱 WhatsApp: <b>01552463349</b><br>
+                           ✈️ Telegram: <b>@smallbusinessman26</b>`;
+                } 
+                // Buying procedure
+                else if (text.includes('buy') || text.includes('order') || text.includes('কিনব') || text.includes('অর্ডার') || text.includes('কিভাবে')) {
                     reply = window.currentLang === 'bn'
-                        ? "আপনার ওয়ালেট ব্যালেন্স দিয়ে আপনি যেকোনো প্রোডাক্ট ইনস্ট্যান্ট কিনতে পারবেন। ওয়ালেটের টাকা দেখার জন্য প্রোফাইল সেকশনে চেক করুন।"
-                        : "You can instantly purchase any product using your wallet balance. Check your profile section to view your current wallet balance.";
+                        ? "প্রোডাক্ট অর্ডার করার সহজ নিয়ম:<br>১. আপনার পছন্দের প্রোডাক্টের 'এখনই কিনুন' (Buy Now) বাটনে ক্লিক করুন।<br>২. সরাসরি WhatsApp অথবা Telegram বাটন থেকে মেসেজ পাঠান।<br>৩. এডমিন আপনাকে সঙ্গে সঙ্গে প্রোডাক্ট প্রোভাইড করে দেবে!"
+                        : "Simple order steps:<br>1. Click 'Buy Now' on your desired product.<br>2. Send a direct message via WhatsApp or Telegram button.<br>3. Admin will instantly deliver your digital item!";
                 }
-                else if (text.includes('product') || text.includes('buying') || text.includes('buy') || text.includes('প্রোডাক্ট') || text.includes('কেনা')) {
-                    reply = window.currentLang === 'bn'
-                        ? "প্রোডাক্ট কিনতে যেকোনো আইটেমের নিচে 'এখনই কিনুন' (Buy Now) অথবা 'কার্টে যোগ করুন' (Add to Cart) বাটনে ক্লিক করুন। চেকআউট ফরম পূরণ করে পেমেন্ট সম্পন্ন করলেই অর্ডার কনফার্ম হয়ে ৫ অক্ষরের ইউনিক অর্ডার আইডি পাবেন।"
-                        : "To buy a product, click 'Buy Now' or 'Add to Cart' under any item. Fill out the checkout form and complete the payment to receive a 5-digit unique order ID.";
-                }
-                else if (text.includes('cheap') || text.includes('sasta') || text.includes('কমদামি') || text.includes('সবচেয়ে কম')) {
+                // Price inquiry / Products search / Cheap items
+                else if (text.includes('cheap') || text.includes('sasta') || text.includes('কমদামি') || text.includes('সবচেয়ে কম') || text.includes('দাম')) {
                     let sorted = [...window.allProductsList].sort((a, b) => (a.price || 0) - (b.price || 0));
                     if (sorted.length > 0) {
                         let cheapest = sorted[0];
                         let title = window.currentLang === 'en' && cheapest.title_en ? cheapest.title_en : cheapest.title_bn;
                         reply = window.currentLang === 'bn'
-                            ? `আমাদের স্টোরে বর্তমানে সবচেয়ে সাশ্রয়ী প্রোডাক্ট হলো: <b>${title}</b> - দাম মাত্র ৳${cheapest.price || 0}!`
-                            : `The cheapest product currently in our store is: <b>${title}</b> - only ৳${cheapest.price || 0}!`;
+                            ? `আমাদের স্টোরের সবচেয়ে কমদামি প্রোডাক্ট হলো: <b>${title}</b> (মূল্য: ৳${cheapest.price || 0})। এছাড়া সকল উপলব্ধ প্রোডাক্ট সরাসরি হোমে দেখতে পাবেন।`
+                            : `The most affordable product in our store is: <b>${title}</b> (Price: ৳${cheapest.price || 0}). Check out home page for all items!`;
                     } else {
-                        reply = window.currentLang === 'bn' ? "বর্তমানে কোনো প্রোডাক্ট উপলব্ধ নেই।" : "No products available currently.";
+                        reply = window.currentLang === 'bn' ? "আমাদের সকল ডিজিটাল প্রোডাক্ট দেখতে হোম পেজ স্ক্রোল করুন।" : "Please check our home page to see available digital products.";
                     }
                 }
-                else if (text.includes('best') || text.includes('top') || text.includes('জনপ্রিয়') || text.includes('সেরা')) {
-                    let topProds = window.allProductsList.slice(0, 5);
-                    if (topProds.length > 0) {
-                        let listStr = topProds.map((p, i) => `${i+1}. ${window.currentLang === 'en' && p.title_en ? p.title_en : p.title_bn} (৳${p.price || 0})`).join('<br>');
-                        reply = window.currentLang === 'bn'
-                            ? `আমাদের সেরা এবং জনপ্রিয় প্রোডাক্টসমূহ:<br>${listStr}`
-                            : `Our best and popular products:<br>${listStr}`;
-                    } else {
-                        reply = window.currentLang === 'bn' ? "বর্তমানে কোনো প্রোডাক্ট নেই।" : "No products available right now.";
-                    }
-                }
-                else if (text.includes('return') || text.includes('refund') || text.includes('রিটার্ন') || text.includes('ফেরত')) {
+                // Contact / Admin support
+                else if (text.includes('contact') || text.includes('admin') || text.includes('support') || text.includes('যোগাযোগ') || text.includes('এডমিন') || text.includes('নাম্বার') || text.includes('number')) {
                     reply = window.currentLang === 'bn'
-                        ? "ডিজিটাল প্রোডাক্ট বা সাবস্ক্রিপশনের ক্ষেত্রে সাধারণত রিটার্ন পলিসি প্রযোজ্য নয়। তবে কোনো সমস্যা হলে বা ভুল প্রোডাক্ট পেলে তাৎক্ষণিকভাবে আমাদের WhatsApp বা Telegram-এ অর্ডার আইডিসহ যোগাযোগ করুন।"
-                        : "Digital products and subscriptions typically aren't returnable. However, if you encounter any issues, please contact us immediately on WhatsApp or Telegram with your Order ID.";
+                        ? `আমাদের এডমিনের সাথে সরাসরি যোগাযোগের ঠিকানা:<br><br>
+                           <a href="https://wa.me/8801552463349" target="_blank" class="contact-btn btn-whatsapp" style="margin-bottom:6px;"><i class="fa-brands fa-whatsapp"></i> WhatsApp: 01552463349</a>
+                           <a href="https://t.me/smallbusinessman26" target="_blank" class="contact-btn btn-telegram"><i class="fa-brands fa-telegram"></i> Telegram: @smallbusinessman26</a>`
+                        : `Contact our admin directly:<br><br>
+                           <a href="https://wa.me/8801552463349" target="_blank" class="contact-btn btn-whatsapp" style="margin-bottom:6px;"><i class="fa-brands fa-whatsapp"></i> WhatsApp: 01552463349</a>
+                           <a href="https://t.me/smallbusinessman26" target="_blank" class="contact-btn btn-telegram"><i class="fa-brands fa-telegram"></i> Telegram: @smallbusinessman26</a>`;
                 }
-                else if (text.includes('contact') || text.includes('admin') || text.includes('support') || text.includes('যোগাযোগ') || text.includes('এডমিন')) {
-                    reply = window.currentLang === 'bn'
-                        ? `যেকোনো সহায়তার জন্য সরাসরি আমাদের সাথে যোগাযোগ করতে পারেন:<br><br>
-                           <div style="display:flex; flex-direction:column; gap:8px;">
-                              <a href="https://wa.me/8801818558919" target="_blank" class="contact-btn btn-whatsapp"><i class="fa-brands fa-whatsapp"></i> WhatsApp: 01818558919</a>
-                              <a href="https://t.me/smallbusinessman26" target="_blank" class="contact-btn btn-telegram"><i class="fa-brands fa-telegram"></i> Telegram: @smallbusinessman26</a>
-                           </div>`
-                        : `For any support, you can contact us directly via:<br><br>
-                           <div style="display:flex; flex-direction:column; gap:8px;">
-                              <a href="https://wa.me/8801818558919" target="_blank" class="contact-btn btn-whatsapp"><i class="fa-brands fa-whatsapp"></i> WhatsApp: 01818558919</a>
-                              <a href="https://t.me/smallbusinessman26" target="_blank" class="contact-btn btn-telegram"><i class="fa-brands fa-telegram"></i> Telegram: @smallbusinessman26</a>
-                           </div>`;
-                }
+                // Product lookup in bot
                 else {
-                    try {
-                        let matchedProd = window.allProductsList.find(p => text.includes((p.title_bn || '').toLowerCase()) || text.includes((p.title_en || '').toLowerCase()));
-                        if(matchedProd) {
-                            let pName = window.currentLang === 'en' && matchedProd.title_en ? matchedProd.title_en : matchedProd.title_bn;
-                            reply = window.currentLang === 'bn'
-                                ? `এই প্রোডাক্টটি সম্পর্কে আমাদের স্টোরে তথ্য রয়েছে: <b>${pName}</b> - মূল্য ৳${matchedProd.price || 0}. আপনি সরাসরি 'Buy Now' ক্লিক করে কিনতে পারেন।`
-                                : `We have info on this product: <b>${pName}</b> - Price ৳${matchedProd.price || 0}. You can buy it directly.`;
-                        } else {
-                            reply = window.currentLang === 'bn' 
-                                ? `আপনার প্রশ্নটি এনালাইসিস করা হলো। আমাদের শপের প্রোডাক্ট, পেমেন্ট বা ওয়ালেট সংক্রান্ত যেকোনো সহায়তার জন্য সরাসরি নিচে যোগাযোগ করতে পারেন:<br><br>
-                                   <div style="display:flex; gap:10px; margin-top:8px;">
-                                      <a href="https://wa.me/8801818558919" target="_blank" class="contact-btn btn-whatsapp" style="padding:6px 12px; font-size:11px; text-decoration:none; border-radius:8px; color:white;"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
-                                      <a href="https://t.me/smallbusinessman26" target="_blank" class="contact-btn btn-telegram" style="padding:6px 12px; font-size:11px; text-decoration:none; border-radius:8px; color:white;"><i class="fa-brands fa-telegram"></i> Telegram</a>
-                                   </div>`
-                                : `Query analyzed. For any shop, payment, or wallet assistance, please contact our support directly:<br><br>
-                                   <div style="display:flex; gap:10px; margin-top:8px;">
-                                      <a href="https://wa.me/8801818558919" target="_blank" class="contact-btn btn-whatsapp" style="padding:6px 12px; font-size:11px; text-decoration:none; border-radius:8px; color:white;"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
-                                      <a href="https://t.me/smallbusinessman26" target="_blank" class="contact-btn btn-telegram" style="padding:6px 12px; font-size:11px; text-decoration:none; border-radius:8px; color:white;"><i class="fa-brands fa-telegram"></i> Telegram</a>
-                                   </div>`;
-                        }
-                    } catch(e) {
-                        reply = window.currentLang === 'bn' ? "দুঃখিত, এই মুহূর্তে উত্তর দিতে পারছি না।" : "Sorry, unable to process at the moment.";
+                    let matched = window.allProductsList.find(p => text.includes((p.title_bn || '').toLowerCase()) || text.includes((p.title_en || '').toLowerCase()));
+                    if(matched) {
+                        let pTitle = window.currentLang === 'en' && matched.title_en ? matched.title_en : matched.title_bn;
+                        reply = window.currentLang === 'bn'
+                            ? `হ্যাঁ! আমাদের স্টোরে <b>${pTitle}</b> উপলব্ধ রয়েছে। এর দাম মাত্র ৳${matched.price || 0}। আপনি সরাসরি প্রোডাক্টের 'Buy Now' বাটনে ক্লিক করে WhatsApp বা Telegram DM-এর মাধ্যমে অর্ডার করতে পারেন।`
+                            : `Yes! We have <b>${pTitle}</b> available for ৳${matched.price || 0}. Click 'Buy Now' to order directly via WhatsApp or Telegram DM.`;
+                    } else {
+                        reply = window.currentLang === 'bn' 
+                            ? `আপনার প্রশ্নটির উত্তর দিতে সরাসরি নিচে দেওয়া WhatsApp বা Telegram এ ক্লিক করুন:<br><br>
+                               <div style="display:flex; flex-direction:column; gap:8px;">
+                                  <a href="https://wa.me/8801552463349" target="_blank" class="contact-btn btn-whatsapp"><i class="fa-brands fa-whatsapp"></i> WhatsApp DM (01552463349)</a>
+                                  <a href="https://t.me/smallbusinessman26" target="_blank" class="contact-btn btn-telegram"><i class="fa-brands fa-telegram"></i> Telegram DM (@smallbusinessman26)</a>
+                               </div>`
+                            : `For instant help regarding your query, please reach out via WhatsApp or Telegram:<br><br>
+                               <div style="display:flex; flex-direction:column; gap:8px;">
+                                  <a href="https://wa.me/8801552463349" target="_blank" class="contact-btn btn-whatsapp"><i class="fa-brands fa-whatsapp"></i> WhatsApp DM (01552463349)</a>
+                                  <a href="https://t.me/smallbusinessman26" target="_blank" class="contact-btn btn-telegram"><i class="fa-brands fa-telegram"></i> Telegram DM (@smallbusinessman26)</a>
+                               </div>`;
                     }
                 }
 
                 chatBody.innerHTML += `<div class="ai-msg bot">${reply}</div>`;
                 chatBody.scrollTop = chatBody.scrollHeight;
-            }, 800);
+            }, 600);
         };
     </script>
 
@@ -1387,4 +1185,4 @@
         function setActiveNavItem(el) { document.querySelectorAll('.bottom-nav .nav-item').forEach(i => i.classList.remove('active')); el.classList.add('active'); }
     </script>
 </body>
-</html>
+                                                      </html>
