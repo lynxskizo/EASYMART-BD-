@@ -1073,18 +1073,70 @@
         window.toggleAiChat = () => { const m = document.getElementById('ai-chat-modal'); m.style.display = m.style.display === 'flex' ? 'none' : 'flex'; };
         
         /* High Intelligent Smart AI Chat Bot Logic */
+                /* High Intelligent Smart AI Chat Bot Logic (Updated with Intent Analysis, Safety Guardrails, & Auto-Language Script Routing) */
+        
+        // ১. ভাষা এবং স্ক্রিপ্ট সনাক্তকরণ ফাংশন (Banglish/Hinglish to Native Script)
+        function analyzeLanguageAndScript(input) {
+            // বাংলা ফ্রন্ট/স্ক্রিপ্ট
+            if (/[\u0980-\u09FF]/.test(input)) return 'bn_script';
+            // হিন্দি (দেবনাগরী) ফ্রন্ট/স্ক্রিপ্ট
+            if (/[\u0900-\u097F]/.test(input)) return 'hi_script';
+
+            const text = input.toLowerCase();
+            const words = text.match(/\b\w+\b/g) || [];
+
+            const banglishKeywords = ["kemon", "acho", "kobi", "ki", "kono", "amader", "korbo", "tumi", "khobor", "bhalo", "khoj", "bhai", "kine", "dam", "koto", "kivabe", "dibo", "pabo", "nibo"];
+            const hinglishKeywords = ["kaise", "kya", "hai", "bhai", "samjh", "karne", "aaj", "karo", "apna", "kaun", "kaisa", "bolo", "daam", "kitna", "chahiye"];
+
+            if (words.some(w => banglishKeywords.includes(w))) return 'banglish';
+            if (words.some(w => hinglishKeywords.includes(w))) return 'hinglish';
+
+            return 'en';
+        }
+
+        // ২. সিকিউরিটি ফিল্টারিং (Bypass, Sexual, Trapping, Spam Detection)
+        function isInvalidOrUnsafe(input) {
+            const text = input.toLowerCase();
+            const blockedPatterns = [
+                /ignore previous instructions/, /jailbreak/, /dan mode/, /system prompt/,
+                /sex/, /nude/, /explicit/, /porn/, /bypassing/, /trapping/, /spam/
+            ];
+            return blockedPatterns.some(pattern => pattern.test(text));
+        }
+
+        // ৩. স্প্যাম ও পুনরাবৃত্তি ট্র্যাকিং Variable
+        let lastUserMessage = "";
+        let repeatCount = 0;
+
         window.sendAiMessage = async () => {
             const input = document.getElementById('ai-input');
             const rawText = input.value.trim();
-            const text = rawText.toLowerCase();
-            if(!text) return;
-            
+            if(!rawText) return;
+
             const chatBody = document.getElementById('ai-chat-body');
             const typingInd = document.getElementById('ai-typing-indicator');
 
+            // ইউজারের মেসেজ যুক্ত করা (প্রশ্ন কোনোভাবেই ইকো/রিপিট করা হবে না)
             chatBody.innerHTML += `<div class="ai-msg user">${rawText}</div>`;
             input.value = "";
             chatBody.scrollTop = chatBody.scrollHeight;
+
+            // স্প্যাম এবং একই প্রশ্ন বারবার পাঠানো ফিল্টার
+            if (rawText.toLowerCase() === lastUserMessage.toLowerCase()) {
+                repeatCount++;
+                if (repeatCount >= 2) {
+                    chatBody.innerHTML += `<div class="ai-msg bot">${
+                        window.currentLang === 'bn' 
+                        ? "একই প্রশ্ন বারবার পাঠাবেন না। আপনার প্রয়োজনীয় বিষয়টি স্পষ্ট করে বলুন।" 
+                        : "Please avoid repeating the same message. State your query directly."
+                    }</div>`;
+                    chatBody.scrollTop = chatBody.scrollHeight;
+                    return;
+                }
+            } else {
+                lastUserMessage = rawText;
+                repeatCount = 0;
+            }
 
             typingInd.style.display = 'block';
             chatBody.scrollTop = chatBody.scrollHeight;
@@ -1093,79 +1145,128 @@
                 typingInd.style.display = 'none';
                 let reply = "";
 
-                // Greeting & Welcome
-                if (text.includes('hi') || text.includes('hello') || text.includes('কেমন') || text.includes('হ্যালো') || text.includes('হাই') || text.includes('slam') || text.includes('salam') || text.includes('সালাম')) {
+                // ফিল্টারিং: অনাকাঙ্ক্ষিত বা বাইপাসিং প্রশ্ন ব্লক করা
+                if (isInvalidOrUnsafe(rawText)) {
                     reply = window.currentLang === 'bn'
-                        ? "ওয়ালাইকুম আসসালাম! ইজির্মাট বিডি ডিজিটাল স্টোরে আপনাকে স্বাগতম। বলুন কীভাবে সাহায্য করতে পারি? যেকোনো প্রোডাক্টের তথ্য বা কিনতে সরাসরি প্রশ্ন করুন।"
-                        : "Hello! Welcome to EASYMART BD Digital Store. How can I help you today? Feel free to ask about products or making purchases!";
-                } 
-                // Payment Method / How to pay
-                else if (text.includes('payment') || text.includes('pay') || text.includes('পেমেন্ট') || text.includes('টাকা') || text.includes('নগদ') || text.includes('বিকাশ') || text.includes('bkash') || text.includes('nagad') || text.includes('কিভাবে দিব')) {
-                    reply = window.currentLang === 'bn' 
-                        ? `আমাদের ডিজিটাল প্রোডাক্ট কেনার জন্য সরাসরি এডমিনকে মেসেজ দিন। আপনার পছন্দের প্রোডাক্ট সিলেক্ট করে 'Buy Now' বাটনে ক্লিক করলে WhatsApp অথবা Telegram এ সরাসরি কথা বলে পেমেন্ট (bKash/Nagad) সম্পন্ন করতে পারবেন।<br><br>
-                           📱 WhatsApp: <b>01552463349</b><br>
-                           ✈️ Telegram: <b>@smallbusinessman26</b>`
-                        : `To pay for digital products, simply message our admin directly! Click 'Buy Now' on your desired product to open WhatsApp or Telegram DM to complete payment via bKash/Nagad.<br><br>
-                           📱 WhatsApp: <b>01552463349</b><br>
-                           ✈️ Telegram: <b>@smallbusinessman26</b>`;
-                } 
-                // Buying procedure
-                else if (text.includes('buy') || text.includes('order') || text.includes('কিনব') || text.includes('অর্ডার') || text.includes('কিভাবে')) {
-                    reply = window.currentLang === 'bn'
-                        ? "প্রোডাক্ট অর্ডার করার সহজ নিয়ম:<br>১. আপনার পছন্দের প্রোডাক্টের 'এখনই কিনুন' (Buy Now) বাটনে ক্লিক করুন।<br>২. সরাসরি WhatsApp অথবা Telegram বাটন থেকে মেসেজ পাঠান।<br>৩. এডমিন আপনাকে সঙ্গে সঙ্গে প্রোডাক্ট প্রোভাইড করে দেবে!"
-                        : "Simple order steps:<br>1. Click 'Buy Now' on your desired product.<br>2. Send a direct message via WhatsApp or Telegram button.<br>3. Admin will instantly deliver your digital item!";
+                        ? "আপনার প্রশ্নটি প্রসেস করা সম্ভব নয়। অনুগ্রহ করে নিয়ম মেনে সঠিক প্রশ্ন করুন।"
+                        : "Your request cannot be processed due to safety and security guidelines.";
+                    chatBody.innerHTML += `<div class="ai-msg bot">${reply}</div>`;
+                    chatBody.scrollTop = chatBody.scrollHeight;
+                    return;
                 }
-                // Price inquiry / Products search / Cheap items
-                else if (text.includes('cheap') || text.includes('sasta') || text.includes('কমদামি') || text.includes('সবচেয়ে কম') || text.includes('দাম')) {
+
+                // ইনটেন্ট এনালাইসিস এবং ভাষা সনাক্তকরণ
+                const langMode = analyzeLanguageAndScript(rawText);
+                const text = rawText.toLowerCase();
+
+                // আউটপুট স্ক্রিপ্ট নির্বাচন
+                const targetLang = (langMode === 'bn_script' || langMode === 'banglish') ? 'bn' : 
+                                   (langMode === 'hi_script' || langMode === 'hinglish') ? 'hi' : 'en';
+
+                // স্মার্ট উত্তর জেনারেটর (প্রশ্ন রিপিট করা এড়িয়ে সরাসরি উত্তর)
+                if (/\b(hi|hello|hey|slam|salam|হ্যালো|হাই|সালাম|কেমন)\b/i.test(text)) {
+                    if (targetLang === 'bn') {
+                        reply = "ওয়ালাইকুম আসসালাম! ইজির্মাট বিডি ডিজিটাল স্টোরে আপনাকে স্বাগতম। আপনার পছন্দের প্রোডাক্ট বা সেবার তথ্যে কীভাবে সাহায্য করতে পারি?";
+                    } else if (targetLang === 'hi') {
+                        reply = "नमस्ते! EASYMART BD डिजिटल स्टोर में आपका स्वागत है। बताइए, मैं आपकी क्या सहायता कर सकता हूँ?";
+                    } else {
+                        reply = "Hello! Welcome to EASYMART BD Digital Store. How can I assist you with our products today?";
+                    }
+                } 
+                else if (/\b(payment|pay|bkash|nagad|পেমেন্ট|টাকা|বিকাশ|নগদ|पेमेंट|पैसा)\b/i.test(text)) {
+                    if (targetLang === 'bn') {
+                        reply = `পেমেন্ট করতে পছন্দের প্রোডাক্টের 'Buy Now' বাটনে ক্লিক করুন অথবা সরাসরি এডমিনকে মেসেজ দিন:<br><br>
+                                 📱 WhatsApp: <b>01552463349</b><br>
+                                 ✈️ Telegram: <b>@smallbusinessman26</b>`;
+                    } else if (targetLang === 'hi') {
+                        reply = `भुगतान के लिए उत्पाद के 'Buy Now' बटन पर क्लिक करें या सीधे एडमिन से संपर्क करें:<br><br>
+                                 📱 WhatsApp: <b>01552463349</b><br>
+                                 ✈️ Telegram: <b>@smallbusinessman26</b>`;
+                    } else {
+                        reply = `To make a payment, click 'Buy Now' on any product or contact admin directly via:<br><br>
+                                 📱 WhatsApp: <b>01552463349</b><br>
+                                 ✈️ Telegram: <b>@smallbusinessman26</b>`;
+                    }
+                }
+                else if (/\b(buy|order|কিনব|অর্ডার|কিভাবে|खरीदना|ऑर्डर)\b/i.test(text)) {
+                    if (targetLang === 'bn') {
+                        reply = "অর্ডার করার নিয়ম:<br>১. প্রোডাক্ট সিলেক্ট করে 'Buy Now' বাটনে ক্লিক করুন।<br>২. WhatsApp/Telegram ডাইরেক্ট মেসেজ পাঠান।<br>৩. পেমেন্ট কনফার্ম হলেই সাথে সাথে ডেলিভারি পেয়ে যাবেন।";
+                    } else if (targetLang === 'hi') {
+                        reply = "ऑर्डर की प्रक्रिया:<br>1. उत्पाद चुनें और 'Buy Now' पर क्लिक करें।<br>2. WhatsApp/Telegram बटन से मैसेज भेजें।<br>3. भुगतान की पुष्टि होते ही डिलीवरी मिल जाएगी।";
+                    } else {
+                        reply = "Order steps:<br>1. Select a product and click 'Buy Now'.<br>2. Send a direct message via WhatsApp or Telegram.<br>3. Receive instant digital delivery after payment.";
+                    }
+                }
+                else if (/\b(cheap|sasta|price|dam|কমদামি|দাম|দাম কত|दाम|कीमत)\b/i.test(text)) {
                     let sorted = [...window.allProductsList].sort((a, b) => (a.price || 0) - (b.price || 0));
                     if (sorted.length > 0) {
                         let cheapest = sorted[0];
                         let title = window.currentLang === 'en' && cheapest.title_en ? cheapest.title_en : cheapest.title_bn;
-                        reply = window.currentLang === 'bn'
-                            ? `আমাদের স্টোরের সবচেয়ে কমদামি প্রোডাক্ট হলো: <b>${title}</b> (মূল্য: ৳${cheapest.price || 0})। এছাড়া সকল উপলব্ধ প্রোডাক্ট সরাসরি হোমে দেখতে পাবেন।`
-                            : `The most affordable product in our store is: <b>${title}</b> (Price: ৳${cheapest.price || 0}). Check out home page for all items!`;
+                        if (targetLang === 'bn') {
+                            reply = `আমাদের স্টোরের সবচেয়ে সাশ্রয়ী প্রোডাক্ট: <b>${title}</b> (মূল্য: ৳${cheapest.price || 0})। মূল পেজে সকল প্রোডাক্ট দেখতে পাবেন।`;
+                        } else if (targetLang === 'hi') {
+                            reply = `सबका किफायती उत्पाद: <b>${title}</b> (मूल्य: ৳${cheapest.price || 0})। मुख्य पृष्ठ पर सभी उत्पाद देखें।`;
+                        } else {
+                            reply = `Most affordable item: <b>${title}</b> (Price: ৳${cheapest.price || 0}). Browse the homepage for all items!`;
+                        }
                     } else {
-                        reply = window.currentLang === 'bn' ? "আমাদের সকল ডিজিটাল প্রোডাক্ট দেখতে হোম পেজ স্ক্রোল করুন।" : "Please check our home page to see available digital products.";
+                        reply = targetLang === 'bn' ? "উপলব্ধ সকল ডিজিটাল প্রোডাক্ট দেখতে হোম পেজ স্ক্রোল করুন।" : "Please check our homepage for available digital products.";
                     }
                 }
-                // Contact / Admin support
-                else if (text.includes('contact') || text.includes('admin') || text.includes('support') || text.includes('যোগাযোগ') || text.includes('এডমিন') || text.includes('নাম্বার') || text.includes('number')) {
-                    reply = window.currentLang === 'bn'
-                        ? `আমাদের এডমিনের সাথে সরাসরি যোগাযোগের ঠিকানা:<br><br>
-                           <a href="https://wa.me/8801552463349" target="_blank" class="contact-btn btn-whatsapp" style="margin-bottom:6px;"><i class="fa-brands fa-whatsapp"></i> WhatsApp: 01552463349</a>
-                           <a href="https://t.me/smallbusinessman26" target="_blank" class="contact-btn btn-telegram"><i class="fa-brands fa-telegram"></i> Telegram: @smallbusinessman26</a>`
-                        : `Contact our admin directly:<br><br>
-                           <a href="https://wa.me/8801552463349" target="_blank" class="contact-btn btn-whatsapp" style="margin-bottom:6px;"><i class="fa-brands fa-whatsapp"></i> WhatsApp: 01552463349</a>
-                           <a href="https://t.me/smallbusinessman26" target="_blank" class="contact-btn btn-telegram"><i class="fa-brands fa-telegram"></i> Telegram: @smallbusinessman26</a>`;
+                else if (/\b(contact|admin|support|যোগাযোগ|এডমিন|নাম্বার|संपर्क|एडमिन)\b/i.test(text)) {
+                    if (targetLang === 'bn') {
+                        reply = `এডমিনের সাথে সরাসরি যোগাযোগের লিংক:<br><br>
+                                 <a href="https://wa.me/8801552463349" target="_blank" class="contact-btn btn-whatsapp" style="margin-bottom:6px;"><i class="fa-brands fa-whatsapp"></i> WhatsApp: 01552463349</a>
+                                 <a href="https://t.me/smallbusinessman26" target="_blank" class="contact-btn btn-telegram"><i class="fa-brands fa-telegram"></i> Telegram: @smallbusinessman26</a>`;
+                    } else if (targetLang === 'hi') {
+                        reply = `एडमिन से सीधे संपर्क करें:<br><br>
+                                 <a href="https://wa.me/8801552463349" target="_blank" class="contact-btn btn-whatsapp" style="margin-bottom:6px;"><i class="fa-brands fa-whatsapp"></i> WhatsApp: 01552463349</a>
+                                 <a href="https://t.me/smallbusinessman26" target="_blank" class="contact-btn btn-telegram"><i class="fa-brands fa-telegram"></i> Telegram: @smallbusinessman26</a>`;
+                    } else {
+                        reply = `Contact our admin directly:<br><br>
+                                 <a href="https://wa.me/8801552463349" target="_blank" class="contact-btn btn-whatsapp" style="margin-bottom:6px;"><i class="fa-brands fa-whatsapp"></i> WhatsApp: 01552463349</a>
+                                 <a href="https://t.me/smallbusinessman26" target="_blank" class="contact-btn btn-telegram"><i class="fa-brands fa-telegram"></i> Telegram: @smallbusinessman26</a>`;
+                    }
                 }
-                // Product lookup in bot
                 else {
                     let matched = window.allProductsList.find(p => text.includes((p.title_bn || '').toLowerCase()) || text.includes((p.title_en || '').toLowerCase()));
-                    if(matched) {
+                    if (matched) {
                         let pTitle = window.currentLang === 'en' && matched.title_en ? matched.title_en : matched.title_bn;
-                        reply = window.currentLang === 'bn'
-                            ? `হ্যাঁ! আমাদের স্টোরে <b>${pTitle}</b> উপলব্ধ রয়েছে। এর দাম মাত্র ৳${matched.price || 0}। আপনি সরাসরি প্রোডাক্টের 'Buy Now' বাটনে ক্লিক করে WhatsApp বা Telegram DM-এর মাধ্যমে অর্ডার করতে পারেন।`
-                            : `Yes! We have <b>${pTitle}</b> available for ৳${matched.price || 0}. Click 'Buy Now' to order directly via WhatsApp or Telegram DM.`;
+                        if (targetLang === 'bn') {
+                            reply = `<b>${pTitle}</b> স্টোরে উপলব্ধ রয়েছে। মূল্য: ৳${matched.price || 0}। কিনতে 'Buy Now' বাটনে চাপ দিয়ে সরাসরি মেসেজ পাঠাতে পারেন।`;
+                        } else if (targetLang === 'hi') {
+                            reply = `<b>${pTitle}</b> स्टोर में उपलब्ध है। मूल्य: ৳${matched.price || 0}। 'Buy Now' पर क्लिक करके डायरेक्ट मैसेज करें।`;
+                        } else {
+                            reply = `<b>${pTitle}</b> is available for ৳${matched.price || 0}. Click 'Buy Now' to order via DM.`;
+                        }
                     } else {
-                        reply = window.currentLang === 'bn' 
-                            ? `আপনার প্রশ্নটির উত্তর দিতে সরাসরি নিচে দেওয়া WhatsApp বা Telegram এ ক্লিক করুন:<br><br>
-                               <div style="display:flex; flex-direction:column; gap:8px;">
-                                  <a href="https://wa.me/8801552463349" target="_blank" class="contact-btn btn-whatsapp"><i class="fa-brands fa-whatsapp"></i> WhatsApp DM (01552463349)</a>
-                                  <a href="https://t.me/smallbusinessman26" target="_blank" class="contact-btn btn-telegram"><i class="fa-brands fa-telegram"></i> Telegram DM (@smallbusinessman26)</a>
-                               </div>`
-                            : `For instant help regarding your query, please reach out via WhatsApp or Telegram:<br><br>
-                               <div style="display:flex; flex-direction:column; gap:8px;">
-                                  <a href="https://wa.me/8801552463349" target="_blank" class="contact-btn btn-whatsapp"><i class="fa-brands fa-whatsapp"></i> WhatsApp DM (01552463349)</a>
-                                  <a href="https://t.me/smallbusinessman26" target="_blank" class="contact-btn btn-telegram"><i class="fa-brands fa-telegram"></i> Telegram DM (@smallbusinessman26)</a>
-                               </div>`;
+                        if (targetLang === 'bn') {
+                            reply = `আপনার প্রশ্নের দ্রুত সমাধানের জন্য এডমিনকে সরাসরি মেসেজ দিন:<br><br>
+                                     <div style="display:flex; flex-direction:column; gap:8px;">
+                                        <a href="https://wa.me/8801552463349" target="_blank" class="contact-btn btn-whatsapp"><i class="fa-brands fa-whatsapp"></i> WhatsApp DM (01552463349)</a>
+                                        <a href="https://t.me/smallbusinessman26" target="_blank" class="contact-btn btn-telegram"><i class="fa-brands fa-telegram"></i> Telegram DM (@smallbusinessman26)</a>
+                                     </div>`;
+                        } else if (targetLang === 'hi') {
+                            reply = `त्वरित सहायता के लिए सीधे एडमिन से संपर्क करें:<br><br>
+                                     <div style="display:flex; flex-direction:column; gap:8px;">
+                                        <a href="https://wa.me/8801552463349" target="_blank" class="contact-btn btn-whatsapp"><i class="fa-brands fa-whatsapp"></i> WhatsApp DM (01552463349)</a>
+                                        <a href="https://t.me/smallbusinessman26" target="_blank" class="contact-btn btn-telegram"><i class="fa-brands fa-telegram"></i> Telegram DM (@smallbusinessman26)</a>
+                                     </div>`;
+                        } else {
+                            reply = `For direct assistance regarding your query, please reach out via DM:<br><br>
+                                     <div style="display:flex; flex-direction:column; gap:8px;">
+                                        <a href="https://wa.me/8801552463349" target="_blank" class="contact-btn btn-whatsapp"><i class="fa-brands fa-whatsapp"></i> WhatsApp DM (01552463349)</a>
+                                        <a href="https://t.me/smallbusinessman26" target="_blank" class="contact-btn btn-telegram"><i class="fa-brands fa-telegram"></i> Telegram DM (@smallbusinessman26)</a>
+                                     </div>`;
+                        }
                     }
                 }
 
                 chatBody.innerHTML += `<div class="ai-msg bot">${reply}</div>`;
                 chatBody.scrollTop = chatBody.scrollHeight;
-            }, 600);
+            }, 500);
         };
-    </script>
+
 
     <script>
         function toggleRoundMenu() {
