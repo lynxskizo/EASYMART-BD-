@@ -107,7 +107,7 @@
             color: var(--text-main); font-weight: 600; margin-bottom: 24px;
             overflow: hidden; position: relative;
         }
-        .banner-slider img { width: 100%; height: 100%; object-fit: cover; }
+        .banner-slider img { width: 100%; height: 100%; object-fit: cover; transition: opacity 0.5s ease-in-out; }
 
         .category-chips { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 12px; margin-bottom: 24px; scrollbar-width: none; }
         .category-chips::-webkit-scrollbar { display: none; }
@@ -547,6 +547,8 @@
         const ADMIN_PHONE = "01552463349";
         const ADMIN_TELEGRAM = "smallbusinessman26";
 
+        let bannerInterval = null;
+
         const translations = {
             bn: {
                 store_title: "EASYMART BD - Digital Store",
@@ -906,19 +908,43 @@
             renderProducts(window.allProductsList);
         });
 
+        /* Fixed & Improved Dynamic Banner Slider Engine */
         onSnapshot(collection(db, "banners"), (snap) => {
             const sliderBox = document.getElementById('banner-slider-box');
+            
+            if (bannerInterval) {
+                clearInterval(bannerInterval);
+                bannerInterval = null;
+            }
+
             let banners = [];
-            snap.forEach(d => banners.push(d.data().url));
-            if(banners.length > 0) {
-                let idx = 0;
-                sliderBox.innerHTML = `<img src="${banners[0]}" alt="Banner">`;
-                if(banners.length > 1) {
-                    setInterval(() => {
-                        idx = (idx + 1) % banners.length;
-                        sliderBox.innerHTML = `<img src="${banners[idx]}" alt="Banner">`;
-                    }, 4000);
-                }
+            snap.forEach(d => {
+                const data = d.data();
+                if(data.url) banners.push(data.url);
+            });
+
+            if (banners.length === 0) {
+                sliderBox.innerHTML = `<i class="fa-regular fa-images" style="margin-right:8px;"></i> EASYMART BD Digital Store`;
+                return;
+            }
+
+            let idx = 0;
+            sliderBox.innerHTML = `<img src="${banners[0]}" alt="Banner" id="current-slider-img">`;
+
+            if (banners.length > 1) {
+                bannerInterval = setInterval(() => {
+                    idx = (idx + 1) % banners.length;
+                    const imgEl = document.getElementById('current-slider-img');
+                    if(imgEl) {
+                        imgEl.style.opacity = '0.3';
+                        setTimeout(() => {
+                            imgEl.src = banners[idx];
+                            imgEl.style.opacity = '1';
+                        }, 250);
+                    } else {
+                        sliderBox.innerHTML = `<img src="${banners[idx]}" alt="Banner" id="current-slider-img">`;
+                    }
+                }, 3500);
             }
         });
 
@@ -1072,19 +1098,16 @@
 
         window.toggleAiChat = () => { const m = document.getElementById('ai-chat-modal'); m.style.display = m.style.display === 'flex' ? 'none' : 'flex'; };
         
-                /* High Intelligent Smart AI Chat Bot Logic (Updated with Intent Analysis, Safety Guardrails, & Auto-Language Script Routing) */
+        /* High Intelligent Smart AI Chat Bot Engine */
         
-        // ১. ভাষা এবং স্ক্রিপ্ট সনাক্তকরণ ফাংশন (Banglish/Hinglish to Native Script)
         function analyzeLanguageAndScript(input) {
-            // বাংলা ফ্রন্ট/স্ক্রিপ্ট
             if (/[\u0980-\u09FF]/.test(input)) return 'bn_script';
-            // হিন্দি (দেবনাগরী) ফ্রন্ট/স্ক্রিপ্ট
             if (/[\u0900-\u097F]/.test(input)) return 'hi_script';
 
             const text = input.toLowerCase();
             const words = text.match(/\b\w+\b/g) || [];
 
-            const banglishKeywords = ["kemon", "acho", "kobi", "ki", "kono", "amader", "korbo", "tumi", "khobor", "bhalo", "khoj", "bhai", "kine", "dam", "koto", "kivabe", "dibo", "pabo", "nibo"];
+            const banglishKeywords = ["kemon", "acho", "kobi", "ki", "kono", "amader", "korbo", "tumi", "khobor", "bhalo", "khoj", "bhai", "kine", "dam", "koto", "kivabe", "dibo", "pabo", "nibo", "oder"];
             const hinglishKeywords = ["kaise", "kya", "hai", "bhai", "samjh", "karne", "aaj", "karo", "apna", "kaun", "kaisa", "bolo", "daam", "kitna", "chahiye"];
 
             if (words.some(w => banglishKeywords.includes(w))) return 'banglish';
@@ -1093,7 +1116,6 @@
             return 'en';
         }
 
-        // ২. সিকিউরিটি ফিল্টারিং (Bypass, Sexual, Trapping, Spam Detection)
         function isInvalidOrUnsafe(input) {
             const text = input.toLowerCase();
             const blockedPatterns = [
@@ -1103,7 +1125,6 @@
             return blockedPatterns.some(pattern => pattern.test(text));
         }
 
-        // ৩. স্প্যাম ও পুনরাবৃত্তি ট্র্যাকিং Variable
         let lastUserMessage = "";
         let repeatCount = 0;
 
@@ -1115,12 +1136,10 @@
             const chatBody = document.getElementById('ai-chat-body');
             const typingInd = document.getElementById('ai-typing-indicator');
 
-            // ইউজারের মেসেজ যুক্ত করা (প্রশ্ন কোনোভাবেই ইকো/রিপিট করা হবে না)
             chatBody.innerHTML += `<div class="ai-msg user">${rawText}</div>`;
             input.value = "";
             chatBody.scrollTop = chatBody.scrollHeight;
 
-            // স্প্যাম এবং একই প্রশ্ন বারবার পাঠানো ফিল্টার
             if (rawText.toLowerCase() === lastUserMessage.toLowerCase()) {
                 repeatCount++;
                 if (repeatCount >= 2) {
@@ -1144,7 +1163,6 @@
                 typingInd.style.display = 'none';
                 let reply = "";
 
-                // ফিল্টারিং: অনাকাঙ্ক্ষিত বা বাইপাসিং প্রশ্ন ব্লক করা
                 if (isInvalidOrUnsafe(rawText)) {
                     reply = window.currentLang === 'bn'
                         ? "আপনার প্রশ্নটি প্রসেস করা সম্ভব নয়। অনুগ্রহ করে নিয়ম মেনে সঠিক প্রশ্ন করুন।"
@@ -1154,16 +1172,13 @@
                     return;
                 }
 
-                // ইনটেন্ট এনালাইসিস এবং ভাষা সনাক্তকরণ
                 const langMode = analyzeLanguageAndScript(rawText);
                 const text = rawText.toLowerCase();
 
-                // আউটপুট স্ক্রিপ্ট নির্বাচন
                 const targetLang = (langMode === 'bn_script' || langMode === 'banglish') ? 'bn' : 
                                    (langMode === 'hi_script' || langMode === 'hinglish') ? 'hi' : 'en';
 
-                // স্মার্ট উত্তর জেনারেটর (প্রশ্ন রিপিট করা এড়িয়ে সরাসরি উত্তর)
-                if (/\b(hi|hello|hey|slam|salam|হ্যালো|হাই|সালাম|কেমন)\b/i.test(text)) {
+                if (/\b(hi|hello|hey|slam|salam|হ্যালো|হাই|সালাম|কেমন|assalam)\b/i.test(text)) {
                     if (targetLang === 'bn') {
                         reply = "ওয়ালাইকুম আসসালাম! ইজির্মাট বিডি ডিজিটাল স্টোরে আপনাকে স্বাগতম। আপনার পছন্দের প্রোডাক্ট বা সেবার তথ্যে কীভাবে সাহায্য করতে পারি?";
                     } else if (targetLang === 'hi') {
@@ -1187,7 +1202,7 @@
                                  ✈️ Telegram: <b>@smallbusinessman26</b>`;
                     }
                 }
-                else if (/\b(buy|order|কিনব|অর্ডার|কিভাবে|खरीदना|ऑर्डर)\b/i.test(text)) {
+                else if (/\b(buy|order|কিনব|অর্ডার|কিভাবে|खरीदना|ऑर्डर|nibo|kine)\b/i.test(text)) {
                     if (targetLang === 'bn') {
                         reply = "অর্ডার করার নিয়ম:<br>১. প্রোডাক্ট সিলেক্ট করে 'Buy Now' বাটনে ক্লিক করুন।<br>২. WhatsApp/Telegram ডাইরেক্ট মেসেজ পাঠান।<br>৩. পেমেন্ট কনফার্ম হলেই সাথে সাথে ডেলিভারি পেয়ে যাবেন।";
                     } else if (targetLang === 'hi') {
@@ -1196,7 +1211,7 @@
                         reply = "Order steps:<br>1. Select a product and click 'Buy Now'.<br>2. Send a direct message via WhatsApp or Telegram.<br>3. Receive instant digital delivery after payment.";
                     }
                 }
-                else if (/\b(cheap|sasta|price|dam|কমদামি|দাম|দাম কত|दाम|कीमत)\b/i.test(text)) {
+                else if (/\b(cheap|sasta|price|dam|কমদামি|দাম|দাম কত|দাম|कीमत|koto)\b/i.test(text)) {
                     let sorted = [...window.allProductsList].sort((a, b) => (a.price || 0) - (b.price || 0));
                     if (sorted.length > 0) {
                         let cheapest = sorted[0];
@@ -1212,7 +1227,7 @@
                         reply = targetLang === 'bn' ? "উপলব্ধ সকল ডিজিটাল প্রোডাক্ট দেখতে হোম পেজ স্ক্রোল করুন।" : "Please check our homepage for available digital products.";
                     }
                 }
-                else if (/\b(contact|admin|support|যোগাযোগ|এডমিন|নাম্বার|संपर्क|एडमिन)\b/i.test(text)) {
+                else if (/\b(contact|admin|support|যোগাযোগ|এডমিন|নাম্বার|সম্পর্ক|एडमिन|number)\b/i.test(text)) {
                     if (targetLang === 'bn') {
                         reply = `এডমিনের সাথে সরাসরি যোগাযোগের লিংক:<br><br>
                                  <a href="https://wa.me/8801552463349" target="_blank" class="contact-btn btn-whatsapp" style="margin-bottom:6px;"><i class="fa-brands fa-whatsapp"></i> WhatsApp: 01552463349</a>
@@ -1286,4 +1301,4 @@
         function setActiveNavItem(el) { document.querySelectorAll('.bottom-nav .nav-item').forEach(i => i.classList.remove('active')); el.classList.add('active'); }
     </script>
 </body>
-</html>
+        </html>
